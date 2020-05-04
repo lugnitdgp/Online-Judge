@@ -1,13 +1,14 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import {} from "@material-ui/icons";
 import { withStyles, createStyles } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
+import dynamic from "next/dynamic";
+const Editor = dynamic(() => import("../components/Editor"), { ssr: false });
 
 const styles = createStyles(() => ({
   "@global": {
     body: {
-      backgroundColor: "black",
     },
   },
   "@keyframes move": {
@@ -35,14 +36,16 @@ interface IProps {
 }
 
 class IndexPage extends React.Component<IProps, {}> {
+  componentDidMount() {}
+
   render() {
     const { classes } = this.props;
     return (
       <Layout>
         <Grid container>
-          <Typography variant="h2" className={classes.hero}>
-            Next Material Template
-          </Typography>
+          <div className={classes.hero}>
+            <Editor />
+          </div>
         </Grid>
       </Layout>
     );

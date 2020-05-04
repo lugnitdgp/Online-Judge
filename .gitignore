@@ -3,4 +3,5 @@ db.sqlite3-journal
 */__pycache__/*
 *.pyc
 .env
+env/
 .vscode

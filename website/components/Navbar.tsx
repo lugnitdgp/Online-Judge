@@ -1,5 +1,5 @@
 import { Typography, AppBar, Toolbar, Button } from "@material-ui/core";
-import { } from "@material-ui/icons";
+import {} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +21,7 @@ export default function Navbar({}) {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
-          Next Material Template
+          Online Judge
         </Typography>
         <Button color="inherit">Login</Button>
       </Toolbar>

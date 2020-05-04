@@ -3,16 +3,12 @@ from django.contrib.auth.models import User
 from django.utils import timezone as t
 # Create your models here.
 
-class Coder(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    wrong_answers = models.IntegerField(default=0, help_text="Number of WAs for the user here")
-    time_out = models.IntegerField(default=0, help_text="Number of TLEs for the user here")
-    score = models.IntegerField(default=0, help_text="Score of the user")
-    correct_answers = models.IntegerField(default=0, help_text="Number of correct answers of the user")
-    time_stamp = models.DateTimeField(default = t.now, help_text="To check the least time taken for a common score")
+class Config(models.Model):
+    start_time = models.DateTimeField(default = t.now, help_text = "Time and Date the contest starts")
+    end_time = models.DateTimeField(default = t.now, help_text = "Time and Date the contest ends")
 
     def __str__(self):
-        return self.user.username
+        return "Server wide config for start and end time"
 
 class Question(models.Model):
     question_text = models.TextField(blank=True, help_text="The entire text for the question")
@@ -26,4 +22,4 @@ class Question(models.Model):
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer_text = models.TextField(blank=True, help_text="Answer field for the questions")
-    
+

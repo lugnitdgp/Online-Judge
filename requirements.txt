@@ -1,3 +1,4 @@
 Django==3.0.5
 django-rest-framework==3.11.0
 python-decouple
+pillow==7.1.2

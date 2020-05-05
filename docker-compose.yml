@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --env DJANGO_SETTINGS_MODULE=judge.settings -w 4 judge.wsgi:application
     volumes:
       - .:/code
     ports:

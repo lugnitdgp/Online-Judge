@@ -1,6 +1,7 @@
 import { Typography, AppBar, Toolbar, Button } from "@material-ui/core";
 import {} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import Router from "next/router"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,7 +24,7 @@ export default function Navbar({}) {
         <Typography variant="h6" className={classes.title}>
           Online Judge
         </Typography>
-        <Button color="inherit">Login</Button>
+        <Button color="inherit" onClick={() => Router.push("/login")}>Login</Button>
       </Toolbar>
     </AppBar>
   );

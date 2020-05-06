@@ -1,55 +1,57 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
-import {} from "@material-ui/icons";
+import { Grid, Typography, Card, CardHeader, CardContent } from "@material-ui/core";
+import { } from "@material-ui/icons";
 import { withStyles, createStyles } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
 import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("../components/Editor"), { ssr: false });
 
-const styles = createStyles(() => ({
-  "@global": {
-    body: {
+const styles = createStyles((theme) => ({
+    "@global": {
+        body: {
+        },
     },
-  },
-  "@keyframes move": {
-    from: {
-      transform: "translate(-50%, 200%)",
-      opacity: 0,
+    "@keyframes move": {
+        from: {
+            transform: "translate(-50%, 200%)",
+            opacity: 0,
+        },
+        to: {
+            transform: "translate(-50%, -50%)",
+            opacity: 1,
+        },
     },
-    to: {
-      transform: "translate(-50%, -50%)",
-      opacity: 1,
-    },
-  },
-  hero: {
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    color: "red",
-    transform: "translate(-50%, -50%)",
-    animation: "$move 1s ease-in-out",
-  },
+    card: {
+        marginBottom: theme.spacing(3)
+    }
 }));
 
 interface IProps {
-  classes: any;
+    classes: any;
 }
 
 class IndexPage extends React.Component<IProps, {}> {
-  componentDidMount() {}
+    componentDidMount() { }
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <Layout>
-        <Grid container>
-          <div className={classes.hero}>
-            <Editor />
-          </div>
-        </Grid>
-      </Layout>
-    );
-  }
+    render() {
+        const { classes } = this.props;
+        return (
+            <Layout>
+                <Grid container justify="center" alignItems="center" direction="column">
+                    <Card className={classes.card}>
+                        <CardHeader title="Sum of two" />
+                        <CardContent>
+                            <Typography>Maths and logic are
+                             the necessary parts of programming that can be learned throu
+                             gh practice. Here is a simple mathematical problem of additio
+                             n for you to solve.</Typography>
+                        </CardContent>
+                    </Card>
+                    <Editor />
+                </Grid>
+            </Layout>
+        );
+    }
 }
 
 export default withStyles(styles)(IndexPage);

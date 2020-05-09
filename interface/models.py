@@ -46,7 +46,7 @@ class Testcases(models.Model):
 
     def delete(self, *args, **kwargs):
         os.remove("testcases/ques{}/input{}.in".format(self.question.pk, self.pk))
-        os.remove("testcases/ques{}/output{}.in".format(self.question.pk, self.pk))
+        os.remove("testcases/ques{}/output{}.out".format(self.question.pk, self.pk))
         super(Testcases, self).delete(*args, **kwargs)
 
 class Answer(models.Model):

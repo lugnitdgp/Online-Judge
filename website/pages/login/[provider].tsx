@@ -48,7 +48,7 @@ class LoginPage extends React.Component<Props, State> {
       })
       .then((res) => {
         axios
-          .post(`${process.env.BACKEND_URL}/login`, {
+          .post(`${process.env.BACKEND_URL}/account/login`, {
             id_token: res.data.id_token,
             provider: "google",
           })

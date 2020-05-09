@@ -7,7 +7,7 @@ export default async (req, res) => {
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
       grant_type: "authorization_code",
-      redirect_uri: req.headers.referer.split("?")[0] || "http://localhost:3000/login/google",
+      redirect_uri: req.headers.referer.split("?")[0] || "http://online-judge.now.sh/login/google",
     });
 
     res.status(200).send(response.data);

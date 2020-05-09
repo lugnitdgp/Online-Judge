@@ -94,7 +94,7 @@ const facebookLogin = () => {
   url.pathname = "v6.0/dialog/oauth";
   url.searchParams.set(
     "redirect_uri",
-    `${window.location.protocol}//${window.location.host}/api/authentication/facebook`
+    `${window.location.protocol}//${window.location.host}/login/facebook`
   );
   url.searchParams.set("client_id", process.env.FACEBOOK_CLIENT_ID);
   url.searchParams.set("scope", ["email"].join(","));

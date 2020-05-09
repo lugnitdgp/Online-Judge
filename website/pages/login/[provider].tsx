@@ -37,9 +37,10 @@ class LoginPage extends React.Component<Props, State> {
     this.state = {
       error: false,
     };
+    this.googleLogin = this.googleLogin.bind(this);
   }
 
-  componentDidMount() {
+  googleLogin() {
     var self = this;
     axios
       .post("/api/login/google", {
@@ -68,6 +69,43 @@ class LoginPage extends React.Component<Props, State> {
           error: true,
         });
       });
+  }
+
+  facebookLogin() {
+    var self = this;
+    axios
+      .post("/api/login/facebook", {
+        code: this.props.code,
+      })
+      .then((res) => {
+        axios
+          .post(`${process.env.BACKEND_URL}/login`, {
+            access_token: res.data.access_token,
+            provider: "facebook",
+          })
+          .then((response) => {
+            localStorage.token = response.data.token;
+            window.location.href = "/";
+          })
+          .catch((e) => {
+            console.log(e);
+            self.setState({
+              error: true,
+            });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        self.setState({
+          error: true,
+        });
+      });
+  }
+
+  componentDidMount() {
+    if (this.props.provider == "google") this.googleLogin();
+    else if (this.props.provider == "facebook") this.facebookLogin();
+    else alert("Invalid login provider");
   }
 
   render() {

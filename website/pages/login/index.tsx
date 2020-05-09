@@ -17,7 +17,7 @@ const styles = createStyles((theme: Theme) => ({
   },
   image: {
     backgroundImage:
-      "url(https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1115&q=80)",
+      "url(https://images.unsplash.com/photo-1555099962-4199c345e5dd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80)",
     backgroundRepeat: "no-repeat",
     backgroundColor: "grey",
     backgroundSize: "cover",

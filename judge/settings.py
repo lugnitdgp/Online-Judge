@@ -44,11 +44,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'accounts',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -160,3 +162,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000','http://localhost:5000',
+]
+CORS_ORIGIN_REGEX_WHITELIST = [
+    'http://localhost:8000','http://localhost:5000',
+]

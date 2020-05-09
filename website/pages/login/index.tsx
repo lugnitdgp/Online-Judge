@@ -166,7 +166,7 @@ class LoginPage extends React.Component<Props, State> {
                   onClick={() => facebookLogin()}
                   className={classes.facebookButton}
                 >
-                  <Facebook fontSize="large" className={classes.signInIcon} />
+                  <Facebook className={classes.signInIcon} />
                   Sign in with Facebook
                 </Button>
                 {/* <Button

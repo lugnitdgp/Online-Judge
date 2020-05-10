@@ -17,6 +17,7 @@ from rest_framework.settings import api_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEST_CASE_DIR = os.path.join(BASE_DIR, "testcases")
 
 
 # Quick-start development settings - unsuitable for production

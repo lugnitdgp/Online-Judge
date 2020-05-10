@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone as t
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from shutil import rmtree
 import os
@@ -35,6 +37,9 @@ class Testcases(models.Model):
     input_test = models.TextField(blank=True, help_text="Input test case")
     output_test = models.TextField(blank=True, help_text="Output test case")
 
+    def __str__(self):
+        return ("Testcase of " + self.question.question_text)
+
     def save(self, *args, **kwargs):
         super(Testcases, self).save(*args, **kwargs)
         with open("testcases/ques{}/input{}.in".format(self.question.pk, self.pk), "w") as f:
@@ -46,10 +51,18 @@ class Testcases(models.Model):
 
     def delete(self, *args, **kwargs):
         os.remove("testcases/ques{}/input{}.in".format(self.question.pk, self.pk))
-        os.remove("testcases/ques{}/output{}.in".format(self.question.pk, self.pk))
+        os.remove("testcases/ques{}/output{}.out".format(self.question.pk, self.pk))
         super(Testcases, self).delete(*args, **kwargs)
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer_text = models.TextField(blank=True, help_text="Answer field for the questions")
 
+@receiver(pre_delete, sender=Question)
+def ques_delete(sender, instance, using, **kwargs):
+    rmtree("testcases/ques{}".format(instance.pk))
+
+@receiver(pre_delete, sender=Testcases)
+def testcases_delete(sender, instance, using, **kwargs):
+    os.remove("testcases/ques{}/input{}.in".format(instance.question.pk, instance.pk))
+    os.remove("testcases/ques{}/output{}.out".format(instance.question.pk, instance.pk))

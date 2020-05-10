@@ -5,3 +5,4 @@ admin.site.site_header = 'Online Judge GLUG'
 
 admin.site.register(Question)
 admin.site.register(Answer)
+admin.site.register(Testcases)

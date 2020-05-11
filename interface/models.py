@@ -19,10 +19,18 @@ class Config(models.Model):
 
 
 class Question(models.Model):
+    question_code = models.CharField(max_length=50,
+                                     blank=True,
+                                     help_text="Code for the question")
+    question_name = models.CharField(max_length=50,
+                                     blank=True,
+                                     help_text="Name of the question")
     question_text = models.TextField(
         blank=True, help_text="The entire text for the question")
     question_image = models.ImageField(
         blank=True, help_text="Optional Image if the question demands")
+    question_score = models.IntegerField(
+        default=0, blank=True, help_text="Score for solving this problem")
     input_example = models.TextField(
         blank=True, help_text="Example showing how should the input look")
     output_example = models.TextField(

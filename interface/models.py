@@ -35,6 +35,10 @@ class Question(models.Model):
         blank=True, help_text="Example showing how should the input look")
     output_example = models.TextField(
         blank=True, help_text="Example showing how should the output look")
+    time_limit = models.IntegerField(default=1,
+                                     help_text="Time limit for the question")
+    memory_limit = models.IntegerField(
+        default=100000, help_text="Memory limit for the question")
 
     def __str__(self):
         return self.question_text

@@ -5,12 +5,14 @@ import filecmp
 
 
 def status():
-    with open("usage.txt", "r") as f:
+    make_temp_status = "sudo cat usage.txt > temp_file"
+    os.system(make_temp_status)
+    with open("temp_file", "r") as f:
         stat = f.read().split("\n")
         return {
             'elapsed_time': int(stat[1].split(":")[1].strip().split(" ")[0]),
             'memory_taken': int(stat[2].split(":")[1].strip().split(" ")[0]),
-            'cpu_time': int(stat[3].split(":")[1].strip().split(" ")[0])
+            'cpu_time': float(stat[3].split(":")[1].strip().split(" ")[0])
         }
 
 

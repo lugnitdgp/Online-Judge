@@ -90,8 +90,8 @@ class Testcases(models.Model):
             f.close()
 
 class Job(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, blank=True, null=True,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
 
 

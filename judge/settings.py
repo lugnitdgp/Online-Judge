@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'knox',
     'accounts',
     'corsheaders',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = 'django-db'
 
 
 CORS_ORIGIN_ALLOW_ALL = True

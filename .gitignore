@@ -8,3 +8,4 @@ env/
 testcases/
 *.in
 *.out
+**/__pycache__/

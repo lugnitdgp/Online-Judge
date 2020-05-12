@@ -60,6 +60,18 @@ class Testcases(models.Model):
     def __str__(self):
         return ("Testcase of " + self.question.question_text)
 
+    def input_path(self):
+        return os.path.join(
+                    os.path.join(TEST_CASE_DIR,
+                                 "ques{}".format(self.question.pk)),
+                    "input{}.in".format(self.pk))
+    
+    def output_path(self):
+        return os.path.join(
+                    os.path.join(TEST_CASE_DIR,
+                                 "ques{}".format(self.question.pk)),
+                    "output{}.out".format(self.pk))
+    
     def save(self, *args, **kwargs):
         super(Testcases, self).save(*args, **kwargs)
         with open(
@@ -76,6 +88,11 @@ class Testcases(models.Model):
                     "output{}.out".format(self.pk)), "w") as f:
             f.write(self.output_test)
             f.close()
+
+class Job(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
 
 
 class Answer(models.Model):

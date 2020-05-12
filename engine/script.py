@@ -130,9 +130,9 @@ def run_python3(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./safeexec --usage usage.txt --exec /usr/bin/python3 " + f + " < " + input_file + " > temp/output_of_main" + ".txt"
+        command = "sudo ./engine/safeexec --usage usage.txt --exec /usr/bin/python3 " + f + " < " + input_file + " > ./engine/output.txt"
         os.system(command)
-        if (filecmp.cmp(output_file, "temp/output_of_main" + ".txt")):
+        if (filecmp.cmp(output_file, "output.txt")):
             return {  # Passed
                 "code": 0,
                 "status": status()

@@ -6,6 +6,7 @@ from interface.serializers import QuestionSerializer, QuestionListSerializer
 from interface.models import Question
 from interface.tasks import execute
 from django.core.exceptions import ObjectDoesNotExist
+import json
 # Create your views here.
 
 
@@ -33,5 +34,6 @@ def submitCode(request):
     ext = request.data.get('ext')
     code = request.data.get('code')
     question = Question.objects.all().first()
-    execute.delay(question, None, code, ext)
+    serializer = QuestionSerializer(question)
+    execute.delay(serializer.data, None, code, ext)
     return Response({'message':'pls_wait'})

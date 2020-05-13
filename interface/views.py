@@ -4,7 +4,9 @@ from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from interface.serializers import QuestionSerializer, QuestionListSerializer
 from interface.models import Question
+from interface.tasks import execute
 from django.core.exceptions import ObjectDoesNotExist
+import json
 # Create your views here.
 
 
@@ -25,3 +27,13 @@ def GetQuestion(request):
         return Response(serializer.data)
     except ObjectDoesNotExist:
         return Response({'status': 404, "message": "Question Code is Invalid"})
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def submitCode(request):
+    lang = request.data.get('lang')
+    code = request.data.get('code')
+    question = Question.objects.all().first()
+    serializer = QuestionSerializer(question)
+    execute.delay(serializer.data, None, code, lang)
+    return Response({'message':'pls_wait'})

@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import os
 import filecmp
+from judge.settings import OUTPATH_PATH, ENGINE_PATH
 
 
 def status():
@@ -17,7 +18,7 @@ def status():
 
 
 def run_c(f, input_file, output_file):
-    compilation = "gcc -o compiled_code " + f + " &> compile_log"
+    compilation = "gcc -Wno-deprecated -o compiled_code " + f + " &> compile_log"
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
@@ -26,9 +27,9 @@ def run_c(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./engine/safeexec --usage usage.txt --exec compiled_code < " + input_file + " > output.txt"
+        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec compiled_code < " + input_file + " > " + OUTPATH_PATH
         os.system(command)
-        if (filecmp.cmp(output_file, "output.txt")):
+        if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -50,9 +51,9 @@ def run_cpp(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./engine/safeexec --usage usage.txt --exec compiled_code < " + input_file + " > output.txt"
+        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec compiled_code < " + input_file + " > " + OUTPATH_PATH
         os.system(command)
-        if (filecmp.cmp(output_file, "output.txt")):
+        if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -74,9 +75,9 @@ def run_java(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./engine/safeexec --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < " + input_file + " > ./engine/output.txt"
+        command = "sudo " + ENGINE_PATH + " --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < " + input_file + " > " + OUTPATH_PATH
         os.system(command)
-        if (filecmp.cmp(output_file, "./engine/output.txt")):
+        if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -98,11 +99,9 @@ def run_python2(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./safeexec --usage usage.txt --exec /usr/bin/python2 " + f + " < " + input_file + " > output_of_" + input_file.split(
-            ".")[0] + ".txt"
+        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec /usr/bin/python2 " + f + " < " + input_file + " > " + OUTPATH_PATH
         os.system(command)
-        if (filecmp.cmp(output_file,
-                        "output_of_" + input_file.split(".")[0] + ".txt")):
+        if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -124,7 +123,7 @@ def run_python3(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./engine/safeexec --usage usage.txt --exec /usr/bin/python3 " + f + " < " + input_file + " > ./engine/output.txt"
+        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec /usr/bin/python3 " + f + " < " + input_file + " > " + OUTPATH_PATH
         os.system(command)
         if (filecmp.cmp(output_file, "./engine/output.txt")):
             return {  # Passed

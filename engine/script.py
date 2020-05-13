@@ -18,7 +18,7 @@ def status():
 
 
 def run_c(f, input_file, output_file):
-    compilation = "gcc -Wno-deprecated -o compiled_code " + f + " &> compile_log"
+    compilation = "gcc -Wno-deprecated {} -o compiled_code 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
@@ -27,7 +27,7 @@ def run_c(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec compiled_code < " + input_file + " > " + OUTPATH_PATH
+        command = "sudo {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, input_file, OUTPATH_PATH)
         os.system(command)
         if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
@@ -42,7 +42,7 @@ def run_c(f, input_file, output_file):
 
 
 def run_cpp(f, input_file, output_file):
-    compilation = "g++ -o compiled_code " + f + " &> compile_log"
+    compilation = "g++ -o compiled_code {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
@@ -51,7 +51,7 @@ def run_cpp(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec compiled_code < " + input_file + " > " + OUTPATH_PATH
+        command = "sudo {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, input_file, OUTPATH_PATH)
         os.system(command)
         if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
@@ -66,7 +66,7 @@ def run_cpp(f, input_file, output_file):
 
 
 def run_java(f, input_file, output_file):
-    compilation = "javac " + f + " &> compile_log"
+    compilation = "javac {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
@@ -75,7 +75,7 @@ def run_java(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo " + ENGINE_PATH + " --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < " + input_file + " > " + OUTPATH_PATH
+        command = "sudo {} --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, input_file, OUTPATH_PATH)
         os.system(command)
         if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
@@ -90,7 +90,7 @@ def run_java(f, input_file, output_file):
 
 
 def run_python2(f, input_file, output_file):
-    compilation = "python2 -m py_compile " + f + " &> compile_log"
+    compilation = "python2 -m py_compile {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
@@ -99,7 +99,7 @@ def run_python2(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec /usr/bin/python2 " + f + " < " + input_file + " > " + OUTPATH_PATH
+        command = "sudo {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(ENGINE_PATH, f, input_file, OUTPATH_PATH) 
         os.system(command)
         if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
@@ -114,7 +114,7 @@ def run_python2(f, input_file, output_file):
 
 
 def run_python3(f, input_file, output_file):
-    compilation = "python3 -m py_compile " + f + " &> compile_log"
+    compilation = "python3 -m py_compile {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
@@ -123,9 +123,10 @@ def run_python3(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo " + ENGINE_PATH + " --usage usage.txt --exec /usr/bin/python3 " + f + " < " + input_file + " > " + OUTPATH_PATH
+        command = "sudo {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(ENGINE_PATH, f, input_file, OUTPATH_PATH)
         os.system(command)
-        if (filecmp.cmp(output_file, "./engine/output.txt")):
+        # os.system(command)
+        if (filecmp.cmp(output_file, OUTPATH_PATH)):
             return {  # Passed
                 "code": 0,
                 "status": status()

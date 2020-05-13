@@ -51,10 +51,19 @@ def execute(question, user, code, lang):
             if (result['code'] == 1):
                 break
         db_store(question, user, net_res)
-    elif (ext == "py"):
+    elif (ext == "py" and lang=="python3"):
         net_res = []
         for tests in testcases:
             result = script.run_python3(f, tests.input_path(),
+                                        tests.output_path())
+            net_res.append(result)
+            if (result['code'] == 1):
+                break
+        db_store(question, user, net_res)
+    elif (ext == "py" and lang=="python2"):
+        net_res = []
+        for tests in testcases:
+            result = script.run_python2(f, tests.input_path(),
                                         tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):

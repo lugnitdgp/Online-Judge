@@ -31,9 +31,9 @@ def GetQuestion(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def submitCode(request):
-    ext = request.data.get('ext')
+    lang = request.data.get('lang')
     code = request.data.get('code')
     question = Question.objects.all().first()
     serializer = QuestionSerializer(question)
-    execute.delay(serializer.data, None, code, ext)
+    execute.delay(serializer.data, None, code, lang)
     return Response({'message':'pls_wait'})

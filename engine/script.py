@@ -26,11 +26,9 @@ def run_c(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./safeexec --usage usage.txt --exec compiled_code < " + input_file + " > output_of_" + input_file.split(
-            ".")[0] + ".txt"
+        command = "sudo ./engine/safeexec --usage usage.txt --exec compiled_code < " + input_file + " > output.txt"
         os.system(command)
-        if (filecmp.cmp(output_file,
-                        "output_of_" + input_file.split(".")[0] + ".txt")):
+        if (filecmp.cmp(output_file, "output.txt")):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -52,11 +50,9 @@ def run_cpp(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./safeexec --usage usage.txt --exec compiled_code < " + input_file + " > output_of_" + input_file.split(
-            ".")[0] + ".txt"
+        command = "sudo ./engine/safeexec --usage usage.txt --exec compiled_code < " + input_file + " > output.txt"
         os.system(command)
-        if (filecmp.cmp(output_file,
-                        "output_of_" + input_file.split(".")[0] + ".txt")):
+        if (filecmp.cmp(output_file, "output.txt")):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -78,11 +74,9 @@ def run_java(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo ./safeexec --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < " + input_file + " > output_of_" + input_file.split(
-            ".")[0] + ".txt"
+        command = "sudo ./engine/safeexec --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < " + input_file + " > ./engine/output.txt"
         os.system(command)
-        if (filecmp.cmp(output_file,
-                        "output_of_" + input_file.split(".")[0] + ".txt")):
+        if (filecmp.cmp(output_file, "./engine/output.txt")):
             return {  # Passed
                 "code": 0,
                 "status": status()
@@ -132,7 +126,7 @@ def run_python3(f, input_file, output_file):
     else:
         command = "sudo ./engine/safeexec --usage usage.txt --exec /usr/bin/python3 " + f + " < " + input_file + " > ./engine/output.txt"
         os.system(command)
-        if (filecmp.cmp(output_file, "output.txt")):
+        if (filecmp.cmp(output_file, "./engine/output.txt")):
             return {  # Passed
                 "code": 0,
                 "status": status()

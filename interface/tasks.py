@@ -72,4 +72,4 @@ def execute(question, user, code, lang):
     else:
         result = {"code": 3, "message": "Language not supported"}
         db_store(question, user, result)
-    os.remove(f)
+    # os.remove(f)

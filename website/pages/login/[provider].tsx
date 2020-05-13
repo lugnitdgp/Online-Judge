@@ -53,8 +53,9 @@ class LoginPage extends React.Component<Props, State> {
             provider: "google",
           })
           .then((response) => {
-            localStorage.token = response.data.token;
-            window.location.href = "/";
+            // localStorage.token = response.data.token;
+            // window.location.href = "/";
+            console.log(response.data);
           })
           .catch((e) => {
             console.log(e);

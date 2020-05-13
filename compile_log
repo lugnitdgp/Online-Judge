@@ -1,0 +1,5 @@
+  File "/home/brad272/Desktop/OJ/Online-Judge/interface/test.py", line 1
+    printff('1',end='')a
+                       ^
+SyntaxError: invalid syntax
+

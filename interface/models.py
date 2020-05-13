@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from judge.settings import TEST_CASE_DIR
 from shutil import rmtree
 import os
+from accounts.models import Coder
 
 
 class Config(models.Model):
@@ -91,7 +92,7 @@ class Testcases(models.Model):
 
 class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True,on_delete=models.CASCADE)
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
 
 

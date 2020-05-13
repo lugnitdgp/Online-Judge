@@ -89,7 +89,7 @@ class Login(generics.GenericAPIView):
                                      image_link=res['image'])
             else:
                 self.serializer_class = CoderSerializer
-                user = User.objects.get(email=res['email'])
+                self.user = User.objects.get(email=res['email'])
                 coder = Coder.objects.get(email=res['email'])
                 self.serializer = self.get_serializer(coder)
 

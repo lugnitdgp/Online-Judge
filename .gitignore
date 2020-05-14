@@ -9,3 +9,8 @@ testcases/
 *.in
 *.out
 **/__pycache__/
+test.*
+output.txt
+compile_log
+temp_file
+usage.txt

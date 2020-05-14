@@ -30,3 +30,21 @@ class Coder(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_solved(self):
+        if self.solved_ques == '':
+            return []
+        else:
+            return self.solved_ques.split(',')
+
+    def put_solved(self, ques_code):
+        solved_arr = self.get_solved()
+        solved_arr.append(ques_code)
+        self.solved_ques = ",".join(solved_arr)
+
+    def check_solved(self, ques_code):
+        solved_arr = self.get_solved()
+        for solved in solved_arr:
+            if solved == ques_code:
+                return True
+        return False

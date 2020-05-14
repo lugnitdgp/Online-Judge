@@ -94,6 +94,8 @@ class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True,on_delete=models.CASCADE)
     coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
+    AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
+    WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
 
 
 class Answer(models.Model):

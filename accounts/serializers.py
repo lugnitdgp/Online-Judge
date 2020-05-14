@@ -22,4 +22,4 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class CoderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coder
-        fields = ('name','first_name','email','image_link','score')
+        fields = ('name','first_name','email','image_link','score','solved_ques')

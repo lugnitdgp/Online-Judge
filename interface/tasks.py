@@ -9,8 +9,8 @@ import os
 import json
 
 
-def db_store(question, user, result):
-    j = Job(question=question, coder=user, status=json.dumps(result))
+def db_store(question, user, result, ac, wa):
+    j = Job(question=question, coder=user, status=json.dumps(result), AC_no = ac, WA_no = wa)
     j.save()
 
 
@@ -37,6 +37,7 @@ def execute(question, coder, code, lang):
     question = Question.objects.get(question_name=question['question_name'])
     user = Coder.objects.get(name = coder['name'])
     testcases = Testcases.objects.filter(question=question)
+    ac, wa = 0,0
     if (ext == "c"):
         net_res = []
         for tests in testcases:
@@ -44,7 +45,11 @@ def execute(question, coder, code, lang):
             net_res.append(result)
             if (result['code'] == 1):
                 break
-        db_store(question, user, net_res)
+            elif (result['code'] == 0):
+                ac+=1
+            else:
+                wa+=1
+        db_store(question, user, net_res, ac, wa)
     elif (ext == "cpp"):
         net_res = []
         for tests in testcases:
@@ -52,7 +57,11 @@ def execute(question, coder, code, lang):
             net_res.append(result)
             if (result['code'] == 1):
                 break
-        db_store(question, user, net_res)
+            elif (result['code'] == 0):
+                ac+=1
+            else:
+                wa+=1
+        db_store(question, user, net_res, ac, wa)
     elif (ext == "py" and lang == "python3"):
         net_res = []
         for tests in testcases:
@@ -61,7 +70,11 @@ def execute(question, coder, code, lang):
             net_res.append(result)
             if (result['code'] == 1):
                 break
-        db_store(question, user, net_res)
+            elif (result['code'] == 0):
+                ac+=1
+            else:
+                wa+=1
+        db_store(question, user, net_res, ac, wa)
     elif (ext == "py" and lang == "python2"):
         net_res = []
         for tests in testcases:
@@ -70,7 +83,11 @@ def execute(question, coder, code, lang):
             net_res.append(result)
             if (result['code'] == 1):
                 break
-        db_store(question, user, net_res)
+            elif (result['code'] == 0):
+                ac+=1
+            else:
+                wa+=1
+        db_store(question, user, net_res, ac, wa)
     elif (ext == "java"):
         net_res = []
         for tests in testcases:
@@ -79,8 +96,12 @@ def execute(question, coder, code, lang):
             net_res.append(result)
             if (result['code'] == 1):
                 break
-        db_store(question, user, result)
+            elif (result['code'] == 0):
+                ac+=1
+            else:
+                wa+=1
+        db_store(question, user, net_res, ac, wa)
     else:
         result = {"code": 3, "message": "Language not supported"}
-        db_store(question, user, result)
-    # os.remove(f)
+        db_store(question, user, result, ac, wa)
+    os.remove(f)

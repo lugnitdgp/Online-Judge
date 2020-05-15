@@ -10,7 +10,11 @@ import json
 
 
 def db_store(question, user, result, ac, wa):
-    j = Job(question=question, coder=user, status=json.dumps(result), AC_no = ac, WA_no = wa)
+    j = Job(question=question,
+            coder=user,
+            status=json.dumps(result),
+            AC_no=ac,
+            WA_no=wa)
     j.save()
 
 
@@ -35,71 +39,80 @@ def execute(question, coder, code, lang):
         print("Exception")
     f = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
     question = Question.objects.get(question_name=question['question_name'])
-    user = Coder.objects.get(name = coder['name'])
+    user = Coder.objects.get(name=coder['name'])
     testcases = Testcases.objects.filter(question=question)
-    ac, wa = 0,0
+    ac, wa = 0, 0
     if (ext == "c"):
         net_res = []
         for tests in testcases:
-            result = script.run_c(f, tests.input_path(), tests.output_path())
+            result = script.run_c(f, question.time_limit,
+                                  question.memory_limit, tests.input_path(),
+                                  tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break
-            elif (result['code'] == 0):
-                ac+=1
-            else:
-                wa+=1
+            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
+                ac += 1
+            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
+                wa += 1
         db_store(question, user, net_res, ac, wa)
     elif (ext == "cpp"):
         net_res = []
         for tests in testcases:
-            result = script.run_cpp(f, tests.input_path(), tests.output_path())
+            result = script.run_cpp(f, question.time_limit,
+                                    question.memory_limit, tests.input_path(),
+                                    tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break
-            elif (result['code'] == 0):
-                ac+=1
-            else:
-                wa+=1
+            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
+                ac += 1
+            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
+                wa += 1
         db_store(question, user, net_res, ac, wa)
     elif (ext == "py" and lang == "python3"):
         net_res = []
         for tests in testcases:
-            result = script.run_python3(f, tests.input_path(),
+            result = script.run_python3(f, question.time_limit,
+                                        question.memory_limit,
+                                        tests.input_path(),
                                         tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break
-            elif (result['code'] == 0):
-                ac+=1
-            else:
-                wa+=1
+            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
+                ac += 1
+            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
+                wa += 1
         db_store(question, user, net_res, ac, wa)
     elif (ext == "py" and lang == "python2"):
         net_res = []
         for tests in testcases:
-            result = script.run_python2(f, tests.input_path(),
+            result = script.run_python2(f, question.time_limit,
+                                        question.memory_limit,
+                                        tests.input_path(),
                                         tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break
-            elif (result['code'] == 0):
-                ac+=1
-            else:
-                wa+=1
+            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
+                ac += 1
+            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
+                wa += 1
         db_store(question, user, net_res, ac, wa)
     elif (ext == "java"):
         net_res = []
         for tests in testcases:
-            result = script.run_java(f, tests.input_path(),
+            result = script.run_java(f, question.time_limit,
+                                     question.memory_limit, tests.input_path(),
                                      tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break
-            elif (result['code'] == 0):
-                ac+=1
-            else:
-                wa+=1
+            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
+                ac += 1
+            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
+                wa += 1
         db_store(question, user, net_res, ac, wa)
     else:
         result = {"code": 3, "message": "Language not supported"}

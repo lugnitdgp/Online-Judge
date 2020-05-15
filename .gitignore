@@ -12,5 +12,6 @@ testcases/
 test.*
 output.txt
 compile_log
+compiled_code
 temp_file
 usage.txt

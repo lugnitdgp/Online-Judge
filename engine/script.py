@@ -11,13 +11,14 @@ def status():
     with open("temp_file", "r") as f:
         stat = f.read().split("\n")
         return {
+            'run_status': stat[0],
             'elapsed_time': int(stat[1].split(":")[1].strip().split(" ")[0]),
             'memory_taken': int(stat[2].split(":")[1].strip().split(" ")[0]),
             'cpu_time': float(stat[3].split(":")[1].strip().split(" ")[0])
         }
 
 
-def run_c(f, input_file, output_file):
+def run_c(f, time, mem, input_file, output_file):
     compilation = "gcc -Wno-deprecated {} -o compiled_code 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -27,21 +28,31 @@ def run_c(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, OUTPATH_PATH)
         os.system(command)
-        if (filecmp.cmp(output_file, OUTPATH_PATH)):
-            return {  # Passed
-                "code": 0,
-                "status": status()
-            }
+        stat = status()
+        print(stat)
+        if stat['run_status'] == "OK":
+            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+                stat['run_status'] = "AC"
+                return {  # Passed
+                    "code": 0,
+                    "status": stat
+                }
+            else:
+                stat['run_status'] = "WA"
+                return {  # Failed
+                    "code": 0,
+                    "status": stat
+                }
         else:
-            return {  # Failed
-                "code": 2,
-                "status": status()
+            return {
+                "code" : 2,
+                "status" : stat
             }
 
 
-def run_cpp(f, input_file, output_file):
+def run_cpp(f, time, mem, input_file, output_file):
     compilation = "g++ -o compiled_code {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -51,21 +62,30 @@ def run_cpp(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, OUTPATH_PATH)
         os.system(command)
-        if (filecmp.cmp(output_file, OUTPATH_PATH)):
-            return {  # Passed
-                "code": 0,
-                "status": status()
-            }
+        stat = status()
+        if stat['run_status'] == "OK":
+            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+                stat['run_status'] = "AC"
+                return {  # Passed
+                    "code": 0,
+                    "status": stat
+                }
+            else:
+                stat['run_status'] = "WA"
+                return {  # Failed
+                    "code": 0,
+                    "status": stat
+                }
         else:
-            return {  # Failed
-                "code": 2,
-                "status": status()
+            return {
+                "code" : 2,
+                "status" : stat
             }
 
 
-def run_java(f, input_file, output_file):
+def run_java(f, time, mem, input_file, output_file):
     compilation = "javac {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -75,21 +95,30 @@ def run_java(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu 1 --mem 1000000 --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, time, mem, input_file, OUTPATH_PATH)
         os.system(command)
-        if (filecmp.cmp(output_file, OUTPATH_PATH)):
-            return {  # Passed
-                "code": 0,
-                "status": status()
-            }
+        stat = status()
+        if stat['run_status'] == "OK":
+            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+                stat['run_status'] = "AC"
+                return {  # Passed
+                    "code": 0,
+                    "status": stat
+                }
+            else:
+                stat['run_status'] = "WA"
+                return {  # Failed
+                    "code": 0,
+                    "status": stat
+                }
         else:
-            return {  # Failed
-                "code": 2,
-                "status": status()
+            return {
+                "code" : 2,
+                "status" : stat
             }
 
 
-def run_python2(f, input_file, output_file):
+def run_python2(f, time, mem, input_file, output_file):
     compilation = "python2 -m py_compile {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -99,21 +128,31 @@ def run_python2(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(ENGINE_PATH, f, input_file, OUTPATH_PATH) 
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, OUTPATH_PATH) 
         os.system(command)
-        if (filecmp.cmp(output_file, OUTPATH_PATH)):
-            return {  # Passed
-                "code": 0,
-                "status": status()
-            }
+        stat = status()
+        if stat['run_status'] == "OK":
+            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+                stat['run_status'] = "AC"
+                return {  # Passed
+                    "code": 0,
+                    "status": stat
+                }
+            else:
+                stat['run_status'] = "WA"
+                return {  # Failed
+                    "code": 0,
+                    "status": stat
+                }
         else:
-            return {  # Failed
-                "code": 2,
-                "status": status()
+            return {
+                "code" : 2,
+                "status" : stat
             }
 
 
-def run_python3(f, input_file, output_file):
+
+def run_python3(f, time, mem, input_file, output_file):
     compilation = "python3 -m py_compile {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -123,16 +162,25 @@ def run_python3(f, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(ENGINE_PATH, f, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, OUTPATH_PATH)
         os.system(command)
-        # os.system(command)
-        if (filecmp.cmp(output_file, OUTPATH_PATH)):
-            return {  # Passed
-                "code": 0,
-                "status": status()
-            }
+        os.system(command)
+        stat = status()
+        if stat['run_status'] == "OK":
+            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+                stat['run_status'] = "AC"
+                return {  # Passed
+                    "code": 0,
+                    "status": stat
+                }
+            else:
+                stat['run_status'] = "WA"
+                return {  # Failed
+                    "code": 0,
+                    "status": stat
+                }
         else:
-            return {  # Failed
-                "code": 2,
-                "status": status()
+            return {
+                "code" : 2,
+                "status" : stat
             }

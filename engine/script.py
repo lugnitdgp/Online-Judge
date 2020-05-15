@@ -2,7 +2,7 @@ import argparse
 import subprocess
 import os
 import filecmp
-from judge.settings import OUTPATH_PATH, ENGINE_PATH
+from judge.settings import ENGINE_PATH
 
 
 def status():
@@ -18,7 +18,7 @@ def status():
         }
 
 
-def run_c(f, time, mem, input_file, output_file):
+def run_c(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "gcc -Wno-deprecated {} -o compiled_code 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -28,31 +28,33 @@ def run_c(f, time, mem, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
         stat = status()
-        print(stat)
+        res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+            if (filecmp.cmp(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
-                return {  # Passed
+                res = {  # Passed
                     "code": 0,
                     "status": stat
                 }
             else:
                 stat['run_status'] = "WA"
-                return {  # Failed
+                res = {  # Failed
                     "code": 0,
                     "status": stat
                 }
         else:
-            return {
+            res = {
                 "code" : 2,
                 "status" : stat
             }
+        os.remove(temp_output_file)
+        return res
 
 
-def run_cpp(f, time, mem, input_file, output_file):
+def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "g++ -o compiled_code {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -62,30 +64,33 @@ def run_cpp(f, time, mem, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
         stat = status()
+        res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+            if (filecmp.cmp(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
-                return {  # Passed
+                res = {  # Passed
                     "code": 0,
                     "status": stat
                 }
             else:
                 stat['run_status'] = "WA"
-                return {  # Failed
+                res = {  # Failed
                     "code": 0,
                     "status": stat
                 }
         else:
-            return {
+            res = {
                 "code" : 2,
                 "status" : stat
             }
+        os.remove(temp_output_file)
+        return res
 
 
-def run_java(f, time, mem, input_file, output_file):
+def run_java(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "javac {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -95,30 +100,32 @@ def run_java(f, time, mem, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, time, mem, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
-        stat = status()
+        res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+            if (filecmp.cmp(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
-                return {  # Passed
+                res = {  # Passed
                     "code": 0,
                     "status": stat
                 }
             else:
                 stat['run_status'] = "WA"
-                return {  # Failed
+                res = {  # Failed
                     "code": 0,
                     "status": stat
                 }
         else:
-            return {
+            res = {
                 "code" : 2,
                 "status" : stat
             }
+        os.remove(temp_output_file)
+        return res
 
 
-def run_python2(f, time, mem, input_file, output_file):
+def run_python2(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "python2 -m py_compile {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -128,31 +135,34 @@ def run_python2(f, time, mem, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, OUTPATH_PATH) 
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, temp_output_file) 
         os.system(command)
         stat = status()
+        res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+            if (filecmp.cmp(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
-                return {  # Passed
+                res = {  # Passed
                     "code": 0,
                     "status": stat
                 }
             else:
                 stat['run_status'] = "WA"
-                return {  # Failed
+                res = {  # Failed
                     "code": 0,
                     "status": stat
                 }
         else:
-            return {
+            res = {
                 "code" : 2,
                 "status" : stat
             }
+        os.remove(temp_output_file)
+        return res
 
 
 
-def run_python3(f, time, mem, input_file, output_file):
+def run_python3(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "python3 -m py_compile {} 2> compile_log".format(f)
     os.system(compilation)
     if (os.stat("compile_log").st_size != 0):
@@ -162,25 +172,28 @@ def run_python3(f, time, mem, input_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, OUTPATH_PATH)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, temp_output_file)
         os.system(command)
         os.system(command)
         stat = status()
+        res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, OUTPATH_PATH)):
+            if (filecmp.cmp(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
-                return {  # Passed
+                res = {  # Passed
                     "code": 0,
                     "status": stat
                 }
             else:
                 stat['run_status'] = "WA"
-                return {  # Failed
+                res = {  # Failed
                     "code": 0,
                     "status": stat
                 }
         else:
-            return {
+            res = {
                 "code" : 2,
                 "status" : stat
             }
+        os.remove(temp_output_file)
+        return res

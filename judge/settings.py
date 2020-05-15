@@ -19,7 +19,7 @@ from rest_framework.settings import api_settings
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEST_CASE_DIR = os.path.join(BASE_DIR, "testcases")
 ENGINE_PATH = os.path.join(os.path.join(BASE_DIR,"engine"),"safeexec")
-OUTPATH_PATH = os.path.join(os.path.join(BASE_DIR,"engine"),"output.txt")
+OUTPATH_DIR = os.path.join(BASE_DIR,"engine")
 
 
 # Quick-start development settings - unsuitable for production

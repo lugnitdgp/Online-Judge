@@ -73,19 +73,20 @@ class Testcases(models.Model):
 
     def save(self, *args, **kwargs):
         super(Testcases, self).save(*args, **kwargs)
+        print(self.output_test.__str__())
         with open(
                 os.path.join(
                     os.path.join(TEST_CASE_DIR,
                                  "ques{}".format(self.question.pk)),
                     "input{}.in".format(self.pk)), "w") as f:
-            f.write(self.input_test)
+            f.write(self.input_test.replace("\\n","\n"))
             f.close()
         with open(
                 os.path.join(
                     os.path.join(TEST_CASE_DIR,
                                  "ques{}".format(self.question.pk)),
                     "output{}.out".format(self.pk)), "w") as f:
-            f.write(self.output_test)
+            f.write(self.output_test.replace("\\n","\n"))
             f.close()
 
 

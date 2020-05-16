@@ -27,7 +27,7 @@ export default ({}) => {
   const [postBody, setPostBody] = useState("");
   const [language, setLanguage] = useState("python");
   const handleSubmit = () => {
-    console.log(postBody);
+    console.log(encodeURI(postBody));
   };
 
   return (

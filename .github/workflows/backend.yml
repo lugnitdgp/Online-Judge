@@ -46,7 +46,7 @@ jobs:
     - name: Running remote SSH commands
       uses: JimCronqvist/action-ssh@master
       with:
-        host: 'ubuntu@54.144.213.36'
+        hosts: 'ubuntu@54.144.213.36'
         privatekey: ${{ secrets.SSHKEY }}
         command: |
                 cd OJ/Online-Judge/

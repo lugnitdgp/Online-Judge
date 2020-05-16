@@ -1,44 +1,63 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardActions,
   Button,
+  TextField,
+  MenuItem,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import {} from "@material-ui/icons";
-import * as monaco from "monaco-editor";
+import dynamic from "next/dynamic";
+const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
 
-const styles = makeStyles(() => ({
-  root: {
-    height: "50vh",
-    width: "60vw",
-  },
-}));
+// const styles = makeStyles(() => ({
+//   root: {
+//     height: "50vh",
+//     width: "60vw",
+//   },
+// }));
+
+const languages = ["python", "javascript", "typescript"];
 
 export default ({}) => {
-  const classes = styles();
-  var editor: any;
-  const [value, setValue] = useState("");
-
-  useEffect(() => {
-    editor = monaco.editor.create(document.getElementById("container"), {
-      value: value,
-      language: "javascript",
-    });
-  }, []);
-
+  //const classes = styles();
+  const [postBody, setPostBody] = useState("");
+  const [language, setLanguage] = useState("python");
   const handleSubmit = () => {
-    setValue(editor.getValue());
-    console.log(value);
+    console.log(postBody);
   };
 
   return (
     <Card>
       <CardHeader title="Code editor" />
       <CardContent>
-        <div id="container" className={classes.root}></div>
+        <MonacoEditor
+          editorDidMount={() => {
+            // @ts-ignore
+            window.MonacoEnvironment.getWorkerUrl = (
+              _moduleId: string,
+              label: string
+            ) => {
+              if (label === "typescript" || label === "javascript")
+                return "_next/static/ts.worker.js";
+              return "_next/static/editor.worker.js";
+            };
+          }}
+          width="800"
+          height="600"
+          language={language}
+          theme="vs-dark"
+          value={postBody}
+          options={{
+            minimap: {
+              enabled: false,
+            },
+          }}
+          onChange={setPostBody}
+        />
       </CardContent>
       <CardActions>
         <Button color="primary">Run {"&"} Test</Button>
@@ -49,6 +68,22 @@ export default ({}) => {
         >
           Submit
         </Button>
+        <TextField
+          id="outlined-select-currency"
+          select
+          label="Select Language"
+          fullWidth
+          margin="dense"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          variant="outlined"
+        >
+          {languages.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
       </CardActions>
     </Card>
   );

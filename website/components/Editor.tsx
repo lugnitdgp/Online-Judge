@@ -20,7 +20,7 @@ const MonacoEditor = dynamic(import("react-monaco-editor"), { ssr: false });
 //   },
 // }));
 
-const languages = ["python", "javascript", "typescript"];
+const languages = ["python", "javascript", "typescript","cpp","java","objective-c"];
 
 export default ({}) => {
   //const classes = styles();

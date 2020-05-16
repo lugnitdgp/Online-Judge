@@ -26,6 +26,9 @@ module.exports = withTM({
           "typescript",
           "javascript",
           "python",
+          "cpp",
+          "java",
+          "objective-c"
         ],
         filename: "static/[name].worker.js",
       })

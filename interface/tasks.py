@@ -10,12 +10,13 @@ import json
 from judge.settings import OUTPATH_DIR
 
 
-def db_store(question, user, result, ac, wa):
+def db_store(question, user, result, ac, wa,job_id):
     j = Job(question=question,
             coder=user,
             status=json.dumps(result),
             AC_no=ac,
-            WA_no=wa)
+            WA_no=wa,
+            job_id=job_id)
     j.save()
 
 
@@ -60,7 +61,7 @@ def execute(question, coder, code, lang):
             elif (result['code'] == 0
                   and result['status']['run_status'] == "WA"):
                 wa += 1
-        db_store(question, user, net_res, ac, wa)
+        db_store(question, user, net_res, ac, wa, execute.request.id.__str__())
     elif (ext == "cpp"):
         net_res = []
         for tests in testcases:
@@ -77,7 +78,7 @@ def execute(question, coder, code, lang):
             elif (result['code'] == 0
                   and result['status']['run_status'] == "WA"):
                 wa += 1
-        db_store(question, user, net_res, ac, wa)
+        db_store(question, user, net_res, ac, wa, execute.request.id.__str__())
     elif (ext == "py" and lang == "python3"):
         net_res = []
         for tests in testcases:
@@ -94,7 +95,7 @@ def execute(question, coder, code, lang):
             elif (result['code'] == 0
                   and result['status']['run_status'] == "WA"):
                 wa += 1
-        db_store(question, user, net_res, ac, wa)
+        db_store(question, user, net_res, ac, wa, execute.request.id.__str__())
     elif (ext == "py" and lang == "python2"):
         net_res = []
         for tests in testcases:
@@ -111,7 +112,7 @@ def execute(question, coder, code, lang):
             elif (result['code'] == 0
                   and result['status']['run_status'] == "WA"):
                 wa += 1
-        db_store(question, user, net_res, ac, wa)
+        db_store(question, user, net_res, ac, wa, execute.request.id.__str__())
     elif (ext == "java"):
         net_res = []
         for tests in testcases:
@@ -127,8 +128,8 @@ def execute(question, coder, code, lang):
             elif (result['code'] == 0
                   and result['status']['run_status'] == "WA"):
                 wa += 1
-        db_store(question, user, net_res, ac, wa)
+        db_store(question, user, net_res, ac, wa, execute.request.id.__str__())
     else:
         result = {"code": 3, "message": "Language not supported"}
-        db_store(question, user, result, ac, wa)
+        db_store(question, user, result, ac, wa, execute.request.id.__str__())
     os.remove(f)

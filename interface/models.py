@@ -63,16 +63,14 @@ class Testcases(models.Model):
 
     def input_path(self):
         return os.path.join(
-                    os.path.join(TEST_CASE_DIR,
-                                 "ques{}".format(self.question.pk)),
-                    "input{}.in".format(self.pk))
-    
+            os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
+            "input{}.in".format(self.pk))
+
     def output_path(self):
         return os.path.join(
-                    os.path.join(TEST_CASE_DIR,
-                                 "ques{}".format(self.question.pk)),
-                    "output{}.out".format(self.pk))
-    
+            os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
+            "output{}.out".format(self.pk))
+
     def save(self, *args, **kwargs):
         super(Testcases, self).save(*args, **kwargs)
         with open(
@@ -90,12 +88,29 @@ class Testcases(models.Model):
             f.write(self.output_test)
             f.close()
 
+
 class Job(models.Model):
-    question = models.ForeignKey(Question, blank=True, null=True,on_delete=models.CASCADE)
-    coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
-    status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
-    AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
-    WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
+    question = models.ForeignKey(Question,
+                                 blank=True,
+                                 null=True,
+                                 on_delete=models.CASCADE)
+    coder = models.ForeignKey(Coder,
+                              blank=True,
+                              null=True,
+                              on_delete=models.CASCADE)
+    status = models.TextField(
+        blank=True, help_text="Status in json format. Please don't touch it.")
+    AC_no = models.IntegerField(
+        default=0, help_text="Number of correct answers for this job")
+    WA_no = models.IntegerField(
+        default=0, help_text="Number of wrong answers for this job")
+    job_id = models.CharField(max_length=200,
+                              null=True,
+                              unique=True,
+                              help_text="Celery Job id for the current task")
+
+    def __str__(self):
+        return self.question.question_code + " " + self.coder.name
 
 
 class Answer(models.Model):

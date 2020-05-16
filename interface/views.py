@@ -45,21 +45,24 @@ def submitCode(request):
     try:
         question = Question.objects.get(question_code=request.data.get('q_id'))
         coder = Coder.objects.get(user=request.user)
-        execute.delay(
+        task = execute.delay(
             QuestionSerializer(question).data,
             CoderSerializer(coder).data, code, lang)
-        return Response({'message': 'pls_wait'})
+        return Response({'message': 'pls_wait', 'task_id': task.id})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def status(request):
     try:
-        coder = Coder.objects.get(user = request.user)
-        question = Question.objects.get(question_code = request.data.get('q_id'))
-        job = Job.objects.get(coder = coder, question = question)
-        if job.AC_no == Testcases.objects.filter(question = question).count():
+        coder = Coder.objects.get(user=request.user)
+        question = Question.objects.get(question_code=request.data.get('q_id'))
+        job = Job.objects.get(coder=coder,
+                              question=question,
+                              job_id=request.data.get('task_id'))
+        if job.AC_no == Testcases.objects.filter(question=question).count():
             if coder.check_solved(question.question_code) == False:
                 coder.put_solved(question.question_code)
                 coder.score += question.question_score
@@ -68,4 +71,7 @@ def status(request):
         job.delete()
         return Response(res)
     except Job.DoesNotExist:
-        return Response({'status':302, 'message':'Please wait. Answer being processed'})
+        return Response({
+            'status': 302,
+            'message': 'Please wait. Answer being processed'
+        })

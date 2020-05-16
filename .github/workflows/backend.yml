@@ -51,17 +51,12 @@ jobs:
         command: |
                 cd OJ/Online-Judge/
                 git pull
-                echo "Pulled the latest version"
                 source ../env/bin/activate
-                echo "Activated virtual environment"
+                pip install -r requirements.txt
                 python manage.py makemigrations
-                echo "Made migrations on server"
                 python manage.py migrate --run-syncdb
-                echo "Migrate and sync db on server"
                 sudo systemctl restart gunicorn
-                sudo systemctl restart nginx
-                echo "Restart Gunicorn and Nginx"
                 deactivate
-                echo "Deactivate Virtual environment"
-                sudo supervisorctl restart mailcelery
-                echo "Restart celery server"
+                cd ~
+                sudo supervisorctl stop mailcelery
+                sudo supervisorctl start mailcelery

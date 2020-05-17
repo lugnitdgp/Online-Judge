@@ -15,3 +15,5 @@ compile_log
 compiled_code
 temp_file
 usage.txt
+interface/migrations/
+accounts/migrations

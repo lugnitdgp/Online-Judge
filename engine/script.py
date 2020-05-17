@@ -17,6 +17,12 @@ def status():
             'cpu_time': float(stat[3].split(":")[1].strip().split(" ")[0])
         }
 
+def compare(path1, path2):
+    with open(path1) as f1, open(path2) as f2:
+        if f1.read() == f2.read():
+            return True
+        else:
+            return False
 
 def run_c(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "gcc -Wno-deprecated {} -o compiled_code 2> compile_log".format(f)
@@ -33,7 +39,7 @@ def run_c(f, time, mem, input_file, temp_output_file, output_file):
         stat = status()
         res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, temp_output_file)):
+            if (compare(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
                 res = {  # Passed
                     "code": 0,
@@ -69,7 +75,7 @@ def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
         stat = status()
         res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, temp_output_file)):
+            if (compare(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
                 res = {  # Passed
                     "code": 0,
@@ -86,7 +92,7 @@ def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
                 "code" : 2,
                 "status" : stat
             }
-        os.remove(temp_output_file)
+        # os.remove(temp_output_file)
         return res
 
 
@@ -103,8 +109,9 @@ def run_java(f, time, mem, input_file, temp_output_file, output_file):
         command = "sudo {} --cpu {} --mem {} --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
         res = None
+        stat = status()
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, temp_output_file)):
+            if (compare(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
                 res = {  # Passed
                     "code": 0,
@@ -140,7 +147,7 @@ def run_python2(f, time, mem, input_file, temp_output_file, output_file):
         stat = status()
         res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, temp_output_file)):
+            if (compare(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
                 res = {  # Passed
                     "code": 0,
@@ -178,7 +185,7 @@ def run_python3(f, time, mem, input_file, temp_output_file, output_file):
         stat = status()
         res = None
         if stat['run_status'] == "OK":
-            if (filecmp.cmp(output_file, temp_output_file)):
+            if (compare(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
                 res = {  # Passed
                     "code": 0,

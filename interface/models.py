@@ -73,7 +73,6 @@ class Testcases(models.Model):
 
     def save(self, *args, **kwargs):
         super(Testcases, self).save(*args, **kwargs)
-        print(self.output_test.__str__())
         with open(
                 os.path.join(
                     os.path.join(TEST_CASE_DIR,

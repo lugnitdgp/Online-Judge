@@ -49,7 +49,7 @@ def execute(question, coder, code, lang):
         net_res = []
         for tests in testcases:
             result = script.run_c(f,
-                                  question.time_limit, question.memory_limit,
+                                  question.c_time_limit, question.c_mem_limit,
                                   tests.input_path(), temp_output_file,
                                   tests.output_path())
             net_res.append(result)
@@ -66,7 +66,7 @@ def execute(question, coder, code, lang):
         net_res = []
         for tests in testcases:
             result = script.run_cpp(f,
-                                    question.time_limit, question.memory_limit,
+                                    question.cpp_time_limit, question.cpp_mem_limit,
                                     tests.input_path(), temp_output_file,
                                     tests.output_path())
             net_res.append(result)
@@ -82,8 +82,8 @@ def execute(question, coder, code, lang):
     elif (ext == "py" and lang == "python3"):
         net_res = []
         for tests in testcases:
-            result = script.run_python3(f, question.time_limit,
-                                        question.memory_limit,
+            result = script.run_python3(f, question.python_time_limit,
+                                        question.python_mem_limit,
                                         tests.input_path(), temp_output_file,
                                         tests.output_path())
             net_res.append(result)
@@ -99,8 +99,8 @@ def execute(question, coder, code, lang):
     elif (ext == "py" and lang == "python2"):
         net_res = []
         for tests in testcases:
-            result = script.run_python2(f, question.time_limit,
-                                        question.memory_limit,
+            result = script.run_python2(f, question.python_time_limit,
+                                        question.python_mem_limit,
                                         tests.input_path(), temp_output_file,
                                         tests.output_path())
             net_res.append(result)
@@ -116,8 +116,8 @@ def execute(question, coder, code, lang):
     elif (ext == "java"):
         net_res = []
         for tests in testcases:
-            result = script.run_java(f, question.time_limit,
-                                     question.memory_limit, tests.input_path(),
+            result = script.run_java(f, question.java_time_limit,
+                                     question.java_mem_limit, tests.input_path(),
                                      temp_output_file, tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):

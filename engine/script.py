@@ -106,7 +106,7 @@ def run_java(f, time, mem, input_file, temp_output_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --nproc 20 --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
+        command = "sudo {} --cpu {} --mem {} --nproc 20 --usage usage.txt --exec /usr/bin/java test < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
         res = None
         stat = status()

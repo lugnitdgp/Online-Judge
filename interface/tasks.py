@@ -7,10 +7,10 @@ from judge.celery import app
 from engine import script
 import os
 import json
-from judge.settings import OUTPATH_DIR
+from judge.settings import OUTPATH_DIR, ENGINE_PATH
 
 
-def db_store(question, user, result, ac, wa,job_id):
+def db_store(question, user, result, ac, wa, job_id):
     j = Job(question=question,
             coder=user,
             status=json.dumps(result),
@@ -32,18 +32,18 @@ def execute(question, coder, code, lang):
     ext = language[lang]
     filename = execute.request.id.__str__() + "." + ext
     try:
-        with open(
-                os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                             filename), "w+") as file:
+        with open(os.path.join(os.path.dirname(ENGINE_PATH), filename),
+                  "w+") as file:
             file.write(code)
             file.close()
     except:
         print("Exception")
-    f = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
+    f = os.path.join(os.path.dirname(ENGINE_PATH), filename)
     question = Question.objects.get(question_name=question['question_name'])
     user = Coder.objects.get(name=coder['name'])
     testcases = Testcases.objects.filter(question=question)
-    temp_output_file = os.path.join(OUTPATH_DIR, execute.request.id.__str__()+".txt")
+    temp_output_file = os.path.join(OUTPATH_DIR,
+                                    execute.request.id.__str__() + ".txt")
     ac, wa = 0, 0
     if (ext == "c"):
         net_res = []
@@ -65,10 +65,9 @@ def execute(question, coder, code, lang):
     elif (ext == "cpp"):
         net_res = []
         for tests in testcases:
-            result = script.run_cpp(f,
-                                    question.cpp_time_limit, question.cpp_mem_limit,
-                                    tests.input_path(), temp_output_file,
-                                    tests.output_path())
+            result = script.run_cpp(f, question.cpp_time_limit,
+                                    question.cpp_mem_limit, tests.input_path(),
+                                    temp_output_file, tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break
@@ -117,8 +116,9 @@ def execute(question, coder, code, lang):
         net_res = []
         for tests in testcases:
             result = script.run_java(f, question.java_time_limit,
-                                     question.java_mem_limit, tests.input_path(),
-                                     temp_output_file, tests.output_path())
+                                     question.java_mem_limit,
+                                     tests.input_path(), temp_output_file,
+                                     tests.output_path())
             net_res.append(result)
             if (result['code'] == 1):
                 break

@@ -1,14 +1,8 @@
 import React from "react";
 import axios from 'axios';
 
-interface Props { }
-
-interface State {
-    list: null;
-}
-
-class questionlist extends React.Component<Props, State> {
-    constructor(props: Props) {
+class questionlist extends React.Component{
+    constructor(props) {
         super(props);
         this.state = { list: null };
     }
@@ -17,13 +11,14 @@ class questionlist extends React.Component<Props, State> {
         let headers = {
             'Authorization': `Token ${localStorage.token}`
         };
-        try {
-            var response = axios.get(`${process.env.BACKEND_URL}/api/questions`, { headers: headers });
-            this.setState({ list: response.data });
-        } catch (error) {
-            console.log(error);
-        }
+        axios.get(`${process.env.BACKEND_URL}/api/questions`, { headers: headers })
+            .then((res) => this.setState({ list: res.data }))
+            .catch((error) => {
+                console.log(error);
+            });
     }
+
+    
     render() {
         return (
             this.state.list ? <div>

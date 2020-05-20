@@ -19,6 +19,6 @@
       "target": "esnext"
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts", "**/*.tsx"]
+    "include": ["**/*.ts", "**/*.tsx", "pages/question/index.jsx", "pages/question/[question].jsx"]
   }
   

@@ -36,10 +36,22 @@ class Question(models.Model):
         blank=True, help_text="Example showing how should the input look")
     output_example = models.TextField(
         blank=True, help_text="Example showing how should the output look")
-    time_limit = models.IntegerField(default=1,
-                                     help_text="Time limit for the question")
-    memory_limit = models.IntegerField(
-        default=100000, help_text="Memory limit for the question")
+    c_time_limit = models.IntegerField(
+        default=1, help_text="Time Limit of the question for C")
+    c_mem_limit = models.BigIntegerField(default=100000,
+                                         help_text="Memory Limit for C")
+    cpp_time_limit = models.IntegerField(
+        default=1, help_text="Time Limit of the question for C++")
+    cpp_mem_limit = models.BigIntegerField(default=100000,
+                                           help_text="Memory Limit for C++")
+    python_time_limit = models.IntegerField(
+        default=2, help_text="Time Limit of the question for Python")
+    python_mem_limit = models.BigIntegerField(
+        default=500000, help_text="Memory Limit for Python")
+    java_time_limit = models.IntegerField(
+        default=2, help_text="Time Limit of the question for JAVA")
+    java_mem_limit = models.BigIntegerField(default=500000,
+                                            help_text="Memory Limit for JAVA")
 
     def __str__(self):
         return self.question_text
@@ -78,14 +90,14 @@ class Testcases(models.Model):
                     os.path.join(TEST_CASE_DIR,
                                  "ques{}".format(self.question.pk)),
                     "input{}.in".format(self.pk)), "w") as f:
-            f.write(self.input_test)
+            f.write(self.input_test.replace("\\n", "\n"))
             f.close()
         with open(
                 os.path.join(
                     os.path.join(TEST_CASE_DIR,
                                  "ques{}".format(self.question.pk)),
                     "output{}.out".format(self.pk)), "w") as f:
-            f.write(self.output_test)
+            f.write(self.output_test.replace("\\n", "\n"))
             f.close()
 
 
@@ -111,12 +123,6 @@ class Job(models.Model):
 
     def __str__(self):
         return self.question.question_code + " " + self.coder.name
-
-
-class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    answer_text = models.TextField(blank=True,
-                                   help_text="Answer field for the questions")
 
 
 @receiver(pre_delete, sender=Question)

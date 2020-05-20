@@ -9,6 +9,7 @@ from accounts.serializers import CoderSerializer
 from accounts.models import Coder
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from urllib.parse import unquote
 # Create your views here.
 
 
@@ -41,7 +42,7 @@ def GetQuestion(request):
 ])
 def submitCode(request):
     lang = request.data.get('lang')
-    code = request.data.get('code')
+    code = unquote(request.data.get('code'))
     try:
         question = Question.objects.get(question_code=request.data.get('q_id'))
         coder = Coder.objects.get(user=request.user)

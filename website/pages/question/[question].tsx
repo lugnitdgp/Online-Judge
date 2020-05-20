@@ -19,10 +19,10 @@ class quesdetail extends React.Component<Props, State> {
         const { qid } = router.query;
 
         let headers = {
-            'Authorization': `Token ${localStorage.token}`;
-        }
+            'Authorization': `Token ${localStorage.token}`
+        };
         try {
-            var response = await axios.get(`${process.env.BACKEND_URL}/api/quesdetail?q_id=${qid}`, { headers: headers });
+            var response = axios.get(`${process.env.BACKEND_URL}/api/quesdetail?q_id=${qid}`, { headers: headers });
             this.setState({ ques: response.data });
         } catch (error) {
             console.log(error);
@@ -32,9 +32,9 @@ class quesdetail extends React.Component<Props, State> {
     //@ts-ignore
     submitcode = (code, lang) => {
         let headers = {
-            'Authorization': `Token ${localStorage.token}`;
+            'Authorization': `Token ${localStorage.token}`
         }
-        await axios.post(`${process.env.BACKEND_URL}/api/submit`, {
+        axios.post(`${process.env.BACKEND_URL}/api/submit`, {
             headers: headers,
             params: {
                 'code': encodeURI(code),
@@ -43,7 +43,7 @@ class quesdetail extends React.Component<Props, State> {
             }
         })
             .then((res) => { localStorage.taskid = res['task_id'] })
-            .catch((error) => console.log(error);)
+            .catch((error) => console.log(error))
     }
 
     render() {
@@ -61,3 +61,5 @@ class quesdetail extends React.Component<Props, State> {
         );
     }
 }
+
+export default quesdetail;

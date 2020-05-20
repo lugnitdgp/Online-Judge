@@ -15,10 +15,10 @@ class questionlist extends React.Component<Props, State> {
 
     componentDidMount() {
         let headers = {
-            'Authorization': `Token ${localStorage.token}`;
-        }
+            'Authorization': `Token ${localStorage.token}`
+        };
         try {
-            var response = await axios.get(`${process.env.BACKEND_URL}/api/questions`, { headers: headers });
+            var response = axios.get(`${process.env.BACKEND_URL}/api/questions`, { headers: headers });
             this.setState({ list: response.data });
         } catch (error) {
             console.log(error);

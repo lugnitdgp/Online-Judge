@@ -1,4 +1,3 @@
-require("dotenv").config();
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const withTM = require("next-transpile-modules")(["monaco-editor"]);
 const webpack = require("webpack");
@@ -33,7 +32,6 @@ module.exports = withTM({
         filename: "static/[name].worker.js",
       })
     );
-    config.plugins.push(new webpack.EnvironmentPlugin(process.env));
     return config;
   },
 });

@@ -1,12 +1,12 @@
 import React from "react";
 import { Grid, Typography, Card, CardHeader, CardContent } from "@material-ui/core";
 import { } from "@material-ui/icons";
-import { withStyles, createStyles } from "@material-ui/core/styles";
+import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
 import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("../components/Editor"), { ssr: false });
 
-const styles = createStyles((theme) => ({
+const styles = createStyles((theme: Theme) => ({
     "@global": {
         body: {
         },

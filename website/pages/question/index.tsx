@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 
 interface IState {
   list: Array<any>;
@@ -12,19 +11,21 @@ class questionlist extends React.Component<{}, IState> {
   }
 
   componentDidMount() {
-    let headers = {
-      Authorization: `Token ${localStorage.token}`,
-    };
-    axios
-      .get(`${process.env.BACKEND_URL}/api/questions`, { headers: headers })
-      .then((res) => this.setState({ list: res.data }))
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions`, {
+      method: "GET",
+      headers: {
+        Authorization: `Token ${localStorage.token}`,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((res) => this.setState({ list: res }))
       .catch((error) => {
         console.log(error);
       });
   }
 
   render() {
-    return this.state.list ? (
+    return (
       <div>
         {this.state.list.map((item, i) => (
           <div key={i}>
@@ -34,8 +35,6 @@ class questionlist extends React.Component<{}, IState> {
           </div>
         ))}
       </div>
-    ) : (
-      <div />
     );
   }
 }

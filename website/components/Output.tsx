@@ -8,12 +8,16 @@ import {} from "@material-ui/icons";
 //   },
 // }));
 
-export default ({ children }) => {
-//   const classes = styles();
+interface IProps {
+  children: any;
+}
+
+export default (props: IProps) => {
+  //   const classes = styles();
 
   return (
     <pre>
-      <output>{children}</output>
+      <output>{props.children}</output>
     </pre>
   );
 };

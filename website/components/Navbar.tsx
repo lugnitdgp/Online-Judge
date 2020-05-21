@@ -1,9 +1,9 @@
 import { Typography, AppBar, Toolbar, Button } from "@material-ui/core";
 import {} from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Router from "next/router"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
   },

@@ -2,7 +2,7 @@ import React from "react";
 import { Container, CircularProgress, Typography } from "@material-ui/core";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import {} from "@material-ui/icons";
-import axios from "axios";
+import { GetServerSideProps } from "next";
 
 const styles = createStyles((theme: Theme) => ({
   root: {
@@ -42,20 +42,35 @@ class LoginPage extends React.Component<Props, State> {
 
   googleLogin() {
     var self = this;
-    axios
-      .post("/api/login/google", {
+    fetch("/api/login/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         code: this.props.code,
-      })
+      }),
+    })
+      .then((resp) => resp.json())
       .then((res) => {
-        axios
-          .post(`${process.env.BACKEND_URL}/account/login`, {
-            id_token: res.data.id_token,
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_token: res.id_token,
             provider: "google",
-          })
+          }),
+        })
+          .then((resp) => resp.json())
           .then((response) => {
-            localStorage.token = response.data.token;
+            localStorage.token = response.token;
+            document.cookie = `token=${response.token}; path=/; max-age=${
+              60 * 60 ** 24 * 100
+            }`;
             window.location.href = "/";
-            console.log(response.data);
+            console.log(response);
           })
           .catch((e) => {
             console.log(e);
@@ -74,18 +89,27 @@ class LoginPage extends React.Component<Props, State> {
 
   facebookLogin() {
     var self = this;
-    axios
-      .post("/api/login/facebook", {
+    fetch("/api/login/facebook", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         code: this.props.code,
-      })
+      }),
+    })
+      .then((resp) => resp.json())
       .then((res) => {
-        axios
-          .post(`${process.env.BACKEND_URL}/login`, {
-            access_token: res.data.access_token,
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
+          method: "POST",
+          body: JSON.stringify({
+            access_token: res.access_token,
             provider: "facebook",
-          })
+          }),
+        })
+          .then((resp) => resp.json())
           .then((response) => {
-            localStorage.token = response.data.token;
+            localStorage.token = response.token;
             window.location.href = "/";
           })
           .catch((e) => {
@@ -133,13 +157,13 @@ class LoginPage extends React.Component<Props, State> {
   }
 }
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
-      provider: context.params.provider,
+      provider: context.params?.provider,
       code: context.query.code,
     },
   };
-}
+};
 
 export default withStyles(styles)(LoginPage);

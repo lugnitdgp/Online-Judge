@@ -76,7 +76,7 @@ const styles = createStyles((theme: Theme) => ({
 const googleLogin = () => {
   let url = new URL("https://accounts.google.com");
   url.pathname = "/o/oauth2/v2/auth";
-  url.searchParams.set("client_id", process.env.GOOGLE_CLIENT_ID);
+  url.searchParams.set("client_id", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "");
   url.searchParams.set(
     "redirect_uri",
     `${window.location.protocol}//${window.location.host}/login/google`
@@ -96,7 +96,7 @@ const facebookLogin = () => {
     "redirect_uri",
     `${window.location.protocol}//${window.location.host}/login/facebook`
   );
-  url.searchParams.set("client_id", process.env.FACEBOOK_CLIENT_ID);
+  url.searchParams.set("client_id", process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID || "");
   url.searchParams.set("scope", ["email"].join(","));
   window.location.href = url.toString();
 };

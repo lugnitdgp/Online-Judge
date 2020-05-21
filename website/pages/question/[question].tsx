@@ -1,81 +1,94 @@
 import React from "react";
 import { GetServerSideProps } from "next";
+import Cookie from "lib/models/Cookie";
+import { Card, CardHeader, CardContent } from "@material-ui/core";
 
-interface IState {
-  ques: any;
+interface IProps {
+  data: any;
 }
+interface IState {}
 
-class QuesDetail extends React.Component<{}, IState> {
-  constructor(props: Readonly<{}>) {
+class QuesDetail extends React.Component<IProps, IState> {
+  constructor(props: Readonly<IProps>) {
     super(props);
-    this.state = { ques: {} };
   }
 
   submitcode = (code: any, lang: any) => {
-    if (this.state.ques) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${localStorage.token}`,
-        },
-        body: JSON.stringify({
-          code: encodeURI(code),
-          lang: lang,
-          q_id: this.state.ques.question_code,
-        }),
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.token}`,
+      },
+      body: JSON.stringify({
+        code: encodeURI(code),
+        lang: lang,
+        q_id: this.props.data.question_code,
+      }),
+    })
+      .then((resp) => resp.json())
+      .then((res) => {
+        localStorage.taskid = res["task_id"];
       })
-        .then((resp) => resp.json())
-        .then((res) => {
-          localStorage.taskid = res["task_id"];
-        })
-        .catch((error) => console.log(error));
-    }
+      .catch((error) => console.log(error));
   };
 
   statuscode = () => {
-    if (this.state.ques) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${localStorage.token}`,
-        },
-        body: JSON.stringify({
-          q_id: this.state.ques.question_code,
-          task_id: localStorage.taskid,
-        })
-      })
-        .then((resp) => resp.json())
-    }
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.token}`,
+      },
+      body: JSON.stringify({
+        q_id: this.props.data.question_code,
+        task_id: localStorage.taskid,
+      }),
+    }).then((resp) => resp.json());
   };
 
   render() {
-    var detail = null;
-    if (this.state.ques)
-      detail = (
-        <div>
-          <p>{this.state.ques.question_name}</p>
-        </div>
-      );
-    else detail = <div />;
     return (
       <div>
-        <p>{detail}</p>
+        <p>{this.props.data.question_text}</p>
+        <p>{this.props.data.question_code}</p>
+        <Card>
+          <CardHeader title="Input Example" />
+          <CardContent>
+            <div
+              style={{ whiteSpace: "pre-wrap" }}
+              dangerouslySetInnerHTML={{
+                __html: this.props.data.input_example,
+              }}
+            />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader title="Output Example" />
+          <CardContent>
+            <div
+              style={{ whiteSpace: "pre-wrap" }}
+              dangerouslySetInnerHTML={{
+                __html: this.props.data.output_example,
+              }}
+            />
+          </CardContent>
+        </Card>
       </div>
     );
   }
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log(context.req.headers.cookie?.split(";"));
+  const cookie = new Cookie();
+  cookie.parse(context.req.headers.cookie || "");
 
   try {
     let resp = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?q_id=${context.params?.question}`,
       {
         headers: {
-          Authorization: `Token ${context.req.headers.cookie}`,
+          Authorization: `Token ${cookie.cookies.get("token")}`,
         },
       }
     );

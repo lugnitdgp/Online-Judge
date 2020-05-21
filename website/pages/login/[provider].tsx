@@ -58,6 +58,7 @@ class LoginPage extends React.Component<Props, State> {
           headers: {
             "Content-Type": "application/json",
           },
+          mode: "cors",
           body: JSON.stringify({
             id_token: res.id_token,
             provider: "google",
@@ -67,7 +68,7 @@ class LoginPage extends React.Component<Props, State> {
           .then((response) => {
             localStorage.token = response.token;
             document.cookie = `token=${response.token}; path=/; max-age=${
-              60 * 60 ** 24 * 100
+              60 * 60 * 24 * 100
             }`;
             window.location.href = "/";
             console.log(response);

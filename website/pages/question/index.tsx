@@ -29,7 +29,7 @@ class questionlist extends React.Component<{}, IState> {
       <div>
         {this.state.list.map((item, i) => (
           <div key={i}>
-            <p>{item.question_name}</p>
+            <a href={`/question/${item.question_code}`}>{item.question_name}</a>
             <p>{item.question_code}</p>
             <p>{item.question_score}</p>
           </div>

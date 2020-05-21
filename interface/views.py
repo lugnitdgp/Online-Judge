@@ -49,7 +49,7 @@ def submitCode(request):
         task = execute.delay(
             QuestionSerializer(question).data,
             CoderSerializer(coder).data, code, lang)
-        return Response({'message': 'pls_wait', 'task_id': task.id})
+        return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
 

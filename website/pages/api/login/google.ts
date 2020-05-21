@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     let response = await resp.json()
 
-    res.status(200).send(response.data);
+    res.status(200).send(response);
   } catch (e) {
     console.error(e);
     res.status(403).send("Google authentication failed");

@@ -33,6 +33,23 @@ class QuesDetail extends React.Component<{}, IState> {
     }
   };
 
+  statuscode = () => {
+    if (this.state.ques) {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.token}`,
+        },
+        body: JSON.stringify({
+          q_id: this.state.ques.question_code,
+          task_id: localStorage.taskid,
+        })
+      })
+        .then((resp) => resp.json())
+    }
+  };
+
   render() {
     var detail = null;
     if (this.state.ques)

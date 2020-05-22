@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../components/theme';
 import Router from 'next/router';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import UserProvider from '../components/UserProvider'
 
 class MyApp extends App {
 	constructor(props) {
@@ -42,10 +43,10 @@ class MyApp extends App {
 					{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 					<CssBaseline />
 					{this.state.loaded ? (
-						<Component {...pageProps} />
+						<UserProvider><Component {...pageProps} /></UserProvider>
 					) : (
-						<LinearProgress />
-					)}
+							<LinearProgress />
+						)}
 				</ThemeProvider>
 			</React.Fragment>
 		);

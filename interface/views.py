@@ -76,3 +76,17 @@ def status(request):
             'status': 302,
             'message': 'Please wait. Answer being processed'
         })
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def leaderboard(request):
+    coder_array = []
+    for (rank, coder) in enumerate(Coder.objects.order_by('-score', 'time_stamp'), start=1):
+        coder_array.append({
+            "rank": rank,
+            "name": coder.name,
+            "score": coder.score,
+            "image": coder.image_link
+        })
+    return Response(coder_array)

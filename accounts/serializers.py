@@ -33,7 +33,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(username=data['username'],
                                         email=data['email'],
                                         first_name=data['first_name'],
-                                        password=make_password(data['password']))
+                                        password=data['password'])
         return user
 
 class LoginSerializer(serializers.ModelSerializer):

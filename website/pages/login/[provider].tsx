@@ -1,11 +1,9 @@
 import React from "react";
 import { Container, CircularProgress, Typography } from "@material-ui/core";
-import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { } from "@material-ui/icons";
-import { GetServerSideProps } from "next";
-import { UserContext } from '../../components/UserContextProvider';
 
-const styles = createStyles((theme: Theme) => ({
+const styles = makeStyles((theme: Theme) => ({
   root: {
     width: "100vw",
     height: "100vh",
@@ -28,40 +26,17 @@ interface Props {
   classes: any;
 }
 
-interface State {
-  error: boolean;
-}
+function LoginPage(props: Props) {
+  const [error, setError] = React.useState(false)
 
-class LoginPage extends React.Component<Props, State> {
-  static contextType = UserContext;
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      error: false,
-    };
-    this.googleLogin = this.googleLogin.bind(this);
-  }
-
-  updateContext = (user) => {
-    const { storeUser, showUser } = this.context;
-    storeUser({
-      name: user.name,
-      email: user.email,
-      image_link: user.image_link
-    });
-
-    showUser();
-  }
-
-  googleLogin() {
-    var self = this;
+  const googleLogin = () => {
     fetch("/api/login/google", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        code: this.props.code,
+        code: props.code,
       }),
     })
       .then((resp) => resp.json())
@@ -84,33 +59,26 @@ class LoginPage extends React.Component<Props, State> {
               60 * 60 * 24 * 100
               }`;
             window.location.href = "/";
-            console.log("heyyyy");
-            this.updateContext(response.user);
           })
           .catch((e) => {
             console.log(e);
-            self.setState({
-              error: true,
-            });
+            setError(true)
           });
       })
       .catch((err) => {
         console.log(err);
-        self.setState({
-          error: true,
-        });
-      });
+        setError(true)
+      })
   }
 
-  facebookLogin() {
-    var self = this;
+  const facebookLogin = () => {
     fetch("/api/login/facebook", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        code: this.props.code,
+        code: props.code,
       }),
     })
       .then((resp) => resp.json())
@@ -129,50 +97,46 @@ class LoginPage extends React.Component<Props, State> {
           })
           .catch((e) => {
             console.log(e);
-            self.setState({
-              error: true,
-            });
+            setError(true)
           });
       })
       .catch((err) => {
         console.log(err);
-        self.setState({
-          error: true,
-        });
+        setError(true)
       });
   }
 
-  componentDidMount() {
-    if (this.props.provider == "google") this.googleLogin();
-    else if (this.props.provider == "facebook") this.facebookLogin();
+  React.useEffect(() => {
+    if (props.provider == "google") googleLogin();
+    else if (props.provider == "facebook") facebookLogin();
     else alert("Invalid login provider");
-  }
+  }, [])
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <Container className={classes.root}>
-        {this.state.error ? (
+  const classes = styles()
+
+  return (
+    <Container className={classes.root}>
+      {error ? (
+        <React.Fragment>
+          <Typography className={classes.error} variant="h6" color="error">
+            Something went wrong. Please try again. If the problem still
+            exists, contact the administrator.
+          </Typography>
+        </React.Fragment>
+      ) : (
           <React.Fragment>
-            <Typography className={classes.error} variant="h6" color="error">
-              Something went wrong. Please try again. If the problem still
-              exists, contact the administrator.
-            </Typography>
+            <CircularProgress size={"4rem"} />
+            <Typography variant="h6" className={classes.title}>
+              Logging you in
+          </Typography>
           </React.Fragment>
-        ) : (
-            <React.Fragment>
-              <CircularProgress size={"4rem"} />
-              <Typography variant="h6" className={classes.title}>
-                Logging you in
-            </Typography>
-            </React.Fragment>
-          )}
-      </Container>
-    );
-  }
+        )}
+    </Container>
+  );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+
+export const getServerSideProps= async (context: any) => {
   return {
     props: {
       provider: context.params?.provider,
@@ -181,4 +145,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default withStyles(styles)(LoginPage);
+export default LoginPage

@@ -1,8 +1,9 @@
 import React from "react";
 import { Container, CircularProgress, Typography } from "@material-ui/core";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
-import {} from "@material-ui/icons";
+import { } from "@material-ui/icons";
 import { GetServerSideProps } from "next";
+import { UserContext } from '../../components/UserContextProvider';
 
 const styles = createStyles((theme: Theme) => ({
   root: {
@@ -32,12 +33,24 @@ interface State {
 }
 
 class LoginPage extends React.Component<Props, State> {
+  static contextType = UserContext;
   constructor(props: Props) {
     super(props);
     this.state = {
       error: false,
     };
     this.googleLogin = this.googleLogin.bind(this);
+  }
+
+  updateContext = (user) => {
+    const { storeUser, showUser } = this.context;
+    storeUser({
+      name: user.name,
+      email: user.email,
+      image_link: user.image_link
+    });
+
+    showUser();
   }
 
   googleLogin() {
@@ -53,7 +66,7 @@ class LoginPage extends React.Component<Props, State> {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/login`, {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/social_login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -69,9 +82,10 @@ class LoginPage extends React.Component<Props, State> {
             localStorage.token = response.token;
             document.cookie = `token=${response.token}; path=/; max-age=${
               60 * 60 * 24 * 100
-            }`;
+              }`;
             window.location.href = "/";
-            console.log(response);
+            console.log("heyyyy");
+            this.updateContext(response.user);
           })
           .catch((e) => {
             console.log(e);
@@ -146,13 +160,13 @@ class LoginPage extends React.Component<Props, State> {
             </Typography>
           </React.Fragment>
         ) : (
-          <React.Fragment>
-            <CircularProgress size={"4rem"} />
-            <Typography variant="h6" className={classes.title}>
-              Logging you in
+            <React.Fragment>
+              <CircularProgress size={"4rem"} />
+              <Typography variant="h6" className={classes.title}>
+                Logging you in
             </Typography>
-          </React.Fragment>
-        )}
+            </React.Fragment>
+          )}
       </Container>
     );
   }

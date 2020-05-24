@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../components/theme';
 import Router from 'next/router';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import UserProvider from '../components/UserProvider'
+import UserContextProvider from '../components/UserContextProvider';
 
 class MyApp extends App {
 	constructor(props) {
@@ -35,19 +35,22 @@ class MyApp extends App {
 		const { Component, pageProps } = this.props;
 
 		return (
+
 			<React.Fragment>
 				<Head>
 					<title>Online Judge</title>
 				</Head>
-				<ThemeProvider theme={theme}>
-					{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-					<CssBaseline />
-					{this.state.loaded ? (
-						<UserProvider><Component {...pageProps} /></UserProvider>
-					) : (
-							<LinearProgress />
-						)}
-				</ThemeProvider>
+				<UserContextProvider>
+					<ThemeProvider theme={theme}>
+						{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+						<CssBaseline />
+						{this.state.loaded ? (
+							<Component {...pageProps} />
+						) : (
+								<LinearProgress />
+							)}
+					</ThemeProvider>
+				</UserContextProvider>
 			</React.Fragment>
 		);
 	}

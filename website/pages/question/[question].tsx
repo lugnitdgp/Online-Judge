@@ -1,16 +1,22 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import Cookie from "lib/models/Cookie";
-import { Card, CardHeader, CardContent } from "@material-ui/core";
+import { Card, CardHeader, CardContent, Button } from "@material-ui/core";
+import Editor from "components/Editor";
 
 interface IProps {
   data: any;
 }
-interface IState {}
+interface IState {
+  value: string;
+}
 
 class QuesDetail extends React.Component<IProps, IState> {
   constructor(props: Readonly<IProps>) {
     super(props);
+    this.state = {
+      value: "",
+    };
   }
 
   submitcode = (code: any, lang: any) => {
@@ -74,6 +80,18 @@ class QuesDetail extends React.Component<IProps, IState> {
             />
           </CardContent>
         </Card>
+        <Editor
+          value={this.state.value}
+          setValue={(d) =>
+            this.setState({
+              value: d,
+            })
+          }
+        />
+        <Button variant="outlined" onClick={() => this.submitcode("cpp", this.state.value)}>
+          Submit
+        </Button>
+        <Button variant="outlined" onClick={() => this.statuscode()}>Check for Changes</Button>
       </div>
     );
   }

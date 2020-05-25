@@ -3,8 +3,6 @@ import { Grid, Typography, Card, CardHeader, CardContent } from "@material-ui/co
 import { } from "@material-ui/icons";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Layout from "../components/Layout";
-import dynamic from "next/dynamic";
-const Editor = dynamic(() => import("../components/Editor"), { ssr: false });
 
 const styles = createStyles((theme: Theme) => ({
     "@global": {
@@ -47,7 +45,6 @@ class IndexPage extends React.Component<IProps, {}> {
                              n for you to solve.</Typography>
                         </CardContent>
                     </Card>
-                    <Editor />
                 </Grid>
             </Layout>
         );

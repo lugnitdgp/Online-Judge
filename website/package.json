@@ -12,10 +12,13 @@
     "@material-ui/icons": "^4.9.1",
     "ace-builds": "^1.4.11",
     "next": "9.4.1",
+    "next-redux-wrapper": "^6.0.0",
     "next-transpile-modules": "^3.3.0",
     "react": "16.13.1",
     "react-ace": "^9.0.0",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@types/node": "^13.13.4",

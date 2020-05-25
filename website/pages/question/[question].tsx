@@ -1,7 +1,8 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import Cookie from "lib/models/Cookie";
-import { Card, CardHeader, CardContent, Button } from "@material-ui/core";
+import { Card, CardHeader, CardContent, Button, Grid, FormControl, InputLabel, MenuItem } from "@material-ui/core";
+import Select from '@material-ui/core/Select';
 import Editor from "components/Editor";
 
 interface IProps {
@@ -9,6 +10,7 @@ interface IProps {
 }
 interface IState {
   value: string;
+  lang: string;
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -16,6 +18,7 @@ class QuesDetail extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       value: "",
+      lang: "c++",
     };
   }
 
@@ -55,44 +58,61 @@ class QuesDetail extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <div>
-        <p>{this.props.data.question_text}</p>
-        <p>{this.props.data.question_code}</p>
-        <Card>
-          <CardHeader title="Input Example" />
-          <CardContent>
-            <div
-              style={{ whiteSpace: "pre-wrap" }}
-              dangerouslySetInnerHTML={{
-                __html: this.props.data.input_example,
-              }}
-            />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader title="Output Example" />
-          <CardContent>
-            <div
-              style={{ whiteSpace: "pre-wrap" }}
-              dangerouslySetInnerHTML={{
-                __html: this.props.data.output_example,
-              }}
-            />
-          </CardContent>
-        </Card>
-        <Editor
-          value={this.state.value}
-          setValue={(d) =>
-            this.setState({
-              value: d,
-            })
-          }
-        />
-        <Button variant="outlined" onClick={() => this.submitcode(this.state.value, "c++")}>
-          Submit
-        </Button>
-        <Button variant="outlined" onClick={() => this.statuscode()}>Check for Changes</Button>
-      </div>
+      <Grid container justify="center">
+        <Grid item>
+          <p>{this.props.data.question_text}</p>
+          <p>{this.props.data.question_code}</p>
+          <Card>
+            <CardHeader title="Input Example" />
+            <CardContent>
+              <div
+                style={{ whiteSpace: "pre-wrap" }}
+                dangerouslySetInnerHTML={{
+                  __html: this.props.data.input_example,
+                }}
+              />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader title="Output Example" />
+            <CardContent>
+              <div
+                style={{ whiteSpace: "pre-wrap" }}
+                dangerouslySetInnerHTML={{
+                  __html: this.props.data.output_example,
+                }}
+              />
+            </CardContent>
+          </Card>
+          <FormControl variant="outlined" fullWidth style={{ margin: "16px"}}>
+            <InputLabel>Select Language</InputLabel>
+            <Select value={this.state.lang}
+            onChange={(e) => this.setState({ lang: e.target.value as string })}
+            >
+              <MenuItem value="c++">C++</MenuItem>
+              <MenuItem value="py">Python</MenuItem>
+              <MenuItem value="java">Java</MenuItem>
+            </Select>
+          </FormControl>
+          <Editor
+            value={this.state.value}
+            setValue={(d) =>
+              this.setState({
+                value: d,
+              })
+            }
+          />
+          <Button
+            variant="outlined"
+            onClick={() => this.submitcode(this.state.value, this.state.lang)}
+          >
+            Submit
+          </Button>
+          <Button variant="outlined" onClick={() => this.statuscode()}>
+            Check for Changes
+          </Button>
+        </Grid>
+      </Grid>
     );
   }
 }

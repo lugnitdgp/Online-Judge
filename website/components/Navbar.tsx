@@ -24,6 +24,7 @@ export default function Navbar({}) {
         <Typography variant="h6" className={classes.title}>
           Online Judge
         </Typography>
+        <Button color="inherit" onClick={() => Router.push("/question")}>Questions</Button>
         <Button color="inherit" onClick={() => Router.push("/login")}>Login</Button>
       </Toolbar>
     </AppBar>

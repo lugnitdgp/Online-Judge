@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { } from "@material-ui/icons";
+import Router from 'next/router'
+import UserContextProvider, { UserContext } from '../../components/UserContextProvider';
 
 const styles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,7 +29,14 @@ interface Props {
 }
 
 function LoginPage(props: Props) {
-  const [error, setError] = React.useState(false)
+  const [error, setError] = React.useState(false);
+
+  const { user, storeUser, showUser } = useContext(UserContext);
+
+  const handleLogin = () => {
+    showUser();
+    Router.push("/");
+  }
 
   const googleLogin = () => {
     fetch("/api/login/google", {
@@ -58,7 +67,11 @@ function LoginPage(props: Props) {
             document.cookie = `token=${response.token}; path=/; max-age=${
               60 * 60 * 24 * 100
               }`;
-            window.location.href = "/";
+            storeUser({
+              name: response.user.name,
+              email: response.user.email,
+              image_link: response.user.image_link
+            });
           })
           .catch((e) => {
             console.log(e);
@@ -70,6 +83,20 @@ function LoginPage(props: Props) {
         setError(true)
       })
   }
+
+  React.useEffect(() => {
+    handleLogin()
+  }, [user])
+
+  //This works
+  // React.useEffect(() => {
+  //   storeUser({
+  //     name: "wqygubcjqnc",
+  //     email: "asbcascacsj",
+  //     image_link: "asjbcjasnck"
+  //   });
+  //   showUser();
+  // });
 
   const facebookLogin = () => {
     fetch("/api/login/facebook", {
@@ -115,28 +142,30 @@ function LoginPage(props: Props) {
   const classes = styles()
 
   return (
-    <Container className={classes.root}>
-      {error ? (
-        <React.Fragment>
-          <Typography className={classes.error} variant="h6" color="error">
-            Something went wrong. Please try again. If the problem still
-            exists, contact the administrator.
-          </Typography>
-        </React.Fragment>
-      ) : (
+    <UserContextProvider>
+      <Container className={classes.root}>
+        {error ? (
           <React.Fragment>
-            <CircularProgress size={"4rem"} />
-            <Typography variant="h6" className={classes.title}>
-              Logging you in
+            <Typography className={classes.error} variant="h6" color="error">
+              Something went wrong. Please try again. If the problem still
+              exists, contact the administrator.
           </Typography>
           </React.Fragment>
-        )}
-    </Container>
+        ) : (
+            <React.Fragment>
+              <CircularProgress size={"4rem"} />
+              <Typography variant="h6" className={classes.title}>
+                Logging you in
+          </Typography>
+            </React.Fragment>
+          )}
+      </Container>
+    </UserContextProvider>
   );
 }
 
 
-export const getServerSideProps= async (context: any) => {
+export const getServerSideProps = async (context: any) => {
   return {
     props: {
       provider: context.params?.provider,

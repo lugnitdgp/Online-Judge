@@ -88,7 +88,7 @@ class QuesDetail extends React.Component<IProps, IState> {
             })
           }
         />
-        <Button variant="outlined" onClick={() => this.submitcode("cpp", this.state.value)}>
+        <Button variant="outlined" onClick={() => this.submitcode(this.state.value, "c++")}>
           Submit
         </Button>
         <Button variant="outlined" onClick={() => this.statuscode()}>Check for Changes</Button>

@@ -8,7 +8,7 @@ function test() {
 
     const change = () => {
         storeUser({
-            name: "HSJ",
+            name: "abc",
             email: "xyz",
             image_link: "123"
         })
@@ -23,11 +23,11 @@ function test() {
     return (
         <UserContextProvider>
             <div>
-                <template>
+                <React.Fragment>
                     <p>{user.username}</p>
                     <p>{user.email}</p>
                     <a href={user.image} />
-                </template>
+                </React.Fragment>
                 <button onClick={change}>Click Me to update</button>
                 <button onClick={view}> Click to View</button>
 

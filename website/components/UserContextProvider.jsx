@@ -3,16 +3,14 @@ import React, { useState, createContext } from 'react';
 export const UserContext = createContext();
 
 const UserContextProvider = (props) => {
-    const [user, setUser] = useState({ });
+    const [user, setUser] = useState({});
 
     const storeUser = new_user => {
-        console.log("User: ", new_user);
         setUser({
-            username: new_user['name'],
-            email: new_user['email'],
-            image: new_user['image_link']
+            username: new_user.name,
+            email: new_user.email,
+            image: new_user.image_link
         });
-        console.log(user);
     }
 
     const showUser = () => {

@@ -13,14 +13,22 @@ import { Card, CardContent } from "@material-ui/core";
 interface IProps {
   value: string;
   setValue: (d: string) => void;
+  lang: string;
 }
 
 function Editor(props: IProps) {
+  const dict = {
+    "c" : "c_cpp",
+    "c++" : "c_cpp",
+    "python3" : "python",
+    "java" : "java"
+  }
+
   return (
     <Card>
       <CardContent>
         <AceEditor
-          mode="c_cpp"
+          mode={dict[props.lang]}
           theme="tomorrow"
           value={props.value}
           onChange={(e) => props.setValue(e)}

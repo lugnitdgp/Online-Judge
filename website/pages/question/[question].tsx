@@ -4,7 +4,6 @@ import Cookie from "lib/models/Cookie";
 import { Card, CardHeader, CardContent, Button, Grid, FormControl, InputLabel, MenuItem } from "@material-ui/core";
 import Select from '@material-ui/core/Select';
 import Editor from "components/Editor";
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,6 +15,7 @@ import Paper from '@material-ui/core/Paper';
 interface IProps {
   data: any;
 }
+
 interface IState {
   value: string;
   lang: string;
@@ -148,25 +148,25 @@ class QuesDetail extends React.Component<IProps, IState> {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {this.state.res.map((res) => {
-                    <TableRow key={res}>
+                  {this.state.res.map((res, index) =>
+                    <TableRow key={index}>
                       <TableCell component="th" scope="row">
-                        {res.code}
+                        {index + 1}
                       </TableCell>
                       <TableCell align="right">{res.status.run_status}</TableCell>
-                      <TableCell align="right">{res.status.elapsed_time}</TableCell>
+                      <TableCell align="right">{res.status.cpu_time}</TableCell>
                       <TableCell align="right">{res.status.memory_taken}</TableCell>
                     </TableRow>
-                  })}
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
-          ) : <React.Fragment>{this.state.res.map((res) => {
-            <div>
+          ) : <React.Fragment>{this.state.res.map((res, index) =>
+            <div key={index}>
               <p>Compilation Error</p>
               <p>{res.message}</p>
             </div>
-          })}</React.Fragment>}
+          )}</React.Fragment>}
         </Grid>
       </Grid>
     );

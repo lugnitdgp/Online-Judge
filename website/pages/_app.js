@@ -7,6 +7,9 @@ import theme from '../components/theme';
 import Router from 'next/router';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import UserContextProvider from '../components/UserContextProvider';
+import 'github-markdown-css';
+import '../styles/main.css';
+import "react-table-6/react-table.css";
 
 class MyApp extends App {
 	constructor(props) {

@@ -24,6 +24,9 @@ export default function Navbar({}) {
         <Typography variant="h6" className={classes.title}>
           Online Judge
         </Typography>
+        <Button color="inherit" onClick={() => Router.push("/submissions")}>Submissons</Button>
+        <Button color="inherit" onClick={() => Router.push("/leaderboard")}>Leaderboard</Button>
+        {/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
         <Button color="inherit" onClick={() => Router.push("/question")}>Questions</Button>
         <Button color="inherit" onClick={() => Router.push("/login")}>Login</Button>
       </Toolbar>

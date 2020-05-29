@@ -87,7 +87,7 @@ class QuesDetail extends React.Component<IProps, IState> {
             <CardHeader title={this.props.data.question_code} />
           </Card>
           <Card>
-            <CardContent>
+            <CardContent style={{ fontSize: '16px', justifyContent:'center', margin:"10px", padding:"18px" }} >
              
               {this.props.data.question_text}
               

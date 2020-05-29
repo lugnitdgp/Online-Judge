@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from 'components/Layout';
-import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography, Paper} from '@material-ui/core';
+import { TableContainer, TableHead, TableCell, Paper} from '@material-ui/core';
 import { withStyles, createStyles, Theme, } from "@material-ui/core/styles";
 
 interface IState {
@@ -14,7 +14,7 @@ const StyledTableCell = withStyles((theme: Theme) =>
       color: theme.palette.common.black
     },
     body: {
-      fontSize: 14
+      fontSize: 14,
     }
   })
 )(TableCell);

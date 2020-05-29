@@ -12,48 +12,65 @@ interface IProps {
 }
 
 export default class submissions extends React.Component <IProps, {}> {
-  componentDidMount() { }
+
+  state = {
+    gotData: false,
+    list: []
+  }
+  componentDidMount() {
+    fetch(`https://ojapi.trennds.com/api/questions?json`, {
+      method: "GET",
+      headers: {
+        Authorization: `Token ${localStorage.token}`,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((res) => this.setState({ list: res }))
+      .catch((error) => {
+         console.log(error);
+      });
+  }
+
   render() {
     const columns = [
       {
-        Header: "user",
+        Header: "USER",
         accessor: "user",
         headerClassName: "headerTable",
         className: "firstColumn"
       },
       {
-        Header: "problem",
+        Header: "PROBLEM",
         accessor: "problem",
         headerClassName: "headerTable"
       },
       {
-        Header: "language",
+        Header: "LANGUAGE",
         accessor: "language",
         headerClassName: "headerTable"
       },
       {
-        Header: "status",
+        Header: "STATUS",
         accessor: "status",
         headerClassName: "headerTable"
       },
       {
-        Header: "time",
+        Header: "TIME",
         accessor: "time",
         headerClassName: "headerTable"
       },
       {
-        Header: "memory",
+        Header: "MEMORY",
         accessor: "memory",
         headerClassName: "headerTable"
       }
     ];
 
-    // const { classes } = this.props;
     return (
       <Layout>
       <div>
         <ReactTable style={tableStyle}
-         data={[1, 2, 3, 4]} 
+         data={[1, 2, 3, 4,5]} 
          columns={columns}
          defaultPageSize={20}
          className="-striped -highlight"

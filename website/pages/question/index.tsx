@@ -1,8 +1,23 @@
 import React from "react";
+import Layout from 'components/Layout';
+import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography, Paper} from '@material-ui/core';
+import { withStyles, createStyles, Theme, } from "@material-ui/core/styles";
 
 interface IState {
   list: Array<any>;
 }
+
+const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    head: {
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.common.black
+    },
+    body: {
+      fontSize: 14
+    }
+  })
+)(TableCell);
 
 class questionlist extends React.Component<{}, IState> {
   constructor(props: Readonly<{}>) {
@@ -26,15 +41,28 @@ class questionlist extends React.Component<{}, IState> {
 
   render() {
     return (
-      <div>
+      <Layout>
+      <TableContainer component={Paper}>
+           <TableHead>
+                    <StyledTableCell>Question Code</StyledTableCell>
+                    <StyledTableCell>QUESTION</StyledTableCell>
+                    <StyledTableCell>SCORE</StyledTableCell>
+             
+            </TableHead>
         {this.state.list.map((item, i) => (
+          
           <div key={i}>
-            <a href={`/question/${item.question_code}`}>{item.question_name}</a>
-            <p>{item.question_code}</p>
-            <p>{item.question_score}</p>
+
+          <TableCell>{item.question_code}</TableCell>
+
+            <TableCell><a href={`/question/${item.question_code}`}>{item.question_name}</a></TableCell>
+            
+            <TableCell>{item.question_score}</TableCell>
           </div>
+          
         ))}
-      </div>
+        </TableContainer>
+      </Layout>
     );
   }
 }

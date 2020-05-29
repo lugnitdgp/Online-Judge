@@ -3,7 +3,6 @@ import axios from 'axios';
 import Layout from '../components/Layout';
 import { } from "@material-ui/icons";
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography, Paper} from '@material-ui/core';
-// import MedalIcon from 'mdi-react/MedalIcon';
 import { withStyles, createStyles, Theme, } from "@material-ui/core/styles";
 
 const StyledTableCell = withStyles((theme: Theme) =>

@@ -11,6 +11,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Layout from 'components/Layout';
 
 interface IProps {
   data: any;
@@ -79,10 +80,19 @@ class QuesDetail extends React.Component<IProps, IState> {
 
   render() {
     return (
+      <Layout>
       <Grid container justify="center">
         <Grid item>
-          <p>{this.props.data.question_text}</p>
-          <p>{this.props.data.question_code}</p>
+          <Card>
+            <CardHeader title={this.props.data.question_code} />
+          </Card>
+          <Card>
+            <CardContent style={{ fontSize: '16px', justifyContent:'center', margin:"10px", padding:"18px" }} >
+             
+              {this.props.data.question_text}
+              
+              </CardContent>
+          </Card>
           <Card>
             <CardHeader title="Input Example" />
             <CardContent>
@@ -105,6 +115,8 @@ class QuesDetail extends React.Component<IProps, IState> {
               />
             </CardContent>
           </Card>
+          </Grid>
+          <Grid>
           <FormControl variant="outlined" fullWidth style={{ margin: "16px" }}>
             <InputLabel>Select Language</InputLabel>
             <Select value={this.state.lang}
@@ -169,6 +181,7 @@ class QuesDetail extends React.Component<IProps, IState> {
           )}</React.Fragment>}
         </Grid>
       </Grid>
+      </Layout>
     );
   }
 }

@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import { } from "@material-ui/icons";
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography, Paper} from '@material-ui/core';
 // import MedalIcon from 'mdi-react/MedalIcon';
-import { withStyles, createStyles, Theme, makeStyles, } from "@material-ui/core/styles";
+import { withStyles, createStyles, Theme, } from "@material-ui/core/styles";
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -17,18 +17,6 @@ const StyledTableCell = withStyles((theme: Theme) =>
     }
   })
 )(TableCell);
-
-const styles = makeStyles(() =>
-  createStyles({
-    table: {
-      minWidth: 500
-    },
-    rankCell: {
-      alignItems: 'center',
-      justifyContent: 'center'
-    }
-  })
-);
 
 interface IProps {
     classes: any;
@@ -55,11 +43,10 @@ class Leaderboard extends React.Component<IProps, {}> {
     }
 
     render() {
-    const { classes } = this.props;
         return (       
         <Layout>
         <TableContainer component={Paper}>
-            <Table className={classes.table} stickyHeader aria-label="simple table">
+            <Table  stickyHeader aria-label="simple table">
             <TableHead>
                 <TableRow>
                     <StyledTableCell>Rank</StyledTableCell>
@@ -97,4 +84,4 @@ class Leaderboard extends React.Component<IProps, {}> {
     }
 }
 
-export default  withStyles (styles) (Leaderboard);
+export default Leaderboard;

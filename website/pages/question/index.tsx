@@ -1,7 +1,7 @@
 import React from "react";
-import Layout from 'components/Layout';
-import { TableContainer, TableHead, TableCell, Paper} from '@material-ui/core';
-import { withStyles, createStyles, Theme, } from "@material-ui/core/styles";
+import Layout from "components/Layout";
+import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
+import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 
 interface IState {
   list: Array<any>;
@@ -11,11 +11,11 @@ const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
       backgroundColor: theme.palette.common.white,
-      color: theme.palette.common.black
+      color: theme.palette.common.black,
     },
     body: {
       fontSize: 14,
-    }
+    },
   })
 )(TableCell);
 
@@ -42,25 +42,27 @@ class questionlist extends React.Component<{}, IState> {
   render() {
     return (
       <Layout>
-      <TableContainer component={Paper}>
-           <TableHead>
-                    <StyledTableCell>Question Code</StyledTableCell>
-                    <StyledTableCell>QUESTION</StyledTableCell>
-                    <StyledTableCell>SCORE</StyledTableCell>
-             
-            </TableHead>
-        {this.state.list.map((item, i) => (
-          
-          <div key={i}>
+        <TableContainer component={Paper}>
+          <TableHead>
+            <StyledTableCell>Question Code</StyledTableCell>
+            <StyledTableCell>QUESTION</StyledTableCell>
+            <StyledTableCell>SCORE</StyledTableCell>
+          </TableHead>
+          {this.state.list
+            ? this.state.list.map((item, i) => (
+                <div key={i}>
+                  <TableCell>{item.question_code}</TableCell>
 
-          <TableCell>{item.question_code}</TableCell>
+                  <TableCell>
+                    <a href={`/question/${item.question_code}`}>
+                      {item.question_name}
+                    </a>
+                  </TableCell>
 
-            <TableCell><a href={`/question/${item.question_code}`}>{item.question_name}</a></TableCell>
-            
-            <TableCell>{item.question_score}</TableCell>
-          </div>
-          
-        ))}
+                  <TableCell>{item.question_score}</TableCell>
+                </div>
+              ))
+            : null}
         </TableContainer>
       </Layout>
     );

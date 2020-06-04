@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Container, CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { } from "@material-ui/icons";
-import Router from 'next/router'
-import UserContextProvider, { UserContext } from '../../components/UserContextProvider';
+import UserContextProvider from '../../components/UserContextProvider';
 
 const styles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,13 +29,6 @@ interface Props {
 
 function LoginPage(props: Props) {
   const [error, setError] = React.useState(false);
-
-  const { user, storeUser, showUser } = useContext(UserContext);
-
-  const handleLogin = () => {
-    showUser();
-    Router.push("/");
-  }
 
   const googleLogin = () => {
     fetch("/api/login/google", {
@@ -67,11 +59,12 @@ function LoginPage(props: Props) {
             document.cookie = `token=${response.token}; path=/; max-age=${
               60 * 60 * 24 * 100
               }`;
-            storeUser({
+            localStorage.onlinejudge_info = JSON.stringify({
               name: response.user.name,
               email: response.user.email,
               image_link: response.user.image_link
             });
+            window.location.href = "/question"
           })
           .catch((e) => {
             console.log(e);
@@ -83,10 +76,6 @@ function LoginPage(props: Props) {
         setError(true)
       })
   }
-
-  React.useEffect(() => {
-    handleLogin()
-  }, [user])
 
   //This works
   // React.useEffect(() => {
@@ -120,7 +109,7 @@ function LoginPage(props: Props) {
           .then((resp) => resp.json())
           .then((response) => {
             localStorage.token = response.token;
-            window.location.href = "/";
+            window.location.href = "/question";
           })
           .catch((e) => {
             console.log(e);

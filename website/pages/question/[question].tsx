@@ -48,6 +48,9 @@ class QuesDetail extends React.Component<IProps, IState> {
   }
 
   submitcode = (code: any, lang: any) => {
+    this.setState({
+      isLoading: true,
+    });
     var self = this;
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
       method: "POST",
@@ -64,9 +67,6 @@ class QuesDetail extends React.Component<IProps, IState> {
       .then((resp) => resp.json())
       .then((res) => {
         localStorage.taskid = res["task_id"];
-        self.setState({
-          isLoading: true,
-        });
         self.interval = setInterval(() => self.statuscode(), 2000);
       })
       .catch((error) => console.log(error));

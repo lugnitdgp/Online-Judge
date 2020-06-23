@@ -1,35 +1,35 @@
 {
-  "name": "temp",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@material-ui/core": "^4.9.12",
-    "@material-ui/icons": "^4.9.1",
-    "ace-builds": "^1.4.11",
-    "axios": "^0.19.2",
-    "dotenv": "^8.2.0",
-    "next": "9.4.1",
-    "next-redux-wrapper": "^6.0.0",
-    "next-transpile-modules": "^3.3.0",
-    "react": "16.13.1",
-    "react-ace": "^9.0.0",
-    "react-announcement": "^1.1.2",
-    "react-dom": "16.13.1",
-    "react-redux": "^7.2.0",
-    "react-virtualized": "^9.21.2",
-    "redux": "^4.0.5",
-    "react-live-clock": "^4.0.5",
-    "react-table-6": "^6.11.0"
-  },
-  "devDependencies": {
-    "@types/node": "^13.13.4",
-    "@types/react": "^16.9.34",
-    "babel-plugin-import": "^1.13.0",
-    "typescript": "^3.8.3"
-  }
+	"name": "temp",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"@material-ui/core": "^4.9.12",
+		"@material-ui/icons": "^4.9.1",
+		"ace-builds": "^1.4.11",
+		"axios": "^0.19.2",
+		"dotenv": "^8.2.0",
+		"next": "9.4.1",
+		"next-redux-wrapper": "^6.0.0",
+		"next-transpile-modules": "^3.3.0",
+		"react": "16.13.1",
+		"react-ace": "^9.0.0",
+		"react-announcement": "^1.1.2",
+		"react-dom": "16.13.1",
+		"react-live-clock": "^4.0.5",
+		"react-redux": "^7.2.0",
+		"react-table-6": "^6.11.0",
+		"react-virtualized": "^9.21.2",
+		"redux": "^4.0.5"
+	},
+	"devDependencies": {
+		"@types/node": "^13.13.4",
+		"@types/react": "^16.9.34",
+		"babel-plugin-import": "^1.13.0",
+		"typescript": "^3.8.3"
+	}
 }

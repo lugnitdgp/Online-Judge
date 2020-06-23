@@ -1,28 +1,28 @@
-.table th{
-    text-align: center 
+.table th {
+	text-align: center;
 }
 
 .table td {
-    text-align: center
+	text-align: center;
 }
 
 .table {
-    margin-top: 0.75rem;
+	margin-top: 0.75rem;
 }
 
 .container {
-    width: 40%
-}
-
-.leaderboard {
-    width: 40%;
-    margin-top: 2rem;
-    user-select: none;
+	width: 40%;
 }
 
 .leaderboard_loader {
-    text-align: center;
-    margin: 0 auto;
-    font-size: 1.5rem;
+	text-align: center;
+	margin: 0 auto;
+	font-size: 1.5rem;
 }
 
+.contain {
+	top: 90%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+}

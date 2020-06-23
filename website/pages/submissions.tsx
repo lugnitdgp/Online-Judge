@@ -1,22 +1,21 @@
 import React from "react";
 import ReactTable from "react-table-6";
-import Layout from '../components/Layout';
+import Layout from "../components/Layout";
 
 const tableStyle = {
   border: "none",
-  boxShadow: "none"
+  boxShadow: "none",
 };
 
 interface IProps {
   classes: any;
 }
 
-export default class submissions extends React.Component <IProps, {}> {
-
+export default class submissions extends React.Component<IProps, {}> {
   state = {
     gotData: false,
-    list: []
-  }
+    list: [],
+  };
   componentDidMount() {
     fetch(`https://ojapi.trennds.com/api/questions?json`, {
       method: "GET",
@@ -27,7 +26,7 @@ export default class submissions extends React.Component <IProps, {}> {
       .then((resp) => resp.json())
       .then((res) => this.setState({ list: res }))
       .catch((error) => {
-         console.log(error);
+        console.log(error);
       });
   }
 
@@ -37,45 +36,47 @@ export default class submissions extends React.Component <IProps, {}> {
         Header: "USER",
         accessor: "user",
         headerClassName: "headerTable",
-        className: "firstColumn"
+        className: "firstColumn",
       },
       {
         Header: "PROBLEM",
         accessor: "problem",
-        headerClassName: "headerTable"
+        headerClassName: "headerTable",
       },
       {
         Header: "LANGUAGE",
         accessor: "language",
-        headerClassName: "headerTable"
+        headerClassName: "headerTable",
       },
       {
         Header: "STATUS",
         accessor: "status",
-        headerClassName: "headerTable"
+        headerClassName: "headerTable",
       },
       {
         Header: "TIME",
         accessor: "time",
-        headerClassName: "headerTable"
+        headerClassName: "headerTable",
       },
       {
         Header: "MEMORY",
         accessor: "memory",
-        headerClassName: "headerTable"
-      }
+        headerClassName: "headerTable",
+      },
     ];
 
     return (
       <Layout>
-      <div>
-        <ReactTable style={tableStyle}
-         data={[1, 2, 3, 4,5]} 
-         columns={columns}
-         defaultPageSize={20}
-         className="-striped -highlight"
-         />
-      </div>
+        <div>
+          <div style={{ margin: "60px auto" }}></div>
+          <ReactTable
+            style={tableStyle}
+            data={[1, 2, 3, 4, 5]}
+            columns={columns}
+            defaultPageSize={10}
+            className="-striped -highlight"
+          />
+        </div>
       </Layout>
     );
   }

@@ -2,7 +2,17 @@ import React from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import {} from '@material-ui/icons';
-import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, Avatar } from '@material-ui/core';
+import {
+	TableContainer,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+	Paper,
+	Avatar,
+	Card
+} from '@material-ui/core';
 import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 const StyledTableCell = withStyles((theme: Theme) =>
@@ -17,7 +27,9 @@ const StyledTableCell = withStyles((theme: Theme) =>
 		}
 	})
 )(TableCell);
-
+interface IProps {
+	classes: any;
+}
 class Leaderboard extends React.Component<IProps, {}> {
 	state = {
 		gotData: false,
@@ -62,30 +74,24 @@ class Leaderboard extends React.Component<IProps, {}> {
 					rel="stylesheet"
 					href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
 				/>
-				<Paper
+				<Card
 					style={{
-						borderRadius: '25px',
-						border: '2px solid #068efd',
-						padding: '20px',
-						top: '19%',
-						left: '50%',
-						transform: 'translate(-50% , -50%)',
-						position: 'absolute'
+						maxWidth: 'md',
+						marginRight: 'auto',
+						marginLeft: 'auto',
+						marginTop: '50px',
+						padding: '10px',
+						margin: '20px'
 					}}
-					elevation={3}
 				>
-					<h1>Contest Ranks</h1>
-				</Paper>
-				<Container className="contain" maxWidth="md">
+					<center>
+						<h1>Leaderboard</h1>
+					</center>
+				</Card>
+				<Container className="contain" maxWidth="md" minWidth="sm">
 					<Paper elevation={3}>
 						<TableContainer>
-							<Table
-								aria-label="simple table"
-								style={{
-									border: '2px solid #000000',
-									padding: '2px'
-								}}
-							>
+							<Table aria-label="simple table">
 								<TableHead>
 									<TableRow>
 										{columns.map((column) => (

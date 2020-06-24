@@ -21,8 +21,13 @@
 }
 
 .contain {
-	top: 90%;
+	padding-top: 10px;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, +5%);
 	position: absolute;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 50px;
+	padding: 10px;
+	margin: 10px;
 }

@@ -4,6 +4,8 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/theme-terminal";
+import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/snippets/c_cpp";
 import "ace-builds/src-noconflict/snippets/java";
 import "ace-builds/src-noconflict/snippets/python";
@@ -14,6 +16,7 @@ interface IProps {
   value: string;
   setValue: (d: string) => void;
   lang: string;
+  theme: string;
 }
 
 function Editor(props: IProps) {
@@ -23,18 +26,26 @@ function Editor(props: IProps) {
     "python3" : "python",
     "java" : "java"
   }
+  const the = {
+    
+"theme-tomorrow" : "tomorrow",
+"theme-terminal":  "terminal" ,
+"theme-twilight" : "twilight"
+
+    
+  }
 
   return (
     <Card>
       <CardContent>
         <AceEditor
           mode={dict[props.lang]}
-          theme="tomorrow"
+          theme={the[props.theme]}
           value={props.value}
           onChange={(e) => props.setValue(e)}
           name="UNIQUE"
-          height="400px"
-          width="800px"
+          height="465px"
+          width="865px"
           fontSize={16}
           enableBasicAutocompletion={true}
           enableLiveAutocompletion={true}

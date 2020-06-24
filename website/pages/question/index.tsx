@@ -1,23 +1,15 @@
 import React from "react";
 import Layout from "components/Layout";
-import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
-import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { Grid } from "@material-ui/core";
+
 
 interface IState {
   list: Array<any>;
 }
-
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: theme.palette.common.white,
-      color: theme.palette.common.black,
-    },
-    body: {
-      fontSize: 14,
-    },
-  })
-)(TableCell);
 
 class questionlist extends React.Component<{}, IState> {
   constructor(props: Readonly<{}>) {
@@ -40,33 +32,43 @@ class questionlist extends React.Component<{}, IState> {
   }
 
   render() {
+ 
     return (
       <Layout>
-        <TableContainer component={Paper}>
-          <TableHead>
-            <StyledTableCell>Question Code</StyledTableCell>
-            <StyledTableCell>QUESTION</StyledTableCell>
-            <StyledTableCell>SCORE</StyledTableCell>
-          </TableHead>
-          {this.state.list
+        <Grid container style={{
+        }}>
+        {this.state.list
             ? this.state.list.map((item, i) => (
                 <div key={i}>
-                  <TableCell>{item.question_code}</TableCell>
-
-                  <TableCell>
-                    <a href={`/question/${item.question_code}`}>
-                      {item.question_name}
-                    </a>
-                  </TableCell>
-
-                  <TableCell>{item.question_score}</TableCell>
+            <Card  elevation={3} style={{
+               width : 820,
+               height: 150,
+               paddingTop : 3,
+            }}>
+        <CardContent>
+          <Typography  color="textSecondary" gutterBottom>
+              {item.question_code}
+        </Typography>
+                
+        <Typography variant="h4" component="h2">
+        {item.question_name}
+        </Typography>
+            </CardContent>
+               
+                <Button color="primary" variant="outlined">
+                <a href={`/question/${item.question_code}`}>
+                   SOLVE CHALLENGE
+                 </a>
+                 </Button>
+            
+        </Card>
                 </div>
               ))
             : null}
-        </TableContainer>
+        </Grid>
       </Layout>
     );
   }
 }
 
-export default questionlist;
+export default  questionlist;

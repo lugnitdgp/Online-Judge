@@ -1,28 +1,10 @@
 import React from "react";
 import { Grid, Typography, Card, CardHeader, CardContent } from "@material-ui/core";
 import { } from "@material-ui/icons";
-import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { withStyles,} from "@material-ui/core/styles";
+import styles from "../styles/IndexStyles";
 import Layout from "../components/Layout";
 
-const styles = createStyles((theme: Theme) => ({
-    "@global": {
-        body: {
-        },
-    },
-    "@keyframes move": {
-        from: {
-            transform: "translate(-50%, 200%)",
-            opacity: 0,
-        },
-        to: {
-            transform: "translate(-50%, -50%)",
-            opacity: 1,
-        },
-    },
-    card: {
-        marginBottom: theme.spacing(3)
-    }
-}));
 
 interface IProps {
     classes: any;
@@ -34,8 +16,10 @@ class IndexPage extends React.Component<IProps, {}> {
     render() {
         const { classes } = this.props;
         return (
+            
             <Layout>
                 <Grid container justify="center" alignItems="center" direction="column">
+                <main className={classes.main}>
                     <Card className={classes.card}>
                         <CardHeader title="Sum of two" />
                         <CardContent>
@@ -45,8 +29,10 @@ class IndexPage extends React.Component<IProps, {}> {
                              n for you to solve.</Typography>
                         </CardContent>
                     </Card>
+                    </main>
                 </Grid>
             </Layout>
+          
         );
     }
 }

@@ -2,13 +2,9 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import Cookie from "lib/models/Cookie";
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Button,
   Grid,
   FormControl,
-  InputLabel,
   MenuItem,
   CircularProgress,
 } from "@material-ui/core";
@@ -23,14 +19,50 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Layout from "components/Layout";
 import { CheckCircleOutline, Error } from "@material-ui/icons";
+import Typography from '@material-ui/core/Typography';
+import { withStyles,createStyles, Theme} from "@material-ui/core/styles";
+
+
+const styles = createStyles((theme: Theme) => ({
+  root: {
+    width: "100%",
+    marginBottom: 0,
+    
+  },
+  paper: {
+    flexDirection: "column",
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    marginTop: theme.spacing(5),
+  },
+  details : {
+    paddingTop:  theme.spacing(2),
+    paddingLeft :theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    paddingBottom: theme.spacing(3)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    marginTop: theme.spacing(1.8),
+    minWidth: 120,
+  },
+  button: {
+    marginLeft: theme.spacing(83),
+    marginTop: theme.spacing(3),
+  }
+   
+}));
+
 
 interface IProps {
   data: any;
+  classes: any;
 }
 
 interface IState {
   value: string;
   lang: string;
+  theme: string;
   res: Array<any>;
   isLoading: boolean;
 }
@@ -42,6 +74,7 @@ class QuesDetail extends React.Component<IProps, IState> {
     this.state = {
       value: "",
       lang: "c++",
+      theme: "theme-terminal",
       res: [],
       isLoading: false,
     };
@@ -95,88 +128,116 @@ class QuesDetail extends React.Component<IProps, IState> {
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <Layout>
-        <Grid container justify="center">
+        <Grid container justify="center" className={classes.root}>
+
           <Grid item>
-            <Card>
-              <CardHeader title={this.props.data.question_code} />
-            </Card>
-            <Card>
-              <CardContent
-                style={{
-                  fontSize: "16px",
-                  justifyContent: "center",
-                  margin: "10px",
-                  padding: "18px",
-                }}
-              >
-                {this.props.data.question_text}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader title="Input Example" />
-              <CardContent>
-                <div
+          <Paper elevation={3} className={classes.paper}>
+            <div className={classes.details}>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              {this.props.data.question_code}
+            </Typography>
+              
+            
+            <Typography variant="subtitle1" gutterBottom>
+            {this.props.data.question_text}
+            </Typography>
+             <hr></hr>
+          <Typography variant="h6" gutterBottom>
+            INPUT EXAMPLE
+         </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+          <div
                   style={{ whiteSpace: "pre-wrap" }}
                   dangerouslySetInnerHTML={{
                     __html: this.props.data.input_example,
                   }}
                 />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader title="Output Example" />
-              <CardContent>
-                <div
+          </Typography>
+          <hr></hr>
+          <Typography variant="h6" gutterBottom>
+            OUTPUT EXAMPLE
+      </Typography>
+    
+          <Typography variant="subtitle1" gutterBottom>
+               <div
                   style={{ whiteSpace: "pre-wrap" }}
                   dangerouslySetInnerHTML={{
                     __html: this.props.data.output_example,
                   }}
                 />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid>
-            <FormControl
-              variant="outlined"
-              fullWidth
-              style={{ margin: "16px" }}
-            >
-              <InputLabel>Select Language</InputLabel>
-              <Select
-                value={this.state.lang}
-                onChange={(e) =>
-                  this.setState({ lang: e.target.value as string })
-                }
-              >
-                <MenuItem value="c">C</MenuItem>
-                <MenuItem value="c++">C++</MenuItem>
-                <MenuItem value="python3">Python</MenuItem>
-                <MenuItem value="java">Java</MenuItem>
-              </Select>
-            </FormControl>
-            <Editor
-              value={this.state.value}
-              lang={this.state.lang}
-              setValue={(d) =>
-                this.setState({
-                  value: d,
-                })
-              }
-            />
+          </Typography>
+           </div>
+         </Paper>
+       </Grid >
+       
+       
+
+       <Grid item xs={8}>
+      <Paper elevation={3} className={classes.paper}>
+          
+           <FormControl className={classes.formControl}>
+          <Select
+             labelId="demo-controlled-open-select-label"
+             id="demo-controlled-open-select"
+            value={this.state.lang}
+            onChange={(e) =>
+              this.setState({ lang: e.target.value as string })
+            }
+          >
+            <MenuItem value="c">C</MenuItem>
+            <MenuItem value="c++">C++</MenuItem>
+            <MenuItem value="python3">Python</MenuItem>
+            <MenuItem value="java">Java</MenuItem>
+          </Select>
+          </FormControl>
+          
+
+          <FormControl className={classes.formControl}>
+          <Select
+             labelId="demo-controlled-open-select-label"
+             id="demo-controlled-open-select"
+            value={this.state.theme}
+            onChange={(e) =>
+              this.setState({ theme: e.target.value as string })
+            }
+          >
+            <MenuItem value="theme-terminal">terminal</MenuItem>
+            <MenuItem value="theme-tomorrow">tomorrow</MenuItem>
+            <MenuItem value="theme-twilight">twilight</MenuItem>
+
+          </Select>
+          </FormControl>
+        <Editor
+          value={this.state.value}
+          lang={this.state.lang}
+           theme={this.state.theme}
+          setValue={(d) =>
+            this.setState({
+              value: d,
+            })
+          }
+        />
+    </Paper>
+        
+
             {this.state.isLoading ? (
               <CircularProgress size={24} />
             ) : (
               <Button
-                variant="outlined"
-                onClick={() =>
+               className={classes.button}
+               color="primary" variant="outlined"
+                 onClick={() =>
                   this.submitcode(this.state.value, this.state.lang)
                 }
               >
                 Submit
               </Button>
             )}
+          
+         
             {this.state.res.length > 1 ? (
               <TableContainer component={Paper}>
                 <Table
@@ -223,10 +284,11 @@ class QuesDetail extends React.Component<IProps, IState> {
                 ))}
               </React.Fragment>
             )}
-          </Grid>
-        </Grid>
+      </Grid>
+         </Grid>
       </Layout>
     );
+    
   }
 }
 
@@ -269,4 +331,4 @@ function ResultStatus({ status }) {
   } else return status;
 }
 
-export default QuesDetail;
+export default  withStyles(styles)(QuesDetail);

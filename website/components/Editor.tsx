@@ -21,35 +21,31 @@ interface IProps {
 
 function Editor(props: IProps) {
   const dict = {
-    "c" : "c_cpp",
-    "c++" : "c_cpp",
-    "python3" : "python",
-    "java" : "java"
-  }
+    c: "c_cpp",
+    "c++": "c_cpp",
+    python3: "python",
+    java: "java",
+  };
   const the = {
-    
-"theme-tomorrow" : "tomorrow",
-"theme-terminal":  "terminal" ,
-"theme-twilight" : "twilight"
-
-    
-  }
+    "theme-tomorrow": "tomorrow",
+    "theme-terminal": "terminal",
+    "theme-twilight": "twilight",
+  };
 
   return (
     <Card>
-      <CardContent>
+      <CardContent style={{ overflow: "scroll" }}>
         <AceEditor
           mode={dict[props.lang]}
           theme={the[props.theme]}
           value={props.value}
           onChange={(e) => props.setValue(e)}
           name="UNIQUE"
-          height="465px"
-          width="865px"
           fontSize={16}
           enableBasicAutocompletion={true}
           enableLiveAutocompletion={true}
           enableSnippets={true}
+          style={{ width: "100%" }}
         />
       </CardContent>
     </Card>

@@ -1,10 +1,10 @@
 import React from "react";
 import Layout from "components/Layout";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import { Grid } from "@material-ui/core";
+import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableRow from "@material-ui/core/TableRow";
 
 interface IState {
   list: Array<any>;
@@ -33,38 +33,64 @@ class questionlist extends React.Component<{}, IState> {
   render() {
     return (
       <Layout>
-        <Grid container style={{}}>
-          {this.state.list
-            ? this.state.list.map((item, i) => (
-                <div key={i}>
-                  <Card
-                    elevation={3}
-                    style={{
-                      width: 820,
-                      height: 150,
-                      paddingTop: 3,
-                    }}
-                  >
-                    <CardContent>
-                      <Typography color="textSecondary" gutterBottom>
-                        {item.question_code}
-                      </Typography>
+        <TableContainer
+          component={Paper}
+          style={{ maxWidth: "700px", margin: "30px auto" }}
+        >
+          <Table
+            //className={classes.table}
+            size="small"
+            aria-label="simple table"
+            style={{ maxWidth: "700px", margin: "0 auto" }}
+          >
+            <TableHead>
+              <TableRow style={{ backgroundColor: "#bbaaff" }}>
+                <TableCell>Question Code</TableCell>
+                <TableCell align="left">Question</TableCell>
+                <TableCell align="right">Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.list
+                ? this.state.list.map((item, i) => (
+                    <TableRow key={i}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ textDecoration: "None", color: "#512daa" }}
+                      >
+                        <a
+                          href={`/question/${item.question_code}`}
+                          style={{ textDecoration: "None", color: "#512daa" }}
+                        >
+                          {item.question_code}
+                        </a>
+                      </TableCell>
 
-                      <Typography variant="h4" component="h2">
-                        {item.question_name}
-                      </Typography>
-                    </CardContent>
+                      <TableCell
+                        align="left"
+                        style={{ textDecoration: "None" }}
+                      >
+                        <a
+                          href={`/question/${item.question_code}`}
+                          style={{ textDecoration: "None", color: "#512daa" }}
+                        >
+                          {item.question_name}
+                        </a>
+                      </TableCell>
 
-                    <Button color="primary" variant="outlined">
-                      <a href={`/question/${item.question_code}`}>
-                        SOLVE CHALLENGE
-                      </a>
-                    </Button>
-                  </Card>
-                </div>
-              ))
-            : null}
-        </Grid>
+                      <TableCell
+                        align="right"
+                        style={{ textDecoration: "None", color: "#441199" }}
+                      >
+                        {item.question_score}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : null}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Layout>
     );
   }

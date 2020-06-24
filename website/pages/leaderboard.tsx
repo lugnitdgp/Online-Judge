@@ -17,7 +17,9 @@ const StyledTableCell = withStyles((theme: Theme) =>
 		}
 	})
 )(TableCell);
-
+interface IProps {
+	classes: any;
+}
 class Leaderboard extends React.Component<IProps, {}> {
 	state = {
 		gotData: false,
@@ -46,12 +48,12 @@ class Leaderboard extends React.Component<IProps, {}> {
 			id: 'rank' | 'image' | 'name' | 'score';
 			label: string;
 			minWidth?: number;
-			align?: 'right';
+			align?: 'right' | 'center' | 'left';
 			format?: (value: number) => string;
 		}
 		const columns: Column[] = [
 			{ id: 'rank', align: 'center', label: 'Rank', minWidth: 100 },
-			{ id: 'image', align: 'right', minWidth: 10 },
+			{ id: 'image', label: 'Image', align: 'right', minWidth: 10 },
 			{ id: 'name', align: 'left', label: 'User', minWidth: 100 },
 			{ id: 'score', align: 'center', label: 'Score', minWidth: 100 }
 		];

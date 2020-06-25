@@ -8,7 +8,6 @@ import Router from 'next/router';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import UserContextProvider from '../components/UserContextProvider';
 import '../styles/main.css';
-import "react-table-6/react-table.css";
 
 class MyApp extends App {
 	constructor(props) {
@@ -25,19 +24,14 @@ class MyApp extends App {
 		}
 
 		this.setState({ loaded: true });
-		Router.events.on('routeChangeStart', () =>
-			this.setState({ loaded: false })
-		);
-		Router.events.on('routeChangeComplete', () =>
-			this.setState({ loaded: true })
-		);
+		Router.events.on('routeChangeStart', () => this.setState({ loaded: false }));
+		Router.events.on('routeChangeComplete', () => this.setState({ loaded: true }));
 	}
 
 	render() {
 		const { Component, pageProps } = this.props;
 
 		return (
-
 			<React.Fragment>
 				<Head>
 					<title>Online Judge</title>
@@ -46,11 +40,7 @@ class MyApp extends App {
 					<ThemeProvider theme={theme}>
 						{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 						<CssBaseline />
-						{this.state.loaded ? (
-							<Component {...pageProps} />
-						) : (
-								<LinearProgress />
-							)}
+						{this.state.loaded ? <Component {...pageProps} /> : <LinearProgress />}
 					</ThemeProvider>
 				</UserContextProvider>
 			</React.Fragment>

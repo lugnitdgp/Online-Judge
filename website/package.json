@@ -21,6 +21,7 @@
 		"react-announcement": "^1.1.2",
 		"react-dom": "16.13.1",
 		"react-live-clock": "^4.0.5",
+		"react-modal": "^3.11.2",
 		"react-redux": "^7.2.0",
 		"react-table-6": "^6.11.0",
 		"react-virtualized": "^9.21.2",

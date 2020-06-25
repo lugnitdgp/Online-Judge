@@ -6,5 +6,6 @@ urlpatterns = [
     path("quesdetail",views.GetQuestion,name="GetQuestionDetail"),
     path('submit',views.submitCode, name="SubmitAnswer"),
     path('status', views.status, name="StatusForTheSubmittedAnswer"),
-    path('leaderboard', views.leaderboard, name="LeaderBoardapi")
+    path('leaderboard', views.leaderboard, name="LeaderBoardapi"),
+    path('contests', views.GetContestList, name="Contest")
 ]

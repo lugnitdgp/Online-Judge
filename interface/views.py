@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from interface.serializers import QuestionSerializer, QuestionListSerializer
-from interface.models import Question, Job, Testcases
+from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer
+from interface.models import Question, Job, Testcases, Contest
 from interface.tasks import execute
 from accounts.serializers import CoderSerializer
 from accounts.models import Coder
@@ -14,13 +14,26 @@ from urllib.parse import unquote
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
+def GetContestList(request):
+    query_set = Contest.objects.all()
+    serializer = ContestSerializer(query_set, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 @permission_classes([
     IsAuthenticated,
 ])
 def GetQuestionList(request):
-    query_set = Question.objects.order_by('pk')
-    serializer = QuestionListSerializer(query_set, many=True)
-    return Response(serializer.data)
+    contest = Contest.objects.get(contest_code=request.GET['contest_id'])
+    query_set = Question.objects.filter(contest = contest)
+    if contest.isStarted():
+        serializer = QuestionListSerializer(query_set, many=True)
+        return Response(serializer.data)
+    if contest.isOver():
+        return Response({'status': 302, 'message': 'Contest is Over'})
+    return Response({'status':301, 'message':'Contest hasnt started'})
 
 
 @api_view(['GET'])
@@ -29,7 +42,8 @@ def GetQuestionList(request):
 ])
 def GetQuestion(request):
     try:
-        question = Question.objects.get(question_code=request.GET['q_id'])
+        contest = Contest.objects.get(contest_code=request.GET['contest_id'])
+        question = Question.objects.get(question_code=request.GET['q_id'], contest=contest)
         serializer = QuestionSerializer(question)
         return Response(serializer.data)
     except ObjectDoesNotExist:
@@ -43,8 +57,10 @@ def GetQuestion(request):
 def submitCode(request):
     lang = request.data.get('lang')
     code = unquote(request.data.get('code'))
+    contest_code = request.data.get('contest_id')
     try:
-        question = Question.objects.get(question_code=request.data.get('q_id'))
+        contest = Contest.objects.get(contest_code=contest_code)
+        question = Question.objects.get(question_code=request.data.get('q_id'),contest=contest)
         coder = Coder.objects.get(user=request.user)
         task = execute.delay(
             QuestionSerializer(question).data,
@@ -59,7 +75,8 @@ def submitCode(request):
 def status(request):
     try:
         coder = Coder.objects.get(user=request.user)
-        question = Question.objects.get(question_code=request.data.get('q_id'))
+        contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
+        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         job = Job.objects.get(coder=coder,
                               question=question,
                               job_id=request.data.get('task_id'))
@@ -82,7 +99,9 @@ def status(request):
 @permission_classes([AllowAny])
 def leaderboard(request):
     coder_array = []
-    for (rank, coder) in enumerate(Coder.objects.order_by('-score', 'time_stamp'), start=1):
+    for (rank,
+         coder) in enumerate(Coder.objects.order_by('-score', 'time_stamp'),
+                             start=1):
         coder_array.append({
             "rank": rank,
             "name": coder.name,

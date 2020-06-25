@@ -7,6 +7,7 @@ from judge.settings import TEST_CASE_DIR
 from shutil import rmtree
 import os
 from accounts.models import Coder
+from djrichtextfield.models import RichTextField
 
 
 class Config(models.Model):
@@ -18,16 +19,30 @@ class Config(models.Model):
     def __str__(self):
         return "Server wide config for start and end time"
 
+class Contest(models.Model):
+    contest_name = models.TextField(help_text="Name of Contest", blank=True)
+    contest_code = models.TextField(blank=True, help_text="Code for Contest")
+    start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
+    end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
+     
+    def __str__(self):
+        return self.contest_name + " " + self.contest_code
+
+    def isStarted(self):
+        return (t.now() > self.start_time and t.now() < self.end_time)
+
+    def isOver(self):
+        return (t.now() > self.end_time and t.now() > self.start_time)
 
 class Question(models.Model):
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
     question_code = models.CharField(max_length=50,
                                      blank=True,
                                      help_text="Code for the question")
     question_name = models.CharField(max_length=50,
                                      blank=True,
                                      help_text="Name of the question")
-    question_text = models.TextField(
-        blank=True, help_text="The entire text for the question")
+    question_text = RichTextField()
     question_image = models.ImageField(
         blank=True, help_text="Optional Image if the question demands")
     question_score = models.IntegerField(
@@ -36,25 +51,27 @@ class Question(models.Model):
         blank=True, help_text="Example showing how should the input look")
     output_example = models.TextField(
         blank=True, help_text="Example showing how should the output look")
-    c_time_limit = models.IntegerField(
+    time_limit = models.IntegerField(
         default=1, help_text="Time Limit of the question for C")
-    c_mem_limit = models.BigIntegerField(default=100000,
+    mem_limit = models.BigIntegerField(default=100000,
                                          help_text="Memory Limit for C")
-    cpp_time_limit = models.IntegerField(
-        default=1, help_text="Time Limit of the question for C++")
-    cpp_mem_limit = models.BigIntegerField(default=100000,
-                                           help_text="Memory Limit for C++")
-    python_time_limit = models.IntegerField(
-        default=2, help_text="Time Limit of the question for Python")
-    python_mem_limit = models.BigIntegerField(
-        default=500000, help_text="Memory Limit for Python")
-    java_time_limit = models.IntegerField(
-        default=2, help_text="Time Limit of the question for JAVA")
-    java_mem_limit = models.BigIntegerField(default=500000,
-                                            help_text="Memory Limit for JAVA")
+    c_cpp_multiplier = models.IntegerField(
+        default=1, help_text="Time and Memory Limit multiplier for C/C++")
+    python_multiplier = models.IntegerField(
+        default=2, help_text="Time and Memory limit multiplier for Python")
+    java_multipler = models.IntegerField(default=2, help_text="Time and Memory limit multipler for JAVA")
 
     def __str__(self):
         return self.question_text
+
+    def c_cpp_lim(self):
+        return [self.c_cpp_multiplier*self.time_limit, self.c_cpp_multiplier*self.mem_limit]
+
+    def python_lim(self):
+        return [self.python_multiplier*self.time_limit, self.python_multiplier*self.mem_limit]
+
+    def java_lim(self):
+        return [self.java_multipler*self.time_limit, self.java_multipler*self.mem_limit]
 
     def save(self, *args, **kwargs):
         super(Question, self).save(*args, **kwargs)

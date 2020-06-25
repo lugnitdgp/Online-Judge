@@ -36,7 +36,10 @@ export default class submissions extends React.Component<IProps, {}> {
 				label: '  USER',
 				options: {
 					filter: false,
-					sort: false
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
 				}
 			},
 			{
@@ -44,7 +47,10 @@ export default class submissions extends React.Component<IProps, {}> {
 				label: 'PROBLEM',
 				options: {
 					filter: false,
-					sort: false
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
 				}
 			},
 			{
@@ -52,7 +58,10 @@ export default class submissions extends React.Component<IProps, {}> {
 				label: 'LANGUAGE',
 				options: {
 					filter: true,
-					sort: false
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
 				}
 			},
 			{
@@ -60,7 +69,10 @@ export default class submissions extends React.Component<IProps, {}> {
 				label: 'STATUS',
 				options: {
 					filter: true,
-					sort: false
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
 				}
 			},
 			{
@@ -68,7 +80,10 @@ export default class submissions extends React.Component<IProps, {}> {
 				label: 'TIME',
 				options: {
 					filter: false,
-					sort: true
+					sort: true,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
 				}
 			},
 			{
@@ -76,7 +91,10 @@ export default class submissions extends React.Component<IProps, {}> {
 				label: 'MEMORY',
 				options: {
 					filter: false,
-					sort: true
+					sort: true,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
 				}
 			}
 		];

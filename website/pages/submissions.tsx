@@ -13,7 +13,7 @@ export default class submissions extends React.Component<IProps, {}> {
 		list: []
 	};
 	componentDidMount() {
-		fetch(`https://ojapi.trennds.com/api/questions?json`, {
+		fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?json`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Token ${localStorage.token}`

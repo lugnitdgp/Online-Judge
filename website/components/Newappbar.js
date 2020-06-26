@@ -101,8 +101,8 @@ class Newappbar extends Component {
 								</Button>
 							</ListItem>
 							<ListItem key={3} button divider>
-								<Button color="inherit" onClick={() => Router.push('/question')}>
-									Questions
+								<Button color="inherit" onClick={() => Router.push('/')}>
+									Contests
 								</Button>
 							</ListItem>
 							<ListItem key={4} button divider>
@@ -142,8 +142,8 @@ class Newappbar extends Component {
 						Leaderboard
 					</Button>
 					{/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
-					<Button color="inherit" onClick={() => Router.push('/question')}>
-						Questions
+					<Button color="inherit" onClick={() => Router.push('/')}>
+						Contests
 					</Button>
 					{localStorage.onlinejudge_info ? (
 						<React.Fragment>

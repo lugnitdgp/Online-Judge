@@ -21,6 +21,7 @@
 		"react-ace": "^9.0.0",
 		"react-announcement": "^1.1.2",
 		"react-live-clock": "^4.0.5",
+		"react-material-ui-carousel": "^1.6.0",
 		"react-modal": "^3.11.2",
 		"react-redux": "^7.2.0",
 		"react-virtualized": "^9.21.2",

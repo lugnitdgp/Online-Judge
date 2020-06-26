@@ -44,8 +44,8 @@ const styles = createStyles((theme: Theme) => ({
     flexDirection: "column",
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: theme.spacing(5),
-    minHeight: "70%",
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(2),
     maxWidth: "1100px",
   },
   details: {
@@ -63,9 +63,7 @@ const styles = createStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
   },
 }));
-const customStyles = {
-  content: {},
-};
+
 interface IProps {
   data: any;
   classes: any;
@@ -154,20 +152,18 @@ class QuesDetail extends React.Component<IProps, IState> {
     const { classes } = this.props;
     return (
       <Layout>
-        <div style={{ position: "relative", margin: "0 auto" }}>
+        <div>
           <ReactModal
             isOpen={this.state.showModal}
             contentLabel="Minimal Modal Example"
-            style={customStyles}
           >
             <div
               style={{
-                margin: "10px auto",
+                margin: "0 auto",
                 textAlign: "center",
-                height: "900px",
+                height: "0px",
               }}
             >
-              <button onClick={this.handleCloseModal}>Close Modal</button>
               <Paper elevation={3} className={classes.paper2}>
                 <div style={{ margin: "0 auto", textAlign: "center" }}>
                   <FormControl className={classes.formControl}>
@@ -200,7 +196,12 @@ class QuesDetail extends React.Component<IProps, IState> {
                       <MenuItem value="theme-twilight">twilight</MenuItem>
                     </Select>
                   </FormControl>
-
+                  <Button
+                    style={{ marginTop: "14px" }}
+                    onClick={this.handleCloseModal}
+                  >
+                    MINIMIZE
+                  </Button>
                   <Editor
                     value={this.state.value}
                     lang={this.state.lang}
@@ -219,7 +220,16 @@ class QuesDetail extends React.Component<IProps, IState> {
                       className={classes.button}
                       color="primary"
                       variant="outlined"
-                      style={{ margin: "10px auto" }}
+                      style={{
+                        border: "None",
+                        backgroundColor: "#7788ff",
+                        height: "30px",
+                        width: "100px",
+                        borderRadius: "5px",
+                        color: "white",
+                        textDecoration: "None",
+                        marginBottom: "20px",
+                      }}
                       onClick={() =>
                         this.submitcode(this.state.value, this.state.lang)
                       }
@@ -334,8 +344,24 @@ class QuesDetail extends React.Component<IProps, IState> {
                 />
               </Typography>
               <hr></hr>
+
+              <div>
+                <Button
+                  style={{
+                    border: "None",
+                    backgroundColor: "#7788ff",
+                    height: "30px",
+                    width: "100px",
+                    borderRadius: "5px",
+                    color: "white",
+                    textDecoration: "None",
+                  }}
+                  onClick={this.handleOpenModal}
+                >
+                  CODE
+                </Button>
+              </div>
             </div>
-            <button onClick={this.handleOpenModal}>CODE</button>
           </Paper>
         </div>
       </Layout>

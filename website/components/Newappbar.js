@@ -35,7 +35,7 @@ class Newappbar extends Component {
 		this.destroyDrawer = this.destroyDrawer.bind(this);
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		if (window.innerWidth <= 600) {
 			this.setState({ drawerActivate: true });
 		}
@@ -110,13 +110,13 @@ class Newappbar extends Component {
 									<React.Fragment>
 										<Avatar src={JSON.parse(localStorage.onlinejudge_info).image_link} />
 										&nbsp;
-										{JSON.parse(localStorage.onlinejudge_info).name.split('@')[0]}
+										{JSON.parse(localStorage.onlinejudge_info).email.split('@')[0]}
 									</React.Fragment>
 								) : (
-									<Button color="inherit" onClick={() => Router.push('/login')}>
-										Login
-									</Button>
-								)}
+										<Button color="inherit" onClick={() => Router.push('/login')}>
+											Login
+										</Button>
+									)}
 							</ListItem>
 						</List>
 					</div>
@@ -149,13 +149,13 @@ class Newappbar extends Component {
 						<React.Fragment>
 							<Avatar src={JSON.parse(localStorage.onlinejudge_info).image_link} />
 							&nbsp;
-							{JSON.parse(localStorage.onlinejudge_info).name.split('@')[0]}
+							{JSON.parse(localStorage.onlinejudge_info).email.split('@')[0]}
 						</React.Fragment>
 					) : (
-						<Button color="inherit" onClick={() => Router.push('/login')}>
-							Login
-						</Button>
-					)}
+							<Button color="inherit" onClick={() => Router.push('/login')}>
+								Login
+							</Button>
+						)}
 				</Toolbar>
 			</AppBar>
 		);

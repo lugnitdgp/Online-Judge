@@ -1,10 +1,11 @@
 import React from 'react';
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core';
-import {} from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import styles from '../styles/IndexStyles';
 import Layout from '../components/Layout';
 import Carousel from 'react-material-ui-carousel';
+import Router from 'next/router';
+
 
 interface IProps {
 	classes: any;
@@ -86,6 +87,12 @@ class IndexPage extends React.Component<IProps, {}> {
 			<div>
 				<Card elevation={0}>
 					<img
+						onClick={() => {
+							localStorage.setItem('code', props.item.contest_code)
+							Router.push('/question')
+
+
+						}}
 						className={props.classes.carousel}
 						src="https://i.ytimg.com/vi/J2HGH8LrblU/maxresdefault.jpg"
 					/>

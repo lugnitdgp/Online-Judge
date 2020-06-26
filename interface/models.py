@@ -157,3 +157,14 @@ def testcases_delete(sender, instance, using, **kwargs):
         os.path.join(
             os.path.join(TEST_CASE_DIR, "ques{}".format(instance.question.pk)),
             "output{}.out".format(instance.pk)))
+
+
+class Contest_Score(models.Model):
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
+    coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
+    wa = models.IntegerField(default=0, help_text="Number of WAs of the user")
+    timestamp = models.DateTimeField(default = t.now, help_text="Latest submission")
+
+    def __str__(self):
+        return self.contest.contest_name + " " + self.coder.name

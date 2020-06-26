@@ -39,12 +39,12 @@ class Coder(models.Model):
 
     def put_solved(self, ques_code):
         solved_arr = self.get_solved()
-        solved_arr.append(ques_code)
+        solved_arr.append(str(ques_code))
         self.solved_ques = ",".join(solved_arr)
 
     def check_solved(self, ques_code):
         solved_arr = self.get_solved()
         for solved in solved_arr:
-            if solved == ques_code:
+            if solved == str(ques_code):
                 return True
         return False

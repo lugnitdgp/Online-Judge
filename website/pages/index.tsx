@@ -9,7 +9,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import styles from "../styles/IndexStyles";
 import Layout from "../components/Layout";
-import Carousel from "react-material-ui-carousel";
+import Carousel from 'react-bootstrap/Carousel'
 import Router from "next/router";
 
 interface IProps {
@@ -88,18 +88,20 @@ class IndexPage extends React.Component<IProps, {}> {
       });
   }
   Item(props) {
+    const img = `./img/${props.item.contest_code}.jpg`
+    console.log(img)
     return (
       <div>
-        <Card elevation={0}>
+        {/* <Card elevation={0}>
           <img
             onClick={() => {
               localStorage.setItem("code", props.item.contest_code);
               Router.push("/question");
             }}
             className={props.classes.carousel}
-            src="https://i.ytimg.com/vi/J2HGH8LrblU/maxresdefault.jpg"
+            src={img}
           />
-        </Card>
+        </Card> */}
         <h2>{props.item.contest_name}</h2>
         <p>Contest timings</p>
         <h4>
@@ -112,9 +114,9 @@ class IndexPage extends React.Component<IProps, {}> {
   render() {
     const { classes } = this.props;
 
-    var items = this.state.list;
     return (
       <Layout>
+
         <Grid container justify="center" alignItems="center" direction="column">
           <main className={classes.main}>
             <Card className={classes.card}>
@@ -133,11 +135,31 @@ class IndexPage extends React.Component<IProps, {}> {
           <Card style={{ textAlign: "center", marginBottom: "20px" }}>
             <CardHeader title="Current Contests" />
             <CardContent>
-              <Carousel>
-                {items.map((item) => (
-                  <this.Item item={item} classes={classes} />
-                ))}
+              <Carousel
+                indicators={false}
+              >{this.state.list.map((item) => (
+                <Carousel.Item>
+                  <img
+                    onClick={() => {
+                      localStorage.setItem("code", item.contest_code);
+                      Router.push("/question");
+                    }}
+                    className={classes.carousel} src="https://i.ytimg.com/vi/J2HGH8LrblU/maxresdefault.jpg"
+                    alt={item.contest_name}
+                  />
+                  <Card>
+                    <h6>{item.contest_name}</h6>
+                    <p>Contest timings</p>
+                    <p>
+                      {item.start_time} - {item.end_time}
+                    </p>
+                  </Card>
+
+                </Carousel.Item>
+              ))}
+
               </Carousel>
+
             </CardContent>
           </Card>
         </Grid>

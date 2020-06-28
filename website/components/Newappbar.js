@@ -123,8 +123,8 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                  <div></div>
-                )}
+                <div></div>
+              )}
 
               {localStorage.onlinejudge_info ? (
                 <ListItem key={2} button divider>
@@ -136,14 +136,39 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                  <div></div>
-                )}
+                <div></div>
+              )}
 
               <ListItem key={3} button divider>
                 <Button color="inherit" onClick={() => Router.push("/")}>
                   Contests
                 </Button>
               </ListItem>
+              {localStorage.onlinejudge_info ? (
+                <ListItem key={5} button divider>
+                  <Button
+                    color="inherit"
+                    onClick={() => {
+                      fetch(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/account/logout`,
+                        {
+                          method: "POST",
+                          headers: {
+                            Authorization: `Token ${localStorage.token}`,
+                          },
+                        }
+                      ).then(() => {
+                        localStorage.clear();
+                        Router.push("/");
+                      });
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </ListItem>
+              ) : (
+                <div></div>
+              )}
               <ListItem key={4} button divider>
                 {localStorage.onlinejudge_info ? (
                   <React.Fragment>
@@ -158,35 +183,11 @@ class Newappbar extends Component {
                     }
                   </React.Fragment>
                 ) : (
-                    <Button color="inherit" onClick={() => Router.push("/login")}>
-                      Login
-                    </Button>
-                  )}
-              </ListItem>
-
-              {localStorage.onlinejudge_info ? (
-                <ListItem key={5} button divider>
-                  <Button
-                    color="inherit"
-                    onClick={() => {
-                      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/logout`, {
-                        method: "POST",
-                        headers: {
-                          Authorization: `Token ${localStorage.token}`,
-                        }
-                      }).then(() => {
-                        localStorage.clear();
-                        Router.push("/");
-                      })
-
-                    }}
-                  >
-                    Logout
+                  <Button color="inherit" onClick={() => Router.push("/login")}>
+                    Login
                   </Button>
-                </ListItem>
-              ) : (
-                  <div></div>
                 )}
+              </ListItem>
             </List>
           </div>
         </SwipeableDrawer>
@@ -212,15 +213,15 @@ class Newappbar extends Component {
               Submissons
             </Button>
           ) : (
-              <div></div>
-            )}
+            <div></div>
+          )}
           {localStorage.onlinejudge_info ? (
             <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
               Leaderboard
             </Button>
           ) : (
-              <div></div>
-            )}
+            <div></div>
+          )}
           {/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
           <Button color="inherit" onClick={() => Router.push("/")}>
             Contests
@@ -233,19 +234,18 @@ class Newappbar extends Component {
                   method: "POST",
                   headers: {
                     Authorization: `Token ${localStorage.token}`,
-                  }
+                  },
                 }).then(() => {
                   localStorage.clear();
                   Router.push("/");
-                })
-
+                });
               }}
             >
               Logout
             </Button>
           ) : (
-              <div></div>
-            )}
+            <div></div>
+          )}
           {localStorage.onlinejudge_info ? (
             <React.Fragment>
               <Avatar
@@ -255,10 +255,10 @@ class Newappbar extends Component {
               {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]}
             </React.Fragment>
           ) : (
-              <Button color="inherit" onClick={() => Router.push("/login")}>
-                Login
-              </Button>
-            )}
+            <Button color="inherit" onClick={() => Router.push("/login")}>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     );

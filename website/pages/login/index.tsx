@@ -11,8 +11,6 @@ import useInputState from "../../hooks/useInputState";
 import { GetServerSideProps } from "next";
 import { Facebook } from "@material-ui/icons";
 
-
-
 const styles = createStyles((theme: Theme) => ({
   main: {
     width: "auto",
@@ -22,8 +20,8 @@ const styles = createStyles((theme: Theme) => ({
     [theme.breakpoints.up("sm")]: {
       width: 400,
       marginLeft: "auto",
-      marginRight: "auto"
-    }
+      marginRight: "auto",
+    },
   },
   paper: {
     marginTop: theme.spacing(8),
@@ -33,7 +31,6 @@ const styles = createStyles((theme: Theme) => ({
     paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-
   },
 
   form: {
@@ -62,7 +59,7 @@ const styles = createStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
     "&:hover": {
       backgroundColor: "blue",
-    }
+    },
   },
   linkedInButton: {
     backgroundColor: "#027bb6",
@@ -80,7 +77,10 @@ const styles = createStyles((theme: Theme) => ({
 const googleLogin = () => {
   let url = new URL("https://accounts.google.com");
   url.pathname = "/o/oauth2/v2/auth";
-  url.searchParams.set("client_id", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "");
+  url.searchParams.set(
+    "client_id",
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""
+  );
   url.searchParams.set(
     "redirect_uri",
     `${window.location.protocol}//${window.location.host}/login/google`
@@ -100,7 +100,10 @@ const facebookLogin = () => {
     "redirect_uri",
     `${window.location.protocol}//${window.location.host}/login/facebook`
   );
-  url.searchParams.set("client_id", process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID || "");
+  url.searchParams.set(
+    "client_id",
+    process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID || ""
+  );
   url.searchParams.set("scope", ["email"].join(","));
   window.location.href = url.toString();
 };
@@ -127,152 +130,193 @@ interface Props {
   classes: any;
 }
 
-
 function LoginPage(props: Props) {
- 
-   const { classes } = props;
-   const [value, handleChange, reset] = useInputState("");
-   const [isLogin, toggleLogin] = useState(false);
+  const { classes } = props;
+  const [value, handleChange, reset] = useInputState("");
+  const [isLogin, toggleLogin] = useState(false);
 
-   const toggleisLogin = () => {
-     toggleLogin(!isLogin);
-   };
+  const toggleisLogin = () => {
+    toggleLogin(!isLogin);
+  };
 
-
-   return (
+  return (
     <main className={classes.main}>
-      { isLogin ? (
+      {isLogin ? (
         <Paper className={classes.paper}>
-             <Avatar
-                className={classes.avatar}
-                src="https://img.icons8.com/officel/80/000000/court-judge.png"
+          <Avatar
+            className={classes.avatar}
+            src="https://img.icons8.com/officel/80/000000/court-judge.png"
+          />
+          <Typography variant="h3" gutterBottom>
+            Login
+          </Typography>
+          <form
+            className={classes.form}
+            onSubmit={(e) => {
+              e.preventDefault();
+              reset();
+            }}
+          >
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <Input
+                value={value.email}
+                onChange={handleChange}
+                id="email"
+                name="email"
+                autoFocus
               />
-              <Typography variant="h3" gutterBottom>
-                Login
-              </Typography>
-          <form className={classes.form}
-            onSubmit={e => {
-            e.preventDefault();
-            reset();
-          }}>
-            <FormControl margin='normal' required fullWidth>
-              <InputLabel htmlFor='email'>Email</InputLabel>
-              <Input
-               value={value}
-               onChange={handleChange}
-               id='email'
-               name='email'
-               autoFocus />
             </FormControl>
-            <FormControl margin='normal' required fullWidth>
-              <InputLabel htmlFor='password'>Password</InputLabel>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
               <Input
-               value={value}
-               onChange={handleChange}
-               id='password'
-               name='password'
-               autoFocus />
+                value={value.password}
+                onChange={handleChange}
+                id="password"
+                name="password"
+                autoFocus
+              />
             </FormControl>
-  
+
             <Button
-              variant='contained'
-              type='submit'
+              variant="contained"
+              type="submit"
               fullWidth
-              color='primary'
+              color="primary"
               className={classes.submit}
             >
               LogIn
             </Button>
-          
-          </form>
-        </Paper> ) : (
-          <Paper className={classes.paper}>
-            <Avatar
-                className={classes.avatar}
-                src="https://img.icons8.com/officel/80/000000/court-judge.png"
+            <Button
+              variant="outlined"
+              className={classes.googleButton}
+              size="large"
+              fullWidth
+              onClick={() => googleLogin()}
+            >
+              <img
+                src="https://img.icons8.com/color/24/000000/google-logo.png"
+                className={classes.signInIcon}
               />
-              <Typography variant="h3" gutterBottom>
-                Register
-              </Typography>
-            <form className={classes.form}
-              onSubmit={e => {
+              Login with Google
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              fullWidth
+              onClick={() => facebookLogin()}
+              className={classes.facebookButton}
+            >
+              <Facebook className={classes.signInIcon} />
+              Login with Facebook
+            </Button>
+          </form>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => toggleisLogin()}
+            style={{ border: "None", outline: "none" }}
+          >
+            Didn't Sign Up? Register here.
+          </Button>
+        </Paper>
+      ) : (
+        <Paper className={classes.paper}>
+          <Avatar
+            className={classes.avatar}
+            src="https://img.icons8.com/officel/80/000000/court-judge.png"
+          />
+          <Typography variant="h3" gutterBottom>
+            Register
+          </Typography>
+          <form
+            className={classes.form}
+            onSubmit={(e) => {
               e.preventDefault();
               reset();
-            }}>
-  
-            <FormControl margin='normal' required fullWidth>
-              <InputLabel htmlFor='username'>Username</InputLabel>
+            }}
+          >
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="username">Username</InputLabel>
               <Input
-               value={value}
-               onChange={handleChange}
-               id='username'
-               name='username'
-               autoFocus />
+                value={value.username}
+                onChange={handleChange}
+                id="username"
+                name="username"
+                autoFocus
+              />
             </FormControl>
-              <FormControl margin='normal' required fullWidth>
-                <InputLabel htmlFor='email'>Email</InputLabel>
-                <Input
-                 value={value}
-                 onChange={handleChange}
-                 id='email'
-                 name='email'
-                 autoFocus />
-              </FormControl>
-              <FormControl margin='normal' required fullWidth>
-                <InputLabel htmlFor='password'>Password</InputLabel>
-                <Input
-                 value={value}
-                 onChange={handleChange}
-                 id='password'
-                 name='password'
-                 autoFocus />
-              </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">Email</InputLabel>
+              <Input
+                value={value.email}
+                onChange={handleChange}
+                id="email"
+                name="email"
+                autoFocus
+              />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input
+                value={value.password}
+                onChange={handleChange}
+                id="password"
+                name="password"
+                autoFocus
+              />
+            </FormControl>
             <Button
-                variant='contained'
-                type='submit'
-                fullWidth
-                color='primary'
-                className={classes.submit}
-              >
-                SignUp
-              </Button>
-              <Typography color="error"></Typography>
-                 <Button
-                     variant="outlined"
-                     className={classes.googleButton}
-                     size="large"
-                     fullWidth
-                     onClick={() => googleLogin()}
-                 >
-                     <img
-                     src="https://img.icons8.com/color/24/000000/google-logo.png"
-                     className={classes.signInIcon}
-                     />
-                     Sign Up with Google
-                 </Button>
-             <Button
-                 variant="outlined"
-                 color="secondary"
-                 size="large"
-                 fullWidth
-                 onClick={() => facebookLogin()}
-                 className={classes.facebookButton}
-             >
-                 <Facebook className={classes.signInIcon} />
-                 Sign Up with Facebook
-             </Button>
-            </form>
-          </Paper>
-      )}  
-    <Button
-    variant="outlined" color="secondary"
-     onClick={() => toggleisLogin()}>LOGIN</Button>
-   </main>
+              variant="contained"
+              type="submit"
+              fullWidth
+              color="primary"
+              className={classes.submit}
+            >
+              SignUp
+            </Button>
+            <Typography color="error"></Typography>
+            <Button
+              variant="outlined"
+              className={classes.googleButton}
+              size="large"
+              fullWidth
+              onClick={() => googleLogin()}
+            >
+              <img
+                src="https://img.icons8.com/color/24/000000/google-logo.png"
+                className={classes.signInIcon}
+              />
+              Sign Up with Google
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              fullWidth
+              onClick={() => facebookLogin()}
+              className={classes.facebookButton}
+            >
+              <Facebook className={classes.signInIcon} />
+              Sign Up with Facebook
+            </Button>
+          </form>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => toggleisLogin()}
+            style={{ border: "None", outline: "none" }}
+          >
+            Already Registered? Login here.
+          </Button>
+        </Paper>
+      )}
+    </main>
   );
-  }
-  
-  
-  export const getServerSideProps: GetServerSideProps = async (context) => {
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
   var data = context.query;
   if (data.status) {
     if (data.status == "success") {
@@ -280,10 +324,10 @@ function LoginPage(props: Props) {
       context.res.setHeader("Location", "/");
     }
   }
-  
+
   return {
     props: {},
   };
-  };
-  
-  export default withStyles(styles)(LoginPage);
+};
+
+export default withStyles(styles)(LoginPage);

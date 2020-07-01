@@ -1,8 +1,7 @@
 import React from "react";
-import {} from "@material-ui/icons";
+import { } from "@material-ui/icons";
 //import Navbar from "./Navbar";
 import Newappbar from "./Newappbar";
-import Clock from "react-live-clock";
 
 class Layout extends React.Component {
   render() {
@@ -11,7 +10,6 @@ class Layout extends React.Component {
         <Newappbar />
         {this.props.children}
 
-        <Clock format="HH:mm:ss" interval={1000} ticking={true} />
       </React.Fragment>
     );
   }

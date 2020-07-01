@@ -6,6 +6,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../components/theme';
 import Router from 'next/router';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import UserContextProvider from '../components/UserContextProvider';
 import '../styles/main.css';
 

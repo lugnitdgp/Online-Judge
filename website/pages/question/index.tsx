@@ -17,15 +17,18 @@ class questionlist extends React.Component<{}, IState> {
   }
 
   componentDidMount() {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`, {
       method: "GET",
       headers: {
         Authorization: `Token ${localStorage.token}`,
       },
     })
       .then((resp) => resp.json())
-      .then((res) => this.setState({ list: res }))
+      .then((res) => {
+        this.setState({ list: res })
+      })
       .catch((error) => {
+        error = JSON.stringify(error)
         console.log(error);
       });
   }
@@ -53,40 +56,40 @@ class questionlist extends React.Component<{}, IState> {
             <TableBody>
               {this.state.list
                 ? this.state.list.map((item, i) => (
-                    <TableRow key={i}>
-                      <TableCell
-                        component="th"
-                        scope="row"
+                  <TableRow key={i}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ textDecoration: "None", color: "#512daa" }}
+                    >
+                      <a
+                        href={`/question/${item.question_code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
-                        <a
-                          href={`/question/${item.question_code}`}
-                          style={{ textDecoration: "None", color: "#512daa" }}
-                        >
-                          {item.question_code}
-                        </a>
-                      </TableCell>
+                        {item.question_code}
+                      </a>
+                    </TableCell>
 
-                      <TableCell
-                        align="left"
-                        style={{ textDecoration: "None" }}
+                    <TableCell
+                      align="left"
+                      style={{ textDecoration: "None" }}
+                    >
+                      <a
+                        href={`/question/${item.question_code}`}
+                        style={{ textDecoration: "None", color: "#512daa" }}
                       >
-                        <a
-                          href={`/question/${item.question_code}`}
-                          style={{ textDecoration: "None", color: "#512daa" }}
-                        >
-                          {item.question_name}
-                        </a>
-                      </TableCell>
+                        {item.question_name}
+                      </a>
+                    </TableCell>
 
-                      <TableCell
-                        align="right"
-                        style={{ textDecoration: "None", color: "#441199" }}
-                      >
-                        {item.question_score}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                    <TableCell
+                      align="right"
+                      style={{ textDecoration: "None", color: "#441199" }}
+                    >
+                      {item.question_score}
+                    </TableCell>
+                  </TableRow>
+                ))
                 : null}
             </TableBody>
           </Table>

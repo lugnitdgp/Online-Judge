@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import Cookie from "lib/models/Cookie";
 import {
   Button,
-  Grid,
   FormControl,
   MenuItem,
   CircularProgress,
@@ -21,11 +20,17 @@ import Layout from "components/Layout";
 import { CheckCircleOutline, Error } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
+import ReactModal from "react-modal";
+//import zIndex from "@material-ui/core/styles/zIndex";
+//import ModalButton from "./modal-button";
 
 const styles = createStyles((theme: Theme) => ({
   root: {
     width: "100%",
     marginBottom: 0,
+    marginRight: "auto",
+    marginLeft: "auto",
+    textAlign: "center",
   },
   paper: {
     flexDirection: "column",
@@ -33,13 +38,15 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: theme.spacing(3),
     marginTop: theme.spacing(5),
     minHeight: "80%",
+    maxWidth: "1100px",
   },
   paper2: {
     flexDirection: "column",
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    marginTop: theme.spacing(5),
-    minHeight: "70%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(2),
+    maxWidth: "1100px",
   },
   details: {
     paddingTop: theme.spacing(2),
@@ -68,6 +75,7 @@ interface IState {
   theme: string;
   res: Array<any>;
   isLoading: boolean;
+  showModal: boolean;
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -80,7 +88,17 @@ class QuesDetail extends React.Component<IProps, IState> {
       theme: "theme-terminal",
       res: [],
       isLoading: false,
+      showModal: false,
     };
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
+  handleOpenModal() {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
   }
 
   submitcode = (code: any, lang: any) => {
@@ -134,173 +152,218 @@ class QuesDetail extends React.Component<IProps, IState> {
     const { classes } = this.props;
     return (
       <Layout>
-        <Grid container justify="center" className={classes.root}>
-          <Grid item xs={12} md={5}>
-            <Paper elevation={3} className={classes.paper}>
-              <div className={classes.details}>
-                <Typography
-                  className={classes.title}
-                  style={{
-                    color: "#4455dd",
-                    fontSize: "18px",
-                    textTransform: "capitalize",
-                  }}
-                  gutterBottom
-                >
-                  {this.props.data.question_code}&nbsp;|&nbsp;
-                  {this.props.data.question_name}
-                </Typography>
+        <div>
+          <ReactModal
+            isOpen={this.state.showModal}
+            contentLabel="Minimal Modal Example"
+          >
+            <div
+              style={{
+                margin: "0 auto",
+                textAlign: "center",
+                height: "0px",
+              }}
+            >
+              <Paper elevation={3} className={classes.paper2}>
+                <div style={{ margin: "0 auto", textAlign: "center" }}>
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-controlled-open-select-label"
+                      id="demo-controlled-open-select"
+                      value={this.state.lang}
+                      onChange={(e) =>
+                        this.setState({ lang: e.target.value as string })
+                      }
+                    >
+                      <MenuItem value="c">C</MenuItem>
+                      <MenuItem value="c++">C++</MenuItem>
+                      <MenuItem value="python3">Python</MenuItem>
+                      <MenuItem value="java">Java</MenuItem>
+                    </Select>
+                  </FormControl>
 
-                <Typography variant="subtitle1" gutterBottom>
-                  {this.props.data.question_text}
-                </Typography>
-                <hr></hr>
-                <Typography
-                  style={{ fontSize: "18px", color: "#4455dd" }}
-                  gutterBottom
-                >
-                  INPUT EXAMPLE
-                </Typography>
-                <Typography variant="subtitle1" gutterBottom>
-                  <div
-                    style={{ whiteSpace: "pre-wrap" }}
-                    dangerouslySetInnerHTML={{
-                      __html: this.props.data.input_example,
-                    }}
-                  />
-                </Typography>
-                <hr></hr>
-                <Typography
-                  style={{ fontSize: "18px", color: "#4455dd" }}
-                  gutterBottom
-                >
-                  OUTPUT EXAMPLE
-                </Typography>
-
-                <Typography variant="subtitle1" gutterBottom>
-                  <div
-                    style={{ whiteSpace: "pre-wrap" }}
-                    dangerouslySetInnerHTML={{
-                      __html: this.props.data.output_example,
-                    }}
-                  />
-                </Typography>
-                <hr></hr>
-              </div>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} md={7}>
-            <Paper elevation={3} className={classes.paper2}>
-              <div style={{ margin: "0 auto", textAlign: "center" }}>
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-controlled-open-select-label"
-                    id="demo-controlled-open-select"
-                    value={this.state.lang}
-                    onChange={(e) =>
-                      this.setState({ lang: e.target.value as string })
-                    }
-                  >
-                    <MenuItem value="c">C</MenuItem>
-                    <MenuItem value="c++">C++</MenuItem>
-                    <MenuItem value="python3">Python</MenuItem>
-                    <MenuItem value="java">Java</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl className={classes.formControl}>
-                  <Select
-                    labelId="demo-controlled-open-select-label"
-                    id="demo-controlled-open-select"
-                    value={this.state.theme}
-                    onChange={(e) =>
-                      this.setState({ theme: e.target.value as string })
-                    }
-                  >
-                    <MenuItem value="theme-terminal">terminal</MenuItem>
-                    <MenuItem value="theme-tomorrow">tomorrow</MenuItem>
-                    <MenuItem value="theme-twilight">twilight</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <Editor
-                  value={this.state.value}
-                  lang={this.state.lang}
-                  theme={this.state.theme}
-                  setValue={(d) =>
-                    this.setState({
-                      value: d,
-                    })
-                  }
-                />
-
-                {this.state.isLoading ? (
-                  <CircularProgress size={24} />
-                ) : (
+                  <FormControl className={classes.formControl}>
+                    <Select
+                      labelId="demo-controlled-open-select-label"
+                      id="demo-controlled-open-select"
+                      value={this.state.theme}
+                      onChange={(e) =>
+                        this.setState({ theme: e.target.value as string })
+                      }
+                    >
+                      <MenuItem value="theme-terminal">terminal</MenuItem>
+                      <MenuItem value="theme-tomorrow">tomorrow</MenuItem>
+                      <MenuItem value="theme-twilight">twilight</MenuItem>
+                    </Select>
+                  </FormControl>
                   <Button
-                    className={classes.button}
-                    color="primary"
-                    variant="outlined"
-                    style={{ margin: "10px auto" }}
-                    onClick={() =>
-                      this.submitcode(this.state.value, this.state.lang)
-                    }
+                    style={{ marginTop: "14px" }}
+                    onClick={this.handleCloseModal}
                   >
-                    Submit
+                    MINIMIZE
                   </Button>
-                )}
-              </div>
-            </Paper>
+                  <Editor
+                    value={this.state.value}
+                    lang={this.state.lang}
+                    theme={this.state.theme}
+                    setValue={(d) =>
+                      this.setState({
+                        value: d,
+                      })
+                    }
+                  />
 
-            {this.state.res.length > 1 ? (
-              <TableContainer component={Paper}>
-                <Table
-                  style={{
-                    minWidth: 650,
-                  }}
-                  aria-label="simple table"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>TestCase (Number)</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Run-Time</TableCell>
-                      <TableCell align="right">Memory Used</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
+                  {this.state.isLoading ? (
+                    <CircularProgress size={24} />
+                  ) : (
+                    <Button
+                      className={classes.button}
+                      color="primary"
+                      variant="outlined"
+                      style={{
+                        border: "None",
+                        backgroundColor: "#7788ff",
+                        height: "30px",
+                        width: "100px",
+                        borderRadius: "5px",
+                        color: "white",
+                        textDecoration: "None",
+                        marginBottom: "20px",
+                      }}
+                      onClick={() =>
+                        this.submitcode(this.state.value, this.state.lang)
+                      }
+                    >
+                      Submit
+                    </Button>
+                  )}
+                </div>
+
+                {this.state.res.length > 1 ? (
+                  <TableContainer component={Paper}>
+                    <Table
+                      style={{
+                        minWidth: 650,
+                      }}
+                      aria-label="simple table"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>TestCase (Number)</TableCell>
+                          <TableCell align="right">Status</TableCell>
+                          <TableCell align="right">Run-Time</TableCell>
+                          <TableCell align="right">Memory Used</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {this.state.res.map((res, index) => (
+                          <TableRow key={index}>
+                            <TableCell component="th" scope="row">
+                              {index + 1}
+                            </TableCell>
+                            <TableCell align="right">
+                              <ResultStatus status={res.status.run_status} />
+                            </TableCell>
+                            <TableCell align="right">
+                              {res.status.cpu_time}
+                            </TableCell>
+                            <TableCell align="right">
+                              {res.status.memory_taken}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : (
+                  <React.Fragment>
                     {this.state.res.map((res, index) => (
-                      <TableRow key={index}>
-                        <TableCell component="th" scope="row">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell align="right">
-                          <ResultStatus status={res.status.run_status} />
-                        </TableCell>
-                        <TableCell align="right">
-                          {res.status.cpu_time}
-                        </TableCell>
-                        <TableCell align="right">
-                          {res.status.memory_taken}
-                        </TableCell>
-                      </TableRow>
+                      <div key={index}>
+                        <p>Compilation Error</p>
+                        <p>{res.message}</p>
+                      </div>
                     ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            ) : (
-              <React.Fragment>
-                {this.state.res.map((res, index) => (
-                  <div key={index}>
-                    <p>Compilation Error</p>
-                    <p>{res.message}</p>
-                  </div>
-                ))}
-              </React.Fragment>
-            )}
-          </Grid>
-        </Grid>
+                  </React.Fragment>
+                )}
+              </Paper>
+            </div>
+          </ReactModal>
+        </div>
+        <div style={{ margin: "20px" }}>
+          <Paper
+            elevation={3}
+            className={classes.paper}
+            style={{ margin: "20px auto" }}
+          >
+            <div className={classes.details}>
+              <Typography
+                className={classes.title}
+                style={{
+                  color: "#4455dd",
+                  fontSize: "18px",
+                  textTransform: "capitalize",
+                }}
+                gutterBottom
+              >
+                {this.props.data.question_code}&nbsp;|&nbsp;
+                {this.props.data.question_name}
+              </Typography>
+
+              <Typography variant="subtitle1" gutterBottom>
+                {this.props.data.question_text}
+              </Typography>
+              <hr></hr>
+              <Typography
+                style={{ fontSize: "18px", color: "#4455dd" }}
+                gutterBottom
+              >
+                INPUT EXAMPLE
+              </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                <div
+                  style={{ whiteSpace: "pre-wrap" }}
+                  dangerouslySetInnerHTML={{
+                    __html: this.props.data.input_example,
+                  }}
+                />
+              </Typography>
+              <hr></hr>
+              <Typography
+                style={{ fontSize: "18px", color: "#4455dd" }}
+                gutterBottom
+              >
+                OUTPUT EXAMPLE
+              </Typography>
+
+              <Typography variant="subtitle1" gutterBottom>
+                <div
+                  style={{ whiteSpace: "pre-wrap" }}
+                  dangerouslySetInnerHTML={{
+                    __html: this.props.data.output_example,
+                  }}
+                />
+              </Typography>
+              <hr></hr>
+
+              <div>
+                <Button
+                  style={{
+                    border: "None",
+                    backgroundColor: "#7788ff",
+                    height: "30px",
+                    width: "100px",
+                    borderRadius: "5px",
+                    color: "white",
+                    textDecoration: "None",
+                  }}
+                  onClick={this.handleOpenModal}
+                >
+                  CODE
+                </Button>
+              </div>
+            </div>
+          </Paper>
+        </div>
       </Layout>
     );
   }

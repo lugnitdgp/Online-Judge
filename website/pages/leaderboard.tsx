@@ -2,21 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import {} from '@material-ui/icons';
-import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Avatar, Card } from '@material-ui/core';
-import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
+import MUIDataTable from 'mui-datatables';
+import { Avatar, Card } from '@material-ui/core';
 
-const StyledTableCell = withStyles((theme: Theme) =>
-	createStyles({
-		head: {
-			backgroundColor: theme.palette.common.black,
-			color: theme.palette.common.white,
-			fontSize: 20
-		},
-		body: {
-			fontSize: 14
-		}
-	})
-)(TableCell);
 interface IProps {
 	classes: any;
 }
@@ -29,8 +17,11 @@ class Leaderboard extends React.Component<IProps, {}> {
 	componentDidMount() {
 		// axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?format=json`).then(data => {
 		axios
-			.get(`https://ojapi.trennds.com/api/leaderboard?format=json`)
+			.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?format=json`)
 			.then((data) => {
+				data.data.map((entry) => {
+					entry[`image`] = <Avatar src={entry[`image`]} />;
+				});
 				this.setState({ gotData: true, leaderBoard: data.data });
 			})
 			.catch(function(error) {
@@ -44,19 +35,67 @@ class Leaderboard extends React.Component<IProps, {}> {
 	}
 
 	render() {
-		interface Column {
-			id: 'rank' | 'image' | 'name' | 'score';
-			label: string;
-			minWidth?: number;
-			align?: 'right' | 'center' | 'left';
-			format?: (value: number) => string;
-		}
-		const columns: Column[] = [
-			{ id: 'rank', align: 'center', label: 'Rank', minWidth: 100 },
-			{ id: 'image', label: '', align: 'left', minWidth: 10 },
-			{ id: 'name', align: 'left', label: 'User', minWidth: 100 },
-			{ id: 'score', align: 'center', label: 'Score', minWidth: 100 }
+		const columns = [
+			{
+				name: 'rank',
+				label: 'RANK',
+				options: {
+					filter: false,
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { textAlign: 'center', background: '#000', color: '#fff', textDecoration: 'bold' }
+					}),
+					setCellProps: () => ({
+						style: { fontWeight: '900', textAlign: 'center' }
+					})
+				}
+			},
+			{
+				name: 'image',
+				label: ' ',
+				options: {
+					filter: false,
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { background: '#000', color: '#fff', textDecoration: 'bold' }
+					})
+				}
+			},
+			{
+				name: 'name',
+				label: 'NAME',
+				options: {
+					filter: true,
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { textAlign: 'center', background: '#000', color: '#fff', textDecoration: 'bold' }
+					}),
+					setCellProps: () => ({
+						style: { fontWeight: '900', textAlign: 'center' }
+					})
+				}
+			},
+			{
+				name: 'score',
+				label: 'SCORE',
+				options: {
+					filter: true,
+					sort: false,
+					setCellHeaderProps: () => ({
+						style: { textAlign: 'center', background: '#000', color: '#fff', textDecoration: 'bold' }
+					}),
+					setCellProps: () => ({
+						style: { fontWeight: '900', textAlign: 'center' }
+					})
+				}
+			}
 		];
+		const options = {
+			download: false,
+			selectableRows: 'none',
+			viewColumns: false
+		};
+		const data = this.state.leaderBoard;
 
 		return (
 			<div>
@@ -85,46 +124,7 @@ class Leaderboard extends React.Component<IProps, {}> {
 					</Card>
 					<div className="contain" style={{ margin: '0 auto', maxWidth: '900px', width: '100%' }}>
 						<Card elevation={3} style={{ msOverflowX: 'scroll', margin: '0 auto' }}>
-							<TableContainer>
-								<Table aria-label="simple table">
-									<TableHead>
-										<TableRow>
-											{columns.map((column) => (
-												<StyledTableCell
-													align={column.align}
-													style={{
-														minWidth: column.minWidth,
-														backgroundColor: '#001144'
-													}}
-												>
-													<strong>{column.label}</strong>
-												</StyledTableCell>
-											))}
-										</TableRow>
-									</TableHead>
-
-									<TableBody>
-										{this.state.leaderBoard.map((row) => {
-											return (
-												<TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-													{columns.map((column) => {
-														const value = row[column.id];
-														return (
-															<TableCell key={column.id} align={column.align}>
-																{column.id === 'image' ? (
-																	<Avatar alt={row.name} src={value} />
-																) : (
-																	<strong>{value}</strong>
-																)}
-															</TableCell>
-														);
-													})}
-												</TableRow>
-											);
-										})}
-									</TableBody>
-								</Table>
-							</TableContainer>
+							<MUIDataTable title={'STANDINGS'} data={data} columns={columns} options={options} />
 						</Card>
 					</div>
 				</Layout>

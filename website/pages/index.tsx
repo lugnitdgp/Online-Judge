@@ -27,7 +27,6 @@ class IndexPage extends React.Component<IProps, {}> {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        console.log(res);
         res.map((contest) => {
           var dateObj = new Date(contest["start_time"] * 1000);
           var year = dateObj.getFullYear();
@@ -141,8 +140,13 @@ class IndexPage extends React.Component<IProps, {}> {
                 <Carousel.Item>
                   <img
                     onClick={() => {
-                      localStorage.setItem("code", item.contest_code);
-                      Router.push("/question");
+                      if (!localStorage.token) {
+                        Router.push("/login")
+                      }
+                      else {
+                        localStorage.setItem("code", item.contest_code);
+                        Router.push("/question");
+                      }
                     }}
                     className={classes.carousel} src="https://i.ytimg.com/vi/J2HGH8LrblU/maxresdefault.jpg"
                     alt={item.contest_name}

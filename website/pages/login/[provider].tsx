@@ -64,7 +64,7 @@ function LoginPage(props: Props) {
               email: response.user.email,
               image_link: response.user.image_link
             });
-            window.location.href = "/question"
+            window.location.href = "/"
           })
           .catch((e) => {
             console.log(e);
@@ -109,7 +109,7 @@ function LoginPage(props: Props) {
           .then((resp) => resp.json())
           .then((response) => {
             localStorage.token = response.token;
-            window.location.href = "/question";
+            window.location.href = "/";
           })
           .catch((e) => {
             console.log(e);

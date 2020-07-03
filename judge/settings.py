@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'accounts',
     'corsheaders',
     'django_celery_results',
-    'djrichtextfield',
+    'tinymce',
 ]
 
 MIDDLEWARE = [

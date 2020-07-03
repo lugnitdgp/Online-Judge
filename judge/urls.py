@@ -5,5 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('interface.urls')),
     path('account/',include('accounts.urls')),
-    path('djrichtextfield/', include('djrichtextfield.urls')),
+    path('tinymce/', include('tinymce.urls')),
 ]

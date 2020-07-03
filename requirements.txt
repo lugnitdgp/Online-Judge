@@ -12,6 +12,7 @@ django-celery-results==1.2.1
 django-cors-headers==3.2.1
 django-rest-framework==0.1.0
 django-rest-knox==4.1.0
+django-tinymce==3.0.2
 djangorestframework==3.11.0
 google-auth==1.14.2
 gunicorn==20.0.4

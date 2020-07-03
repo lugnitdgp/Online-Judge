@@ -7,7 +7,7 @@ from judge.settings import TEST_CASE_DIR
 from shutil import rmtree
 import os
 from accounts.models import Coder
-from djrichtextfield.models import RichTextField
+from tinymce.models import HTMLField
 
 
 class Config(models.Model):
@@ -42,7 +42,7 @@ class Question(models.Model):
     question_name = models.CharField(max_length=50,
                                      blank=True,
                                      help_text="Name of the question")
-    question_text = RichTextField()
+    question_text = HTMLField()
     question_image = models.ImageField(
         blank=True, help_text="Optional Image if the question demands")
     question_score = models.IntegerField(

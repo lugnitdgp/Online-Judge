@@ -19,6 +19,7 @@ interface IProps {
 class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
+    leasttime: 0,
     list: [],
   };
   componentDidMount() {
@@ -27,60 +28,24 @@ class IndexPage extends React.Component<IProps, {}> {
     })
       .then((resp) => resp.json())
       .then((res) => {
+        var least = 0;
         res.map((contest) => {
-          var dateObj = new Date(contest["start_time"] * 1000);
-          var year = dateObj.getFullYear();
+          if (least == 0 || contest["start_time"] < least)
+            least = contest["start_time"]
 
-          var month = dateObj.getMonth() + 1;
+          var dateObj = new Date((contest["start_time"] - 19800) * 1000);
 
-          var day = dateObj.getDate();
 
-          var hours = dateObj.getUTCHours();
+          contest["start"] = dateObj.toString()
+          contest["start"] = contest["start"].substring()
+          dateObj = new Date((contest["end_time"] - 19800) * 1000);
 
-          var minutes = dateObj.getUTCMinutes();
-
-          var seconds = dateObj.getUTCSeconds();
-
-          var formattedTime =
-            day.toString().padStart(2, "0") +
-            "/" +
-            month.toString().padStart(2, "0") +
-            "/" +
-            year.toString().padStart(2, "0") +
-            "  " +
-            hours.toString().padStart(2, "0") +
-            ":" +
-            minutes.toString().padStart(2, "0") +
-            ":" +
-            seconds.toString().padStart(2, "0");
-          contest["start_time"] = formattedTime;
-          dateObj = new Date(contest["end_time"] * 1000);
-          year = dateObj.getFullYear();
-
-          month = dateObj.getMonth() + 1;
-
-          day = dateObj.getDate();
-          hours = dateObj.getUTCHours();
-
-          minutes = dateObj.getUTCMinutes();
-
-          seconds = dateObj.getUTCSeconds();
-
-          formattedTime =
-            day.toString().padStart(2, "0") +
-            "/" +
-            month.toString().padStart(2, "0") +
-            "/" +
-            year.toString().padStart(2, "0") +
-            "  " +
-            hours.toString().padStart(2, "0") +
-            ":" +
-            minutes.toString().padStart(2, "0") +
-            ":" +
-            seconds.toString().padStart(2, "0");
-          contest["end_time"] = formattedTime;
+          contest['end'] = dateObj.toString()
+          console.log(contest)
         });
         this.setState({ list: res });
+        this.setState({ leasttime: least });
+
       })
       .catch((error) => {
         console.log(error);
@@ -96,7 +61,7 @@ class IndexPage extends React.Component<IProps, {}> {
             onClick={() => {
               localStorage.setItem("code", props.item.contest_code);
               Router.push("/question");
-            }}
+            }}zz
             className={props.classes.carousel}
             src={img}
           />
@@ -115,9 +80,10 @@ class IndexPage extends React.Component<IProps, {}> {
 
     return (
       <Layout>
-
         <Grid container justify="center" alignItems="center" direction="column">
+
           <main className={classes.main}>
+
             <Card className={classes.card}>
               <CardHeader
                 style={{ textAlign: "center" }}
@@ -131,6 +97,7 @@ class IndexPage extends React.Component<IProps, {}> {
               </CardContent>
             </Card>
           </main>
+
           <Card style={{ textAlign: "center", marginBottom: "20px" }}>
             <CardHeader title="Current Contests" />
             <CardContent>
@@ -145,6 +112,8 @@ class IndexPage extends React.Component<IProps, {}> {
                       }
                       else {
                         localStorage.setItem("code", item.contest_code);
+                        localStorage.setItem("start", item.start_time);
+                        localStorage.setItem("end", item.end_time);
                         Router.push("/question");
                       }
                     }}
@@ -155,7 +124,7 @@ class IndexPage extends React.Component<IProps, {}> {
                     <h6>{item.contest_name}</h6>
                     <p>Contest timings</p>
                     <p>
-                      {item.start_time} - {item.end_time}
+                      {item.start} - {item.end}
                     </p>
                   </Card>
 

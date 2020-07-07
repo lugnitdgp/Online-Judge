@@ -13,3 +13,13 @@ https://docs.celeryproject.org/en/stable/getting-started/next-steps.html#next-st
 ## API Documentation
 
 https://documenter.getpostman.com/view/7834053/Szmh1vuz?version=latest
+
+
+## Development Environment Config
+This project uses PEP8 code style, please make sure to follow. Yapf is our preffered formatting tool.
+If you are using VSCode add the following in your *settings.json* 
+```
+"python.formatting.provider": "yapf",
+"python.formatting.yapfArgs": ["--style={based_on_style: pep8, indent_width: 4, column_limit: 120}"],
+"python.linting.enabled": true
+```

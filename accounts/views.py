@@ -23,22 +23,21 @@ def verifyUser(email):
     except ObjectDoesNotExist:
         return False
 
+
 def verifyPassword(email, password):
     try:
         c = User.objects.get(email=email)
         return c.check_password(password)
     except:
-        return False 
+        return False
+
 
 def verifyGoogleToken(token):
     CLIENT_ID = config('GOOGLE_CLIENT_ID', cast=str)
     try:
-        id_info = id_token.verify_oauth2_token(token, requests.Request(),
-                                              CLIENT_ID)
+        id_info = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
 
-        if id_info['iss'] not in [
-                'accounts.google.com', 'https://accounts.google.com'
-        ]:
+        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong Issuer')
 
         return {
@@ -49,10 +48,7 @@ def verifyGoogleToken(token):
             "status": 200
         }
     except ValueError:
-        return {
-            'status': 404,
-            'message': 'Your Token has expired. Please login again!'
-        }
+        return {'status': 404, 'message': 'Your Token has expired. Please login again!'}
 
 
 def verifyFacebookToken(accesstoken, userID):
@@ -79,28 +75,21 @@ class Register(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         res = customRegister(request)
         if res['status'] == 404:
-                return Response({'status': 404, 'message': 'Token expired'})
+            return Response({'status': 404, 'message': 'Token expired'})
         else:
             if verifyUser(res['email']) == False:
                 self.serializer = self.get_serializer(data=res)
                 self.serializer.is_valid(raise_exception=True)
                 self.user = self.serializer.save()
                 Coder.objects.create(user=self.user,
-                                        name=res['username'],
-                                        first_name=res['first_name'],
-                                        email=res['email'],
-                                        image_link=res['image'])
+                                     name=res['username'],
+                                     first_name=res['first_name'],
+                                     email=res['email'],
+                                     image_link=res['image'])
             else:
-                return Response({
-                    "status": 401,
-                    "message": "User has already registered under this email."
-                })
+                return Response({"status": 401, "message": "User has already registered under this email."})
 
-        return Response({
-            "user": self.serializer.data,
-            "token": AuthToken.objects.create(self.user)[1],
-            "status": 200
-        })
+        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1], "status": 200})
 
 
 def customRegister(request):
@@ -114,22 +103,15 @@ def customRegister(request):
             "status": 200
         }
     except:
-        res = {
-            "status": 404
-        }
+        res = {"status": 404}
     return res
+
 
 def customLogin(request):
     try:
-        res = {
-            "email": request.data['email'],
-            "password": request.data["password"],
-            "status": 200
-        }
+        res = {"email": request.data['email'], "password": request.data["password"], "status": 200}
     except:
-        res = {
-            "status": 404
-        }
+        res = {"status": 404}
     return res
 
 
@@ -146,26 +128,16 @@ class CustomLogin(generics.GenericAPIView):
             return Response({'status': 404, 'message': 'Token expired'})
         else:
             if verifyUser(res['email']) == False:
-                return Response({
-                    "status": 401,
-                    "message": "User doesn't exist."
-                })
+                return Response({"status": 401, "message": "User doesn't exist."})
             elif verifyPassword(res['email'], res['password']) == True:
                 self.serializer_class = CoderSerializer
                 self.user = User.objects.get(email=res['email'])
                 coder = Coder.objects.get(email=res['email'])
                 self.serializer = self.get_serializer(coder)
             else:
-                return Response({
-                    "status": 401,
-                    "message": "Incorrect password"
-                })
+                return Response({"status": 401, "message": "Incorrect password"})
 
-        return Response({
-            "user": self.serializer.data,
-            "token": AuthToken.objects.create(self.user)[1],
-            "status": 200
-        })
+        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1], "status": 200})
 
 
 @permission_classes([
@@ -179,8 +151,7 @@ class SocialLogin(generics.GenericAPIView):
         if request.data.get('provider') == 'google':
             res = verifyGoogleToken(request.data.get('id_token'))
         else:
-            res = verifyFacebookToken(request.data.get('access_token'),
-                                      request.data.get('userID'))
+            res = verifyFacebookToken(request.data.get('access_token'), request.data.get('userID'))
         if res['status'] == 404:
             return Response({'status': 404, 'message': 'Token expired'})
         else:
@@ -199,8 +170,4 @@ class SocialLogin(generics.GenericAPIView):
                 coder = Coder.objects.get(email=res['email'])
                 self.serializer = self.get_serializer(coder)
 
-        return Response({
-            "user": self.serializer.data,
-            "token": AuthToken.objects.create(self.user)[1],
-            "status": 200
-        })
+        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1], "status": 200})

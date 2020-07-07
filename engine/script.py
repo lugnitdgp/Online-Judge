@@ -17,12 +17,14 @@ def status():
             'cpu_time': float(stat[3].split(":")[1].strip().split(" ")[0])
         }
 
+
 def compare(path1, path2):
     with open(path1) as f1, open(path2) as f2:
         if f1.read() == f2.read():
             return True
         else:
             return False
+
 
 def run_c(f, time, mem, input_file, temp_output_file, output_file):
     compilation = "gcc -Wno-deprecated {} -o compiled_code 2> compile_log".format(f)
@@ -34,7 +36,8 @@ def run_c(f, time, mem, input_file, temp_output_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(
+            ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
         stat = status()
         res = None
@@ -52,10 +55,7 @@ def run_c(f, time, mem, input_file, temp_output_file, output_file):
                     "status": stat
                 }
         else:
-            res = {
-                "code" : 2,
-                "status" : stat
-            }
+            res = {"code": 2, "status": stat}
         os.remove(temp_output_file)
         return res
 
@@ -70,7 +70,8 @@ def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(ENGINE_PATH, time, mem, input_file, temp_output_file)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(
+            ENGINE_PATH, time, mem, input_file, temp_output_file)
         os.system(command)
         stat = status()
         res = None
@@ -88,10 +89,7 @@ def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
                     "status": stat
                 }
         else:
-            res = {
-                "code" : 2,
-                "status" : stat
-            }
+            res = {"code": 2, "status": stat}
         # os.remove(temp_output_file)
         return res
 
@@ -106,7 +104,8 @@ def run_java(f, time, mem, input_file, temp_output_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --nproc 20 --usage usage.txt --exec /usr/bin/java -cp {} test < {} > {}".format(ENGINE_PATH, time, mem, os.path.dirname(ENGINE_PATH),input_file, temp_output_file)
+        command = "sudo {} --cpu {} --mem {} --nproc 20 --usage usage.txt --exec /usr/bin/java -cp {} test < {} > {}".format(
+            ENGINE_PATH, time, mem, os.path.dirname(ENGINE_PATH), input_file, temp_output_file)
         os.system(command)
         res = None
         stat = status()
@@ -124,10 +123,7 @@ def run_java(f, time, mem, input_file, temp_output_file, output_file):
                     "status": stat
                 }
         else:
-            res = {
-                "code" : 2,
-                "status" : stat
-            }
+            res = {"code": 2, "status": stat}
         os.remove(temp_output_file)
         return res
 
@@ -142,7 +138,8 @@ def run_python2(f, time, mem, input_file, temp_output_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, temp_output_file) 
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(
+            ENGINE_PATH, time, mem, f, input_file, temp_output_file)
         os.system(command)
         stat = status()
         res = None
@@ -160,13 +157,9 @@ def run_python2(f, time, mem, input_file, temp_output_file, output_file):
                     "status": stat
                 }
         else:
-            res = {
-                "code" : 2,
-                "status" : stat
-            }
+            res = {"code": 2, "status": stat}
         os.remove(temp_output_file)
         return res
-
 
 
 def run_python3(f, time, mem, input_file, temp_output_file, output_file):
@@ -179,7 +172,8 @@ def run_python3(f, time, mem, input_file, temp_output_file, output_file):
                 "message": temp_file.read()
             }
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(ENGINE_PATH, time, mem, f, input_file, temp_output_file)
+        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(
+            ENGINE_PATH, time, mem, f, input_file, temp_output_file)
         os.system(command)
         os.system(command)
         stat = status()
@@ -198,9 +192,6 @@ def run_python3(f, time, mem, input_file, temp_output_file, output_file):
                     "status": stat
                 }
         else:
-            res = {
-                "code" : 2,
-                "status" : stat
-            }
+            res = {"code": 2, "status": stat}
         os.remove(temp_output_file)
         return res

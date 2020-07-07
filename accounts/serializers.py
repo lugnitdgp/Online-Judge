@@ -15,10 +15,9 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'first_name')
 
     def create(self, data):
-        user = User.objects.create_user(username=data['username'],
-                                        email=data['email'],
-                                        first_name=data['first_name'])
+        user = User.objects.create_user(username=data['username'], email=data['email'], first_name=data['first_name'])
         return user
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
@@ -36,12 +35,14 @@ class RegisterSerializer(serializers.ModelSerializer):
                                         password=data['password'])
         return user
 
+
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email','password')
+        fields = ('email', 'password')
+
 
 class CoderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coder
-        fields = ('name','first_name','email','image_link','score','solved_ques')
+        fields = ('name', 'first_name', 'email', 'image_link', 'score', 'solved_ques')

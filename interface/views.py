@@ -44,8 +44,7 @@ def GetQuestionList(request):
 def GetQuestion(request):
     try:
         contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-        question = Question.objects.get(question_code=request.GET['q_id'],
-                                        contest=contest)
+        question = Question.objects.get(question_code=request.GET['q_id'], contest=contest)
         serializer = QuestionSerializer(question)
         return Response(serializer.data)
     except ObjectDoesNotExist:
@@ -62,12 +61,9 @@ def submitCode(request):
     contest_code = request.data.get('contest_id')
     try:
         contest = Contest.objects.get(contest_code=contest_code)
-        question = Question.objects.get(question_code=request.data.get('q_id'),
-                                        contest=contest)
+        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder = Coder.objects.get(user=request.user)
-        task = execute.delay(
-            QuestionSerializer(question).data,
-            CoderSerializer(coder).data, code, lang)
+        task = execute.delay(QuestionSerializer(question).data, CoderSerializer(coder).data, code, lang)
         return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
@@ -78,15 +74,10 @@ def submitCode(request):
 def status(request):
     try:
         coder = Coder.objects.get(user=request.user)
-        contest = Contest.objects.get(
-            contest_code=request.data.get('contest_id'))
-        question = Question.objects.get(question_code=request.data.get('q_id'),
-                                        contest=contest)
-        coder_contest_score = Contest_Score.objects.get_or_create(
-            contest=contest, coder=coder)[0]
-        job = Job.objects.get(coder=coder,
-                              question=question,
-                              job_id=request.data.get('task_id'))
+        contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
+        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
+        job = Job.objects.get(coder=coder, question=question, job_id=request.data.get('task_id'))
         if job.AC_no == Testcases.objects.filter(question=question).count():
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
@@ -100,10 +91,7 @@ def status(request):
         res = json.loads(job.status)
         return Response(res)
     except Job.DoesNotExist:
-        return Response({
-            'status': 302,
-            'message': 'Please wait. Answer being processed'
-        })
+        return Response({'status': 302, 'message': 'Please wait. Answer being processed'})
 
 
 @api_view(['GET'])
@@ -111,9 +99,9 @@ def status(request):
 def leaderboard(request):
     coder_array = []
     contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
-    for (rank, participant) in enumerate(Contest_Score.objects.filter(
-            contest=contest).order_by('-score', 'timestamp', 'wa'),
-                                         start=1):
+    for (rank,
+         participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
+                                   start=1):
         coder_array.append({
             "rank": rank,
             "name": participant.coder.name,

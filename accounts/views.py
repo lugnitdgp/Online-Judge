@@ -14,6 +14,7 @@ from accounts.serializers import *
 from decouple import config
 import requests as r
 from knox.models import AuthToken
+import json
 
 
 def verifyUser(email):
@@ -49,6 +50,22 @@ def verifyGoogleToken(token):
         }
     except ValueError:
         return {'status': 404, 'message': 'Your Token has expired. Please login again!'}
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def google_oauth(request):
+    url = "https://oauth2.googleapis.com/token"
+    headers = {'Content-Type': 'application/json'}
+    data = json.dumps({ 
+        'code': request.data.get('code'),
+        'client_id': config('GOOGLE_CLIENT_ID', cast=str),
+        'client_secret': config('GOOGLE_CLIENT_SECRET', cast=str),
+        'grant_type': 'authorization_code',
+        'redirect_uri': request.data.get('redirect_uri') + "/login/google"
+    })
+    res = r.post(url=url, headers=headers, data=data).json()
+    return Response(res)
 
 
 def verifyFacebookToken(accesstoken, userID):

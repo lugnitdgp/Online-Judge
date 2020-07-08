@@ -31,13 +31,14 @@ function LoginPage(props: Props) {
   const [error, setError] = React.useState(false);
 
   const googleLogin = () => {
-    fetch("/api/login/google", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/oauth/google`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         code: props.code,
+        redirect_uri: window.location.protocol+ "//" + window.location.host,
       }),
     })
       .then((resp) => resp.json())

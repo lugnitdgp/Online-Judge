@@ -63,7 +63,7 @@ class questionlist extends React.Component<{}, IState> {
                       style={{ textDecoration: "None", color: "#512daa" }}
                     >
                       <a
-                        href={`/question/${item.question_code}`}
+                        href={`/question/description?id=${item.question_code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_code}
@@ -75,7 +75,7 @@ class questionlist extends React.Component<{}, IState> {
                       style={{ textDecoration: "None" }}
                     >
                       <a
-                        href={`/question/${item.question_code}`}
+                        href={`/question/description?id=${item.question_code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_name}

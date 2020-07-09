@@ -84,7 +84,7 @@ class questionlist extends React.Component {
                       style={{ textDecoration: "None", color: "#512daa" }}
                     >
                       <a
-                        href={`/question/${item.question_code}?con=${localStorage.code}`}
+                        href={`/question/description?id=${item.question_code}?con=${localStorage.code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_code}
@@ -96,7 +96,7 @@ class questionlist extends React.Component {
                       style={{ textDecoration: "None" }}
                     >
                       <a
-                        href={`/question/${item.question_code}?con=${localStorage.code}`}
+                        href={`/question/description?id=${item.question_code}?con=${localStorage.code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_name}
@@ -125,3 +125,22 @@ class questionlist extends React.Component {
 }
 
 export default questionlist;
+
+
+{/* <CopyToClipboard text={this.props.data.input_example} onCopy={this.changeCopyState}>
+                <Typography variant="subtitle1" gutterBottom>
+                  <div
+                    style={{ whiteSpace: "pre-wrap" }}
+                    dangerouslySetInnerHTML={{
+                      __html: this.props.data.input_example,
+                    }}
+                  />
+
+                  <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
+                    <IconButton aria-label="upload picture" component="span">
+                      < FileCopyRoundedIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                </Typography>
+              </CopyToClipboard> */}

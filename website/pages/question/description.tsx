@@ -1,5 +1,5 @@
+
 import React from "react";
-import { GetServerSideProps } from "next";
 import Cookie from "lib/models/Cookie";
 import {
   Button,
@@ -17,13 +17,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Layout from "components/Layout";
-import { CheckCircleOutline, Error } from "@material-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { CheckCircleOutline, Error } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
-import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from "@material-ui/core/IconButton";
 import ReactModal from "react-modal";
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
@@ -35,7 +32,6 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: "auto",
     marginLeft: "auto",
     textAlign: "center",
-
   },
   paper: {
     flexDirection: "column",
@@ -67,12 +63,9 @@ const styles = createStyles((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(3),
   },
-  
-  
 }));
 
 interface IProps {
-  data: any;
   classes: any;
 }
 
@@ -83,7 +76,8 @@ interface IState {
   res: Array<any>;
   isLoading: boolean;
   showModal: boolean;
-  copied: boolean;
+  data: any;
+  question: string
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -97,11 +91,11 @@ class QuesDetail extends React.Component<IProps, IState> {
       res: [],
       isLoading: false,
       showModal: false,
-      copied: false,
+      data: {},
+      question: ""
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.changeCopyState = this.changeCopyState.bind(this);
   }
   handleOpenModal() {
     this.setState({ showModal: true });
@@ -109,11 +103,6 @@ class QuesDetail extends React.Component<IProps, IState> {
 
   handleCloseModal() {
     this.setState({ showModal: false });
-  }
-  changeCopyState() {
-    this.setState({ copied: true }, () => {
-      setTimeout(() => this.setState({ copied: false }), 1500);
-    });
   }
 
   submitcode = (code: any, lang: any) => {
@@ -130,7 +119,7 @@ class QuesDetail extends React.Component<IProps, IState> {
       body: JSON.stringify({
         code: encodeURI(code),
         lang: lang,
-        q_id: this.props.data.question_code,
+        q_id: this.state.data.question_code,
       }),
     })
       .then((resp) => resp.json())
@@ -150,7 +139,7 @@ class QuesDetail extends React.Component<IProps, IState> {
         Authorization: `Token ${localStorage.token}`,
       },
       body: JSON.stringify({
-        q_id: this.props.data.question_code,
+        q_id: this.state.data.question_code,
         task_id: localStorage.taskid,
       }),
     })
@@ -162,6 +151,30 @@ class QuesDetail extends React.Component<IProps, IState> {
       .then(() => console.log(this.state.res))
       .catch((err) => console.log(err));
   };
+
+  async componentDidMount() {
+    const cookie = new Cookie();
+    cookie.parse(document.cookie || "");
+
+    try {
+      let resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${getParameterByName("con")}&q_id=${getParameterByName("id")}`,
+        {
+          headers: {
+            Authorization: `Token ${cookie.cookies.get("token")}`,
+          },
+        }
+      );
+
+      let response = await resp.json();
+      console.log(response)
+      this.setState({
+        data: response
+      })
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -320,12 +333,12 @@ class QuesDetail extends React.Component<IProps, IState> {
                 }}
                 gutterBottom
               >
-                {this.props.data.question_code}&nbsp;|&nbsp;
-                {this.props.data.question_name}
+                {this.state.data.question_code}&nbsp;|&nbsp;
+                {this.state.data.question_name}
               </Typography>
 
               <Typography variant="subtitle1" gutterBottom>
-                {this.props.data.question_text}
+                {this.state.data.question_text}
               </Typography>
               <hr></hr>
               <Typography
@@ -334,23 +347,14 @@ class QuesDetail extends React.Component<IProps, IState> {
               >
                 INPUT EXAMPLE
               </Typography>
-              <CopyToClipboard text={this.props.data.input_example} onCopy={this.changeCopyState}>
               <Typography variant="subtitle1" gutterBottom>
                 <div
                   style={{ whiteSpace: "pre-wrap" }}
                   dangerouslySetInnerHTML={{
-                    __html: this.props.data.input_example,
+                    __html: this.state.data.input_example,
                   }}
                 />
-                  
-                <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
-                <IconButton  aria-label="upload picture" component="span">
-                < FileCopyRoundedIcon />
-                </IconButton>
-                </Tooltip>
-                
               </Typography>
-              </CopyToClipboard>
               <hr></hr>
               <Typography
                 style={{ fontSize: "18px", color: "#4455dd" }}
@@ -358,17 +362,15 @@ class QuesDetail extends React.Component<IProps, IState> {
               >
                 OUTPUT EXAMPLE
               </Typography>
-              
+
               <Typography variant="subtitle1" gutterBottom>
                 <div
                   style={{ whiteSpace: "pre-wrap" }}
                   dangerouslySetInnerHTML={{
-                    __html: this.props.data.output_example,
+                    __html: this.state.data.output_example,
                   }}
                 />
-                  
               </Typography>
-              
               <hr></hr>
 
               <div>
@@ -395,36 +397,6 @@ class QuesDetail extends React.Component<IProps, IState> {
   }
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const cookie = new Cookie();
-  cookie.parse(context.req.headers.cookie || "");
-
-  try {
-    let resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${context.query.con}&q_id=${context.params?.question}`,
-      {
-        headers: {
-          Authorization: `Token ${cookie.cookies.get("token")}`,
-        },
-      }
-    );
-
-    let response = await resp.json();
-
-    return {
-      props: {
-        data: response,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      props: {
-        data: "",
-      },
-    };
-  }
-};
-
 function ResultStatus({ status }) {
   if (status == "AC") {
     return <CheckCircleOutline />;
@@ -433,5 +405,16 @@ function ResultStatus({ status }) {
   } else return status;
 }
 
+function getParameterByName(name, url = window.location.href) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
 export default withStyles(styles)(QuesDetail);
+//////////
 

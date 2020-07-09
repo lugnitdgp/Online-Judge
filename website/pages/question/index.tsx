@@ -1,20 +1,19 @@
 import React from "react";
 import Layout from "components/Layout";
 import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
-
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
+import Timer from "../../components/Timer"
 
-interface IState {
-  list: Array<any>;
-}
 
-class questionlist extends React.Component<{}, IState> {
-  constructor(props: Readonly<{}>) {
-    super(props);
-    this.state = { list: [] };
+class questionlist extends React.Component {
+  state = {
+    list: [],
+    timestamp: '',
+    message: ''
   }
+
 
   componentDidMount() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`, {
@@ -26,6 +25,28 @@ class questionlist extends React.Component<{}, IState> {
       .then((resp) => resp.json())
       .then((res) => {
         this.setState({ list: res })
+        var today = Date.now()
+        var start = (localStorage.start - 19800) * 1000
+        var end = (localStorage.end - 19800) * 1000
+
+        if (start < today && end > today) {
+          this.setState({
+            timestamp: end,
+            message: 'The Contest ends in ...'
+          })
+        }
+        else if (start < today && end < today) {
+          this.setState({
+            timestamp: 0,
+            message: 'The Contest has ended'
+          })
+        }
+        else if (start > today) {
+          this.setState({
+            timestamp: start,
+            message: 'The Contest begins in ...'
+          })
+        }
       })
       .catch((error) => {
         error = JSON.stringify(error)
@@ -63,7 +84,7 @@ class questionlist extends React.Component<{}, IState> {
                       style={{ textDecoration: "None", color: "#512daa" }}
                     >
                       <a
-                        href={`/question/description?id=${item.question_code}`}
+                        href={`/question/${item.question_code}?con=${localStorage.code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_code}
@@ -75,7 +96,7 @@ class questionlist extends React.Component<{}, IState> {
                       style={{ textDecoration: "None" }}
                     >
                       <a
-                        href={`/question/description?id=${item.question_code}`}
+                        href={`/question/${item.question_code}?con=${localStorage.code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_name}
@@ -93,7 +114,11 @@ class questionlist extends React.Component<{}, IState> {
                 : null}
             </TableBody>
           </Table>
+
         </TableContainer>
+        <div
+          style={{ maxWidth: "700px", margin: "30px auto" }}>          <Timer time={this.state.timestamp} message={this.state.message} />
+        </div>
       </Layout>
     );
   }

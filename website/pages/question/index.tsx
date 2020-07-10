@@ -84,7 +84,7 @@ class questionlist extends React.Component {
                       style={{ textDecoration: "None", color: "#512daa" }}
                     >
                       <a
-                        href={`/question/description?id=${item.question_code}?con=${localStorage.code}`}
+                        href={`/question/description?id=${item.question_code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_code}
@@ -96,7 +96,7 @@ class questionlist extends React.Component {
                       style={{ textDecoration: "None" }}
                     >
                       <a
-                        href={`/question/description?id=${item.question_code}?con=${localStorage.code}`}
+                        href={`/question/description?id=${item.question_code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
                         {item.question_name}

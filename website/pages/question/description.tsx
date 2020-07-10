@@ -158,7 +158,7 @@ class QuesDetail extends React.Component<IProps, IState> {
 
     try {
       let resp = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${getParameterByName("con")}&q_id=${getParameterByName("id")}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${localStorage.code}&q_id=${getParameterByName("id")}`,
         {
           headers: {
             Authorization: `Token ${cookie.cookies.get("token")}`,

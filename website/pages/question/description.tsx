@@ -1,4 +1,3 @@
-
 import React from "react";
 import Cookie from "lib/models/Cookie";
 import {
@@ -22,6 +21,9 @@ import { CheckCircleOutline, Error } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
 import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import ReactModal from "react-modal";
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from "@material-ui/core/IconButton";
+import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -67,6 +69,7 @@ const styles = createStyles((theme: Theme) => ({
 
 interface IProps {
   classes: any;
+  
 }
 
 interface IState {
@@ -78,6 +81,7 @@ interface IState {
   showModal: boolean;
   data: any;
   question: string
+  copied: boolean;
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -92,10 +96,12 @@ class QuesDetail extends React.Component<IProps, IState> {
       isLoading: false,
       showModal: false,
       data: {},
-      question: ""
+      question: "",
+      copied: false,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.changeCopyState = this.changeCopyState.bind(this);
   }
   handleOpenModal() {
     this.setState({ showModal: true });
@@ -105,6 +111,11 @@ class QuesDetail extends React.Component<IProps, IState> {
     this.setState({ showModal: false });
   }
 
+changeCopyState() {
+  this.setState({ copied: true }, () => {
+    setTimeout(() => this.setState({ copied: false }), 1500);
+  });
+}
   submitcode = (code: any, lang: any) => {
     this.setState({
       isLoading: true,
@@ -347,6 +358,7 @@ class QuesDetail extends React.Component<IProps, IState> {
               >
                 INPUT EXAMPLE
               </Typography>
+              <CopyToClipboard text={this.state.data.input_example} onCopy={this.changeCopyState}>
               <Typography variant="subtitle1" gutterBottom>
                 <div
                   style={{ whiteSpace: "pre-wrap" }}
@@ -354,7 +366,15 @@ class QuesDetail extends React.Component<IProps, IState> {
                     __html: this.state.data.input_example,
                   }}
                 />
+                  
+                <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
+                <IconButton  aria-label="upload picture" component="span">
+                < FileCopyRoundedIcon />
+                </IconButton>
+                </Tooltip>
+                
               </Typography>
+              </CopyToClipboard>
               <hr></hr>
               <Typography
                 style={{ fontSize: "18px", color: "#4455dd" }}

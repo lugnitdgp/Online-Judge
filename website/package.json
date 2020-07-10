@@ -18,7 +18,7 @@
 		"next": "9.4.1",
 		"next-redux-wrapper": "^6.0.0",
 		"next-transpile-modules": "^3.3.0",
-		"react": "16.13.1",
+		"react": "^16.13.1",
 		"react-ace": "^9.0.0",
 		"react-announcement": "^1.1.2",
 		"react-bootstrap": "^1.0.1",

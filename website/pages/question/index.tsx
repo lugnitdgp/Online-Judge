@@ -16,6 +16,10 @@ class questionlist extends React.Component {
 
 
   componentDidMount() {
+    if (!(localStorage.token) || !(localStorage.code))
+      window.location.href = "/"
+
+
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`, {
       method: "GET",
       headers: {

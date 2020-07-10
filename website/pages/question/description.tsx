@@ -69,7 +69,7 @@ const styles = createStyles((theme: Theme) => ({
 
 interface IProps {
   classes: any;
-  
+
 }
 
 interface IState {
@@ -111,11 +111,11 @@ class QuesDetail extends React.Component<IProps, IState> {
     this.setState({ showModal: false });
   }
 
-changeCopyState() {
-  this.setState({ copied: true }, () => {
-    setTimeout(() => this.setState({ copied: false }), 1500);
-  });
-}
+  changeCopyState() {
+    this.setState({ copied: true }, () => {
+      setTimeout(() => this.setState({ copied: false }), 1500);
+    });
+  }
   submitcode = (code: any, lang: any) => {
     this.setState({
       isLoading: true,
@@ -164,6 +164,8 @@ changeCopyState() {
   };
 
   async componentDidMount() {
+    if (!(localStorage.token) || !(localStorage.code))
+      window.location.href = "/"
     const cookie = new Cookie();
     cookie.parse(document.cookie || "");
 
@@ -359,21 +361,21 @@ changeCopyState() {
                 INPUT EXAMPLE
               </Typography>
               <CopyToClipboard text={this.state.data.input_example} onCopy={this.changeCopyState}>
-              <Typography variant="subtitle1" gutterBottom>
-                <div
-                  style={{ whiteSpace: "pre-wrap" }}
-                  dangerouslySetInnerHTML={{
-                    __html: this.state.data.input_example,
-                  }}
-                />
-                  
-                <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
-                <IconButton  aria-label="upload picture" component="span">
-                < FileCopyRoundedIcon />
-                </IconButton>
-                </Tooltip>
-                
-              </Typography>
+                <Typography variant="subtitle1" gutterBottom>
+                  <div
+                    style={{ whiteSpace: "pre-wrap" }}
+                    dangerouslySetInnerHTML={{
+                      __html: this.state.data.input_example,
+                    }}
+                  />
+
+                  <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
+                    <IconButton aria-label="upload picture" component="span">
+                      < FileCopyRoundedIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                </Typography>
               </CopyToClipboard>
               <hr></hr>
               <Typography

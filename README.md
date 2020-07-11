@@ -1,4 +1,5 @@
 ![Django CI](https://github.com/himanshu272/Online-Judge/workflows/Django%20CI/badge.svg)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/acc85f90-6d93-45a2-863b-4b3eeaddf625/deploy-status)](https://app.netlify.com/sites/zen-galileo-d63570/deploys)
 
 # Online-Judge
 Port of the Online Judge in Python

@@ -287,6 +287,14 @@ function LoginPage(props: Props) {
           <Typography variant="h3" gutterBottom>
             Login
         </Typography>
+        <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => toggleisLogin()}
+            style={{ border: "None", outline: "none" }}
+          >
+            Didn't Sign Up? Register here.
+        </Button>
           <form
             className={classes.form}
 
@@ -357,14 +365,7 @@ function LoginPage(props: Props) {
             Login with Facebook
           </Button>
           </form>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => toggleisLogin()}
-            style={{ border: "None", outline: "none" }}
-          >
-            Didn't Sign Up? Register here.
-        </Button>
+          
         </Paper>
       ) : (
           <Paper className={classes.paper}>
@@ -375,6 +376,14 @@ function LoginPage(props: Props) {
             <Typography variant="h3" gutterBottom>
               Register
         </Typography>
+        <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => toggleisLogin()}
+              style={{ border: "None", outline: "none" }}
+            >
+              Already Registered? Login here.
+        </Button>
             <form
               className={classes.form}
 
@@ -458,14 +467,6 @@ function LoginPage(props: Props) {
             Sign Up with Facebook
           </Button>
             </form>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => toggleisLogin()}
-              style={{ border: "None", outline: "none" }}
-            >
-              Already Registered? Login here.
-        </Button>
           </Paper>
         )}
     </main>

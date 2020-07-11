@@ -23,7 +23,7 @@ import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import ReactModal from "react-modal";
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from "@material-ui/core/IconButton";
-import FileCopyRoundedIcon from '@material-ui/icons/FileCopyRounded';
+import FileCopySharpIcon from '@material-ui/icons/FileCopySharp';
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -354,28 +354,33 @@ class QuesDetail extends React.Component<IProps, IState> {
                 {this.state.data.question_text}
               </Typography>
               <hr></hr>
+              <CopyToClipboard text={this.state.data.input_example} onCopy={this.changeCopyState}>
               <Typography
                 style={{ fontSize: "18px", color: "#4455dd" }}
                 gutterBottom
-              >
-                INPUT EXAMPLE
-              </Typography>
-              <CopyToClipboard text={this.state.data.input_example} onCopy={this.changeCopyState}>
+              ><div>
+                <div className="row">
+                  <div className="column" style={{ marginLeft:15, verticalAlign: 'middle'}}>
+                         INPUT EXAMPLE
+                </div>
+                <div className="column"> 
+                <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
+                    <IconButton aria-label="upload picture">
+                      < FileCopySharpIcon style={{width:20, height:20, bottom:10,position: 'relative' }} />
+                    </IconButton>
+                  </Tooltip>
+                </div></div>
                 <Typography variant="subtitle1" gutterBottom>
+                 
                   <div
                     style={{ whiteSpace: "pre-wrap" }}
                     dangerouslySetInnerHTML={{
                       __html: this.state.data.input_example,
-                    }}
-                  />
-
-                  <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
-                    <IconButton aria-label="upload picture" component="span">
-                      < FileCopyRoundedIcon />
-                    </IconButton>
-                  </Tooltip>
+                    }}/>
 
                 </Typography>
+                </div>
+              </Typography>
               </CopyToClipboard>
               <hr></hr>
               <Typography

@@ -59,7 +59,7 @@ function LoginPage() {
                             email: response.user.email,
                             image_link: response.user.image_link
                         });
-                        window.location.href = "/question"
+                        window.location.href = "/"
                     })
                     .catch((e) => {
                         console.log(e);

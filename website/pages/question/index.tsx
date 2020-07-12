@@ -1,22 +1,25 @@
 import React from "react";
 import Layout from "components/Layout";
 import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
-
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
+import Timer from "../../components/Timer"
 
-interface IState {
-  list: Array<any>;
-}
 
-class questionlist extends React.Component<{}, IState> {
-  constructor(props: Readonly<{}>) {
-    super(props);
-    this.state = { list: [] };
+class questionlist extends React.Component {
+  state = {
+    list: [],
+    timestamp: '',
+    message: ''
   }
 
+
   componentDidMount() {
+    if (!(localStorage.token) || !(localStorage.code))
+      window.location.href = "/"
+
+
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`, {
       method: "GET",
       headers: {
@@ -26,6 +29,28 @@ class questionlist extends React.Component<{}, IState> {
       .then((resp) => resp.json())
       .then((res) => {
         this.setState({ list: res })
+        var today = Date.now()
+        var start = (localStorage.start - 19800) * 1000
+        var end = (localStorage.end - 19800) * 1000
+
+        if (start < today && end > today) {
+          this.setState({
+            timestamp: end,
+            message: 'The Contest ends in ...'
+          })
+        }
+        else if (start < today && end < today) {
+          this.setState({
+            timestamp: 0,
+            message: 'The Contest has ended'
+          })
+        }
+        else if (start > today) {
+          this.setState({
+            timestamp: start,
+            message: 'The Contest begins in ...'
+          })
+        }
       })
       .catch((error) => {
         error = JSON.stringify(error)
@@ -93,10 +118,33 @@ class questionlist extends React.Component<{}, IState> {
                 : null}
             </TableBody>
           </Table>
+
         </TableContainer>
+        <div
+          style={{ maxWidth: "700px", margin: "30px auto" }}>          <Timer time={this.state.timestamp} message={this.state.message} />
+        </div>
       </Layout>
     );
   }
 }
 
 export default questionlist;
+
+
+{/* <CopyToClipboard text={this.props.data.input_example} onCopy={this.changeCopyState}>
+                <Typography variant="subtitle1" gutterBottom>
+                  <div
+                    style={{ whiteSpace: "pre-wrap" }}
+                    dangerouslySetInnerHTML={{
+                      __html: this.props.data.input_example,
+                    }}
+                  />
+
+                  <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
+                    <IconButton aria-label="upload picture" component="span">
+                      < FileCopyRoundedIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                </Typography>
+              </CopyToClipboard> */}

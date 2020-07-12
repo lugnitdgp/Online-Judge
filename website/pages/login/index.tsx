@@ -7,8 +7,12 @@ import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
-import useInputState from "../../hooks/useInputState";
 import { Facebook } from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 
 const styles = createStyles((theme: Theme) => ({
   main: {
@@ -107,6 +111,7 @@ const facebookLogin = () => {
   window.location.href = url.toString();
 };
 
+
 // const linkedInLogin = () => {
 //   // let url = new URL("https://www.linkedin.com");
 //   // url.pathname = "/oauth/v2/authorization";
@@ -128,11 +133,136 @@ const facebookLogin = () => {
 interface Props {
   classes: any;
 }
-
+interface State {
+  email1: string;
+  email2: string;
+  password1: string;
+  password2: string;
+  username: string;
+  first_name: string;
+  showPassword: boolean;
+}
 function LoginPage(props: Props) {
   const { classes } = props;
-  const [value, handleChange, reset] = useInputState("");
   const [isLogin, toggleLogin] = useState(false);
+
+  const [values, setValues] = React.useState<State>({
+    email1: '',
+    email2: '',
+    password1: '',
+    password2: '',
+    username: '',
+    first_name: '',
+    showPassword: false,
+  });
+
+  const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  const signUp = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+    event.preventDefault();
+
+      var payload = JSON.stringify({
+        email: values['email2'],
+        username: values['username'],
+        first_name: values['first_name'],
+        password: values[`password2`]
+      })
+    
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+      },
+        body: payload
+      }).then((resp) => resp.json())
+        .then((response) => {
+          if(response.status === 401)
+          {
+            alert(response.message)
+            window.location.href= "/login"
+          }
+          else if(response.status === 400){
+            alert("Please enter your details properly.")
+            window.location.href= "/login"
+          }
+          else if(response.status === 200){
+          localStorage.token = response.token;
+          document.cookie = `token=${response.token}; path=/; max-age=${
+              60 * 60 * 24 * 100
+              }`;
+          localStorage.onlinejudge_info = JSON.stringify({
+              name: response.user.name,
+              email: response.user.email,
+              image_link: response.user.image_link
+          })
+
+          window.location.href = "/"
+          
+      }})
+          
+        .catch((error) => { console.log(error) });
+    
+    
+    }
+    
+  const logIn = (event: React.MouseEvent<HTMLButtonElement>) =>{
+
+    event.preventDefault();
+    var payload = JSON.stringify({
+      email: values['email1'],
+      password: values[`password1`]
+    })
+
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/custom_login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+    },
+      body: payload
+    }).then((resp) => resp.json())
+      .then((response) => {
+        if(response.status === 401)
+        {
+          alert(response.message)
+          window.location.href= "/login"
+        }
+        else if(response.status === 404){
+          alert("Please enter your details properly.")
+          window.location.href= "/login"
+        }
+        else if(response.status === 200){
+        localStorage.token = response.token;
+        document.cookie = `token=${response.token}; path=/; max-age=${
+            60 * 60 * 24 * 100
+            }`;
+        localStorage.onlinejudge_info = JSON.stringify({
+            name: response.user.name,
+            email: response.user.email,
+            image_link: response.user.image_link
+        })
+
+        window.location.href = "/"
+        
+    }})
+        
+      .catch((error) => { console.log(error) });
+
+
+
+
+
+  }
 
   const toggleisLogin = () => {
     toggleLogin(!isLogin);
@@ -141,7 +271,8 @@ function LoginPage(props: Props) {
   React.useEffect(() => {
     let status = getParameterByName("status")
     if (status == "success") {
-      window.location.href = "/"
+      //window.location.href = "/"
+        alert('hemlo')
     }
   }, [])
 
@@ -155,20 +286,25 @@ function LoginPage(props: Props) {
           />
           <Typography variant="h3" gutterBottom>
             Login
-          </Typography>
+        </Typography>
+        <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => toggleisLogin()}
+            style={{ border: "None", outline: "none" }}
+          >
+            Didn't Sign Up? Register here.
+        </Button>
           <form
             className={classes.form}
-            onSubmit={(e) => {
-              e.preventDefault();
-              reset();
-            }}
+
+
           >
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email</InputLabel>
               <Input
-                value={value.email}
-                onChange={handleChange}
-                id="email"
+                value={values.email1}
+                onChange={handleChange('email1')}
                 name="email"
                 autoFocus
               />
@@ -176,11 +312,21 @@ function LoginPage(props: Props) {
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="password">Password</InputLabel>
               <Input
-                value={value.password}
-                onChange={handleChange}
-                id="password"
-                name="password"
-                autoFocus
+                id="standard-adornment-password"
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password1}
+                onChange={handleChange('password1')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
               />
             </FormControl>
 
@@ -190,9 +336,10 @@ function LoginPage(props: Props) {
               fullWidth
               color="primary"
               className={classes.submit}
+              onClick={logIn}
             >
               LogIn
-            </Button>
+          </Button>
             <Button
               variant="outlined"
               className={classes.googleButton}
@@ -204,8 +351,8 @@ function LoginPage(props: Props) {
                 src="https://img.icons8.com/color/24/000000/google-logo.png"
                 className={classes.signInIcon}
               />
-              Login with Google
-            </Button>
+            Login with Google
+          </Button>
             <Button
               variant="outlined"
               color="secondary"
@@ -215,17 +362,10 @@ function LoginPage(props: Props) {
               className={classes.facebookButton}
             >
               <Facebook className={classes.signInIcon} />
-              Login with Facebook
-            </Button>
-          </form>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => toggleisLogin()}
-            style={{ border: "None", outline: "none" }}
-          >
-            Didn't Sign Up? Register here.
+            Login with Facebook
           </Button>
+          </form>
+          
         </Paper>
       ) : (
           <Paper className={classes.paper}>
@@ -235,42 +375,61 @@ function LoginPage(props: Props) {
             />
             <Typography variant="h3" gutterBottom>
               Register
-          </Typography>
+        </Typography>
+        <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => toggleisLogin()}
+              style={{ border: "None", outline: "none" }}
+            >
+              Already Registered? Login here.
+        </Button>
             <form
               className={classes.form}
-              onSubmit={(e) => {
-                e.preventDefault();
-                reset();
-              }}
+
             >
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="first_name">Name</InputLabel>
+                <Input
+                  value={values.first_name}
+                  onChange={handleChange('first_name')}
+                  name="first_name"
+                />
+              </FormControl>
               <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="username">Username</InputLabel>
                 <Input
-                  value={value.username}
-                  onChange={handleChange}
-                  id="username"
+                  value={values.username}
+                  onChange={handleChange('username')}
                   name="username"
-                  autoFocus
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="email">Email</InputLabel>
                 <Input
-                  value={value.email}
-                  onChange={handleChange}
-                  id="email"
+                  value={values.email2}
+                  onChange={handleChange('email2')}
                   name="email"
-                  autoFocus
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <Input
-                  value={value.password}
-                  onChange={handleChange}
-                  id="password"
-                  name="password"
-                  autoFocus
+                  id="standard-adornment-password"
+                  type={values.showPassword ? 'text' : 'password'}
+                  value={values.password2}
+                  onChange={handleChange('password2')}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
               <Button
@@ -278,10 +437,10 @@ function LoginPage(props: Props) {
                 type="submit"
                 fullWidth
                 color="primary"
-                className={classes.submit}
+                onClick={signUp}
               >
                 SignUp
-            </Button>
+          </Button>
               <Typography color="error"></Typography>
               <Button
                 variant="outlined"
@@ -294,8 +453,8 @@ function LoginPage(props: Props) {
                   src="https://img.icons8.com/color/24/000000/google-logo.png"
                   className={classes.signInIcon}
                 />
-              Sign Up with Google
-            </Button>
+            Sign Up with Google
+          </Button>
               <Button
                 variant="outlined"
                 color="secondary"
@@ -305,17 +464,9 @@ function LoginPage(props: Props) {
                 className={classes.facebookButton}
               >
                 <Facebook className={classes.signInIcon} />
-              Sign Up with Facebook
-            </Button>
-            </form>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => toggleisLogin()}
-              style={{ border: "None", outline: "none" }}
-            >
-              Already Registered? Login here.
+            Sign Up with Facebook
           </Button>
+            </form>
           </Paper>
         )}
     </main>

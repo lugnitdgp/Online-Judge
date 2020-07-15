@@ -17,7 +17,7 @@ class Leaderboard extends React.Component<IProps, {}> {
 	componentDidMount() {
 		// axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?format=json`).then(data => {
 		axios
-			.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?format=json`)
+			.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?contest_id=${localStorage.code}`)
 			.then((data) => {
 				data.data.map((entry) => {
 					entry[`image`] = <Avatar src={entry[`image`]} />;

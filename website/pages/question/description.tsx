@@ -131,6 +131,7 @@ class QuesDetail extends React.Component<IProps, IState> {
         code: encodeURI(code),
         lang: lang,
         q_id: this.state.data.question_code,
+        contest_id: localStorage.code
       }),
     })
       .then((resp) => resp.json())
@@ -152,10 +153,12 @@ class QuesDetail extends React.Component<IProps, IState> {
       body: JSON.stringify({
         q_id: this.state.data.question_code,
         task_id: localStorage.taskid,
+        contest_id: localStorage.code
       }),
     })
       .then((resp) => resp.json())
       .then((response) => {
+        console.log(response)
         self.setState({ res: response, isLoading: false });
         clearInterval(self.interval);
       })

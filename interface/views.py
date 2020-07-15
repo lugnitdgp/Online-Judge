@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer
+from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer
 from interface.models import Question, Job, Testcases, Contest, Contest_Score
 from interface.tasks import execute
 from accounts.serializers import CoderSerializer
@@ -60,10 +60,10 @@ def submitCode(request):
     code = unquote(request.data.get('code'))
     contest_code = request.data.get('contest_id')
     try:
-        contest = Contest.objects.get(contest_code=contest_code)
+        contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder = Coder.objects.get(user=request.user)
-        task = execute.delay(QuestionSerializer(question).data, CoderSerializer(coder).data, code, lang)
+        task = execute.delay(QuestionSerializer(question).data, CoderSerializer(coder).data, code, lang, ContestSerializer(contest).data)
         return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
@@ -109,3 +109,32 @@ def leaderboard(request):
             "image": participant.coder.image_link
         })
     return Response(coder_array)
+
+@api_view(['GET'])
+@permission_classes([
+    AllowAny
+])
+def GetSubmissions(request):
+    contest = Contest.objects.get(contest_code=request.GET['contest_id'])
+    query_set = Job.objects.filter(contest=contest)
+    serializer = SubmissionSerializer(query_set, many=True)
+    if contest.isStarted():
+        return Response(serializer.data)
+    if contest.isOver():
+        return Response(serializer.data)
+    return Response({'status': 301, 'message': 'Contest has not started yet'})
+    
+@api_view(['GET'])
+@permission_classes(
+    [IsAuthenticated]
+)
+def GetPersonalSubmissions(request):
+    contest = Contest.objects.get(contest_code=request.GET['contest_id'])
+    coder = Coder.objects.get(user=request.user)
+    query_set = Job.objects.filter(contest=contest, coder=coder)
+    serializer = PersonalSubmissionSerializer(query_set, many=True)
+    if contest.isStarted():
+        return Response(serializer.data)
+    if contest.isOver():
+        return Response(serializer.data)
+    return Response({'status': 301, 'message': 'Contest has not started yet'})

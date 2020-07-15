@@ -50,7 +50,7 @@ class Question(models.Model):
     java_multipler = models.IntegerField(default=2, help_text="Time and Memory limit multipler for JAVA")
 
     def __str__(self):
-        return self.question_text
+        return self.question_code
 
     def c_cpp_lim(self):
         return [self.c_cpp_multiplier * self.time_limit, self.c_cpp_multiplier * self.mem_limit]
@@ -75,7 +75,7 @@ class Testcases(models.Model):
     output_test = models.TextField(blank=True, help_text="Output test case")
 
     def __str__(self):
-        return ("Testcase of " + self.question.question_text)
+        return ("Testcase of " + self.question.question_code)
 
     def input_path(self):
         return os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
@@ -101,7 +101,9 @@ class Testcases(models.Model):
 
 class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True, on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
     coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
+    code = models.TextField(blank=True, help_text="Code goes here")
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
     WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")

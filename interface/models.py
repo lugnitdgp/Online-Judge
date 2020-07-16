@@ -21,6 +21,9 @@ class Config(models.Model):
 class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
+    penalty = models.IntegerField(default=0, help_text="Add Penalty multiplier per minute")
+    wa_penalty = models.IntegerField(default=0, help_text="Add Penalty for WAs, TLEs etc")
+    min_score = models.IntegerField(default=1, help_text="Add the fraction multiplier to question score Eg. 3 for 1/3")
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
 
@@ -103,6 +106,8 @@ class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
     coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, null=True, help_text="Name goes here")
+    question_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
     code = models.TextField(blank=True, help_text="Code goes here")
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")

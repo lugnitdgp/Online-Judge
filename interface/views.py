@@ -75,18 +75,26 @@ def status(request):
     try:
         coder = Coder.objects.get(user=request.user)
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
+        penalty = contest.penalty
+        penalty_total = penalty*((t.now()-contest.start_time).total_seconds()/60)
         question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
         job = Job.objects.get(coder=coder, question=question, job_id=request.data.get('task_id'))
+        job.name = coder.first_name
+        job.question_name = question.question_name
+        job.save()
         if job.AC_no == Testcases.objects.filter(question=question).count():
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
-                coder_contest_score.score += question.question_score
+                coder.correct_answers += 1
+                coder_contest_score.score += max(((int)(question.question_score/(contest.min_score))) , (question.question_score - penalty_total - (coder_contest_score.wa*contest.wa_penalty)) )
                 coder_contest_score.timestamp = t.now()
-                coder.save()
+                coder.score = coder_contest_score
         else:
             coder_contest_score.wa += 1
+            coder.wrong_answers += 1
             coder_contest_score.timestamp = t.now()
+        coder.save()
         coder_contest_score.save()
         res = json.loads(job.status)
         return Response(res)
@@ -98,7 +106,7 @@ def status(request):
 @permission_classes([AllowAny])
 def leaderboard(request):
     coder_array = []
-    contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
+    contest = Contest.objects.get(contest_code=request.GET['contest_id'])
     for (rank,
          participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
                                    start=1):
@@ -108,6 +116,7 @@ def leaderboard(request):
             "score": participant.score,
             "image": participant.coder.image_link
         })
+    print(coder_array)
     return Response(coder_array)
 
 @api_view(['GET'])

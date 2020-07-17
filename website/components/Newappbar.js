@@ -88,7 +88,8 @@ class Newappbar extends Component {
                 alignItems="Right"
                 style={{ textAlign: "Right" }}
               >
-                Online Judge
+                Online Judge &nbsp;&nbsp;
+                <img src="/oj.png" alt="." style={{ width: "30px", borderRadius: "5px" }} />
               </Typography>
             </Grid>
           </Toolbar>
@@ -177,11 +178,11 @@ class Newappbar extends Component {
                       src={JSON.parse(localStorage.onlinejudge_info).image_link}
                     />
                     &nbsp;
-                    {
+                    {/* {
                       JSON.parse(localStorage.onlinejudge_info).email.split(
                         "@"
                       )[0]
-                    }
+                    } */}
                   </React.Fragment>
                 ) : (
                     <Button color="inherit" onClick={() => Router.push("/login")}>
@@ -208,8 +209,8 @@ class Newappbar extends Component {
             className={classes.title}
             onClick={() => Router.push("/")}
           >
-
-            Online Judge
+            <img src="/oj.png" alt="." style={{ width: "45px", borderRadius: "5px" }} />
+            &nbsp;&nbsp;&nbsp;Online Judge
           </Typography>
           {localStorage.onlinejudge_info ? (
             <Button color="inherit" onClick={() => Router.push("/submissions")}>
@@ -255,7 +256,7 @@ class Newappbar extends Component {
                 src={JSON.parse(localStorage.onlinejudge_info).image_link}
               />
               &nbsp;
-              {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]}
+              {/* {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]} */}
             </React.Fragment>
           ) : (
               <Button color="inherit" onClick={() => Router.push("/login")}>

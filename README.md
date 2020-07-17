@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="http://debsocnitd.herokuapp.com">
+    <img alt="logo" src="website/public/oj.png" width="140" />
+  </a>
+</p>
+
 ![Django CI](https://github.com/himanshu272/Online-Judge/workflows/Django%20CI/badge.svg)
 
 # Online-Judge

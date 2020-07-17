@@ -120,26 +120,27 @@ class Leaderboard extends React.Component<IProps, {}> {
 						rel="stylesheet"
 						href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
 					/>
-					<Card
+					<div
 						style={{
 							maxWidth: '700px',
-							height: '70px',
+							height: '30px',
 							textAlign: 'center',
-							margin: '20px auto'
+							margin: '20px auto',
+							padding: "0px"
 						}}
 					>
 						<h1
 							style={{
-								margin: '12px auto',
+								margin: '0px auto',
 								textTransform: 'uppercase',
 								color: '#001144'
 							}}
 						>
 							Leaderboard
 						</h1>
-					</Card>
+					</div>
 					<div className="contain" style={{ margin: '0 auto', maxWidth: '900px', width: '100%' }}>
-						<Card elevation={3} style={{ msOverflowX: 'scroll', margin: '0 auto' }}>
+						<Card elevation={0} style={{ msOverflowX: 'scroll', margin: '0 auto', border: "1px solid #003" }}>
 							{/* <MUIDataTable title={'STANDINGS'} data={data} columns={columns} options={options} /> */}
 							<Paper>
 								<TableContainer>
@@ -150,7 +151,7 @@ class Leaderboard extends React.Component<IProps, {}> {
 													<TableCell
 														key={columns.name}
 														align="left"
-														style={{ backgroundColor: "#8899ff", color: "#003", fontSize: "15px" }}
+														style={{ backgroundColor: "#eeeeff", color: "#003", fontSize: "15px" }}
 													>
 														{columns.label}
 													</TableCell>
@@ -164,7 +165,7 @@ class Leaderboard extends React.Component<IProps, {}> {
 														{columns.map((columns) => {
 															const value = row[columns.name];
 															return (
-																<TableCell key={columns.name} style={{ minWidth: "20px", backgroundColor: "#eeeeff", color: "#003", fontSize: "13px", borderBottom: "0.5px solid #006", paddingTop: "7px", paddingBottom: "7px" }}>
+																<TableCell key={columns.name} style={{ minWidth: "20px", backgroundColor: "#eeeeff", color: "#003", fontSize: "13px", borderBottom: "0px solid #006", paddingTop: "7px", paddingBottom: "7px" }}>
 																	{value}
 																</TableCell>
 															);
@@ -183,6 +184,7 @@ class Leaderboard extends React.Component<IProps, {}> {
 									page={options.page}
 									onChangePage={handleChangePage}
 									onChangeRowsPerPage={handleChangeRowsPerPage}
+									style={{ backgroundColor: "#eeeeff", borderTop: "1px solid #ddd" }}
 								/>
 							</Paper>
 						</Card>

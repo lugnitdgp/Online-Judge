@@ -15,6 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
 import Router from "next/router";
 
+
 const styleSheet = {
   list: {
     width: 200,
@@ -123,8 +124,8 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                <div></div>
-              )}
+                  <div></div>
+                )}
 
               {localStorage.onlinejudge_info ? (
                 <ListItem key={2} button divider>
@@ -136,8 +137,8 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                <div></div>
-              )}
+                  <div></div>
+                )}
 
               <ListItem key={3} button divider>
                 <Button color="inherit" onClick={() => Router.push("/")}>
@@ -167,8 +168,8 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                <div></div>
-              )}
+                  <div></div>
+                )}
               <ListItem key={4} button divider>
                 {localStorage.onlinejudge_info ? (
                   <React.Fragment>
@@ -183,10 +184,10 @@ class Newappbar extends Component {
                     }
                   </React.Fragment>
                 ) : (
-                  <Button color="inherit" onClick={() => Router.push("/login")}>
-                    Login
-                  </Button>
-                )}
+                    <Button color="inherit" onClick={() => Router.push("/login")}>
+                      Login
+                    </Button>
+                  )}
               </ListItem>
             </List>
           </div>
@@ -201,11 +202,13 @@ class Newappbar extends Component {
     return (
       <AppBar position="static">
         <Toolbar>
+
           <Typography
             variant="h6"
             className={classes.title}
             onClick={() => Router.push("/")}
           >
+
             Online Judge
           </Typography>
           {localStorage.onlinejudge_info ? (
@@ -213,15 +216,15 @@ class Newappbar extends Component {
               Submissons
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           {localStorage.onlinejudge_info ? (
             <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
               Leaderboard
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           {/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
           <Button color="inherit" onClick={() => Router.push("/")}>
             Contests
@@ -244,8 +247,8 @@ class Newappbar extends Component {
               Logout
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           {localStorage.onlinejudge_info ? (
             <React.Fragment>
               <Avatar
@@ -255,10 +258,10 @@ class Newappbar extends Component {
               {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]}
             </React.Fragment>
           ) : (
-            <Button color="inherit" onClick={() => Router.push("/login")}>
-              Login
-            </Button>
-          )}
+              <Button color="inherit" onClick={() => Router.push("/login")}>
+                Login
+              </Button>
+            )}
         </Toolbar>
       </AppBar>
     );

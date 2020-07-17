@@ -1,10 +1,17 @@
 import React from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
-import {} from '@material-ui/icons';
-import MUIDataTable from 'mui-datatables';
+import { } from '@material-ui/icons';
+//import MUIDataTable from 'mui-datatables';
 import { Avatar, Card } from '@material-ui/core';
-
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
 interface IProps {
 	classes: any;
 }
@@ -24,7 +31,7 @@ class Leaderboard extends React.Component<IProps, {}> {
 				});
 				this.setState({ gotData: true, leaderBoard: data.data });
 			})
-			.catch(function(error) {
+			.catch(function (error) {
 				if (error.response) {
 					console.log(error);
 					console.log(error.response.data);
@@ -93,10 +100,19 @@ class Leaderboard extends React.Component<IProps, {}> {
 		const options = {
 			download: false,
 			selectableRows: 'none',
-			viewColumns: false
+			viewColumns: false,
+			page: 0,
+			rowsPerPage: 10,
 		};
 		const data = this.state.leaderBoard;
+		const handleChangePage = () => {
+			options.page = options.page + 1;
+		};
 
+		const handleChangeRowsPerPage = () => {
+			options.rowsPerPage = (+event.target);
+
+		};
 		return (
 			<div>
 				<Layout>
@@ -124,7 +140,51 @@ class Leaderboard extends React.Component<IProps, {}> {
 					</Card>
 					<div className="contain" style={{ margin: '0 auto', maxWidth: '900px', width: '100%' }}>
 						<Card elevation={3} style={{ msOverflowX: 'scroll', margin: '0 auto' }}>
-							<MUIDataTable title={'STANDINGS'} data={data} columns={columns} options={options} />
+							{/* <MUIDataTable title={'STANDINGS'} data={data} columns={columns} options={options} /> */}
+							<Paper>
+								<TableContainer>
+									<Table stickyHeader aria-label="sticky table">
+										<TableHead>
+											<TableRow >
+												{columns.map((columns) => (
+													<TableCell
+														key={columns.name}
+														align="left"
+														style={{ backgroundColor: "#8899ff", color: "#003", fontSize: "15px" }}
+													>
+														{columns.label}
+													</TableCell>
+												))}
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{data.slice(options.page * options.rowsPerPage, options.page * options.rowsPerPage + options.rowsPerPage).map((row) => {
+												return (
+													<TableRow hover role="checkbox" tabIndex={-1} key={row.name}>
+														{columns.map((columns) => {
+															const value = row[columns.name];
+															return (
+																<TableCell key={columns.name} style={{ minWidth: "20px", backgroundColor: "#eeeeff", color: "#003", fontSize: "13px", borderBottom: "0.5px solid #006", paddingTop: "7px", paddingBottom: "7px" }}>
+																	{value}
+																</TableCell>
+															);
+														})}
+													</TableRow>
+												);
+											})}
+										</TableBody>
+									</Table>
+								</TableContainer>
+								<TablePagination
+									rowsPerPageOptions={[10, 25, 100]}
+									component="div"
+									count={data.length}
+									rowsPerPage={options.rowsPerPage}
+									page={options.page}
+									onChangePage={handleChangePage}
+									onChangeRowsPerPage={handleChangeRowsPerPage}
+								/>
+							</Paper>
 						</Card>
 					</div>
 				</Layout>

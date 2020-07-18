@@ -8,11 +8,12 @@ from judge.celery import app
 from engine import script
 import os
 import json
+from django.utils import timezone as t
 from judge.settings import OUTPATH_DIR, ENGINE_PATH
 
 
 def db_store(question, user, result, ac, wa, job_id, contest, code):
-    j = Job(question=question, coder=user, code=code, status=json.dumps(result), AC_no=ac, WA_no=wa, job_id=job_id, contest=contest)
+    j = Job(question=question, coder=user, code=code, status=json.dumps(result), AC_no=ac, WA_no=wa, job_id=job_id, contest=contest, timestamp=t.now())
     j.save()
 
 

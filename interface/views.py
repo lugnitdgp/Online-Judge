@@ -87,12 +87,14 @@ def status(request):
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
                 coder.correct_answers += 1
+                coder.solved = coder.solved + question.question_name + ","  
                 coder_contest_score.score += max(((int)(question.question_score/(contest.min_score))) , (question.question_score - penalty_total - (coder_contest_score.wa*contest.wa_penalty)) )
                 coder_contest_score.timestamp = t.now()
-                coder.score = coder_contest_score
+                coder.score = coder_contest_score.score
         else:
             coder_contest_score.wa += 1
             coder.wrong_answers += 1
+            coder.wrong_ques = (str)(coder.wrong_ques) + question.question_name + ","
             coder_contest_score.timestamp = t.now()
         coder.save()
         coder_contest_score.save()
@@ -107,14 +109,15 @@ def status(request):
 def leaderboard(request):
     coder_array = []
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-    for (rank,
-         participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
+    for (rank, participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
                                    start=1):
         coder_array.append({
             "rank": rank,
-            "name": participant.coder.name,
+            "name": participant.coder.first_name,
             "score": participant.score,
-            "image": participant.coder.image_link
+            "image": participant.coder.image_link,
+            "solved": participant.coder.solved,
+            "wrong": participant.coder.wrong_ques
         })
     print(coder_array)
     return Response(coder_array)

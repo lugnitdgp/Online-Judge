@@ -113,6 +113,10 @@ class Job(models.Model):
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
     WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
     job_id = models.CharField(max_length=200, null=True, unique=True, help_text="Celery Job id for the current task")
+    timestamp = models.DateTimeField(default=t.now, help_text="Latest submission")
+
+    class Meta:
+        ordering = ['-timestamp']
 
     def __str__(self):
         return self.question.question_code + " " + self.coder.name

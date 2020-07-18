@@ -28,10 +28,9 @@ class ContestSerializer(serializers.BaseSerializer):
 class SubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('question','contest','question_name','name','coder','status','AC_no','WA_no')
-
+        fields = ('question','contest','question_name','name','coder','status','AC_no','WA_no', 'timestamp')
 
 class PersonalSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('question','contest','question_name','name','code','coder','status','AC_no','WA_no')
+        fields = ('question','contest','question_name','name','code','coder','status','AC_no','WA_no', 'timestamp')

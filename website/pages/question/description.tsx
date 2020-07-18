@@ -159,8 +159,12 @@ class QuesDetail extends React.Component<IProps, IState> {
       .then((resp) => resp.json())
       .then((response) => {
         console.log(response)
+        if(response.status === 302){
+          alert(response.message)
+        }else {
         self.setState({ res: response, isLoading: false });
         clearInterval(self.interval);
+        }
       })
       .then(() => console.log(this.state.res))
       .catch((err) => console.log(err));

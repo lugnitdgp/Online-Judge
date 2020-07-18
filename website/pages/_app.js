@@ -44,6 +44,19 @@ class MyApp extends App {
 						{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 						<CssBaseline />
 						{this.state.loaded ? <Component {...pageProps} /> : <LinearProgress />}
+						<style jsx global>{`
+								html,
+								body {
+									padding: 0;
+									margin: 0;
+									font-family: 'Noto Sans TC', sans-serif;
+								}
+
+								* {
+									box-sizing: border-box;
+								}
+						`}</style>
+  
 					</ThemeProvider>
 				</UserContextProvider>
 			</React.Fragment>

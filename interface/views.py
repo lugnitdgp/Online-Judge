@@ -18,7 +18,7 @@ from django.utils import timezone as t
 @permission_classes([AllowAny])
 def GetContestList(request):
     query_set = Contest.objects.all()
-    serializer = ContestSerializer(query_set, many=True)
+    serializer = ContestSerializer(query_set, many=True, context={"request": request})
     return Response(serializer.data)
 
 
@@ -63,7 +63,10 @@ def submitCode(request):
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder = Coder.objects.get(user=request.user)
-        task = execute.delay(QuestionSerializer(question).data, CoderSerializer(coder).data, code, lang, ContestSerializer(contest).data)
+        task = execute.delay(
+            QuestionSerializer(question).data,
+            CoderSerializer(coder).data, code, lang,
+            ContestSerializer(contest).data)
         return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
@@ -76,7 +79,7 @@ def status(request):
         coder = Coder.objects.get(user=request.user)
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         penalty = contest.penalty
-        penalty_total = penalty*((t.now()-contest.start_time).total_seconds()/60)
+        penalty_total = penalty * ((t.now() - contest.start_time).total_seconds() / 60)
         question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
         job = Job.objects.get(coder=coder, question=question, job_id=request.data.get('task_id'))
@@ -87,8 +90,10 @@ def status(request):
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
                 coder.correct_answers += 1
-                coder.solved = coder.solved + question.question_name + ","  
-                coder_contest_score.score += max(((int)(question.question_score/(contest.min_score))) , (question.question_score - penalty_total - (coder_contest_score.wa*contest.wa_penalty)) )
+                coder.solved = coder.solved + question.question_name + ","
+                coder_contest_score.score += max(
+                    ((int)(question.question_score / (contest.min_score))),
+                    (question.question_score - penalty_total - (coder_contest_score.wa * contest.wa_penalty)))
                 coder_contest_score.timestamp = t.now()
                 coder.score = coder_contest_score.score
         else:
@@ -109,7 +114,8 @@ def status(request):
 def leaderboard(request):
     coder_array = []
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-    for (rank, participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
+    for (rank,
+         participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
                                    start=1):
         coder_array.append({
             "rank": rank,
@@ -122,10 +128,9 @@ def leaderboard(request):
     print(coder_array)
     return Response(coder_array)
 
+
 @api_view(['GET'])
-@permission_classes([
-    AllowAny
-])
+@permission_classes([AllowAny])
 def GetSubmissions(request):
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
     query_set = Job.objects.filter(contest=contest)
@@ -135,11 +140,10 @@ def GetSubmissions(request):
     if contest.isOver():
         return Response(serializer.data)
     return Response({'status': 301, 'message': 'Contest has not started yet'})
-    
+
+
 @api_view(['GET'])
-@permission_classes(
-    [IsAuthenticated]
-)
+@permission_classes([IsAuthenticated])
 def GetPersonalSubmissions(request):
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
     coder = Coder.objects.get(user=request.user)

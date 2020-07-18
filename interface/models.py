@@ -21,6 +21,7 @@ class Config(models.Model):
 class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
+    contest_image = models.ImageField(upload_to="contest_images/", blank=True, null=True)
     penalty = models.IntegerField(default=0, help_text="Add Penalty multiplier per minute")
     wa_penalty = models.IntegerField(default=0, help_text="Add Penalty for WAs, TLEs etc")
     min_score = models.IntegerField(default=1, help_text="Add the fraction multiplier to question score Eg. 3 for 1/3")

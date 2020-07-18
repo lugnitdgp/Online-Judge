@@ -22,7 +22,8 @@ class ContestSerializer(serializers.BaseSerializer):
             'contest_name': instance.contest_name,
             'contest_code': instance.contest_code,
             'start_time': instance.start_time.timestamp(),
-            'end_time' : instance.end_time.timestamp()
+            'end_time' : instance.end_time.timestamp(),
+            'contest_image' : self.context.get('request').build_absolute_uri(instance.contest_image.url)
         }
 
 class SubmissionSerializer(serializers.ModelSerializer):

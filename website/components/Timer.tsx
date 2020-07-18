@@ -3,7 +3,6 @@ import Countdown, { zeroPad } from 'react-countdown';
 import {
     Typography,
     CardContent,
-    CardHeader,
     Card
 } from "@material-ui/core";
 
@@ -13,19 +12,13 @@ export default function Timer(props) {
 
         return (
             <span>
-                <Card style={{
-                    marginBottom: 30
-                }}>
-                    <CardHeader
-                        style={{ textAlign: "center" }}
-                        title={props.message}>
+                <Card style={{ padding: "0px", margin: "0 auto" }}>
 
-                    </CardHeader>
                     <CardContent>
-                        <Typography style={{ textAlign: "center" }}>
-                            <h1>
-                                {zeroPad(days, 3)}:{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
-                            </h1>
+                        <Typography style={{ textAlign: "center", margin: "0 auto", padding: "0", textTransform: "uppercase" }}>
+                            <h4>
+                                This contest ends in : {zeroPad(days, 3)}:{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
+                            </h4>
                         </Typography>
                     </CardContent>
                 </Card>

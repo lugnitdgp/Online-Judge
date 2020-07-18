@@ -63,7 +63,7 @@ class questionlist extends React.Component {
       <Layout>
         <TableContainer
           component={Paper}
-          style={{ maxWidth: "700px", margin: "30px auto" }}
+          style={{ maxWidth: "700px", margin: "30px auto", marginBottom: "0px" }}
         >
           <Table
             //className={classes.table}
@@ -121,7 +121,8 @@ class questionlist extends React.Component {
 
         </TableContainer>
         <div
-          style={{ maxWidth: "700px", margin: "30px auto" }}>          <Timer time={this.state.timestamp} message={this.state.message} />
+          style={{ maxWidth: "700px", margin: "0px auto" }}>
+          <Timer time={this.state.timestamp} message={this.state.message} />
         </div>
       </Layout>
     );

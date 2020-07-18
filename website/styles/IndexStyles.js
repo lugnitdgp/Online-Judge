@@ -2,6 +2,7 @@ const styles = (theme) => ({
 	main: {
 		width: 'auto',
 		display: 'block',
+		fontFamily: "'Noto Sans TC', sans-serif",
 		marginLeft: theme.spacing.unit * 5,
 		marginRight: theme.spacing.unit * 5,
 		marginTop: theme.spacing.unit * 3,
@@ -12,23 +13,21 @@ const styles = (theme) => ({
 		}
 	},
 	carousel: {
-		width: 'auto',
-		marginLeft: 'auto',	
-		marginRight: 'auto',
+		fontFamily: "'Noto Sans TC', sans-serif",
+		maxWidth: '1200px',
+		margin: '0 auto',
 		fontSize: 12,
 		[theme.breakpoints.down('xs')]: {
-			width: 350,
-			marginLeft: 'auto',
-			marginRight: 'auto',
+
 			fontSize: 0
 		},
-		[theme.breakpoints.up('md')]: {
-			width: 1000,
-			height: 562.5,
-			marginLeft: 'auto',
-			marginRight: 'auto',
-			fontSize: 15
-		}
+		// [theme.breakpoints.up('md')]: {
+		// 	width: 1000,
+		// 	height: 562.5,
+		// 	marginLeft: 'auto',
+		// 	marginRight: 'auto',
+		// 	fontSize: 15
+		// }
 	},
 	'@keyframes move': {
 		from: {

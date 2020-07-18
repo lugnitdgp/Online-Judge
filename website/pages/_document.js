@@ -16,8 +16,9 @@ export default class MyDocument extends Document {
 					/>
 					<meta name="robots" content="all" />
 					<meta name="theme-color" content={theme.palette.primary.main} />
+					<link href="/fonts/noto.woff2" rel="preload" as="font" crossOrigin="" />
 				</Head>
-				<body>
+				<body >
 					<Main />
 					<NextScript />
 				</body>

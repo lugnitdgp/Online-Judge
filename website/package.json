@@ -35,6 +35,7 @@
 		"react-swipeable-views": "^0.13.9",
 		"react-virtualized": "^9.21.2",
 		"redux": "^4.0.5",
+		"styled-components": "^5.1.1",
 		"url-loader": "^4.1.0"
 	},
 	"devDependencies": {

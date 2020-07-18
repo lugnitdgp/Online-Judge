@@ -1,6 +1,5 @@
 amqp==2.5.2
 asgiref==3.2.7
-beautifulsoup4==4.9.0
 billiard==3.6.3.0
 cachetools==4.1.0
 celery==4.4.2
@@ -24,8 +23,6 @@ importlib-metadata==1.6.0
 jsonfield==3.1.0
 kombu==4.6.8
 Pillow==7.1.2
-pkg-resources==0.0.0
-psycopg2==2.8.5
 psycopg2-binary==2.8.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8

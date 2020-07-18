@@ -6,7 +6,7 @@ import {withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import CheckTwoToneIcon from '@material-ui/icons/CheckTwoTone';import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
 
-const customStyles = theme => ({
+const customStyles = () => ({
 	Successful: {
 	  '& td': { backgroundColor: "#99ff99" }
 	},
@@ -34,7 +34,8 @@ class submissions extends React.Component<IProps, {}> {
 		})
 			.then((resp) => resp.json())
 			.then((res) => {
-				var arr = [];
+			var arr = [];
+			console.log(res)
 				res.map((r)=>{
 					var stat = ""
 					var time = ""
@@ -79,7 +80,7 @@ class submissions extends React.Component<IProps, {}> {
 					
 
 					var payload = {
-						user : r['coder'],
+						user : r['name'],
 						problem : r.question,
 						status : stat,
 						time : time,
@@ -196,7 +197,6 @@ class submissions extends React.Component<IProps, {}> {
 			selectableRows: 'none',
 			viewColumns: false,
 			setRowProps: (row) => {
-				console.log(row)
 				return {	
 				  className: classnames(
 					{

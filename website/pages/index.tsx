@@ -9,8 +9,9 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import styles from "../styles/IndexStyles";
 import Layout from "../components/Layout";
-import Carousel from 'react-bootstrap/Carousel'
 import Router from "next/router";
+import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask } from
+"mdbreact";
 
 interface IProps {
   classes: any;
@@ -51,29 +52,8 @@ class IndexPage extends React.Component<IProps, {}> {
         console.log(error);
       });
   }
-  Item(props) {
-    const img = `./img/${props.item.contest_code}.jpg`
-    console.log(img)
-    return (
-      <div>
-        {/* <Card elevation={0}>
-          <img
-            onClick={() => {
-              localStorage.setItem("code", props.item.contest_code);
-              Router.push("/question");
-            }}zz
-            className={props.classes.carousel}
-            src={img}
-          />
-        </Card> */}
-        <h2>{props.item.contest_name}</h2>
-        <p>Contest timings</p>
-        <h4>
-          {props.item.start_time} to {props.item.end_time}
-        </h4>
-      </div>
-    );
-  }
+
+
 
   render() {
     const { classes } = this.props;
@@ -97,48 +77,50 @@ class IndexPage extends React.Component<IProps, {}> {
               </CardContent>
             </Card>
           </main>
+      </Grid>
+        <div className={classes.carousel}>
+          <MDBCarousel
+      activeItem={1}
+      length={1}
+      showControls={true}
+      showIndicators={true}
+      className="z-depth-1"
+    >
+      <MDBCarouselInner >
+      {this.state.list.map((item) => (
+        <MDBCarouselItem itemId="1">
+          <MDBView>
+            <img
+              className="d-block w-100"
+              onClick={() => {
+                if (!localStorage.token) {
+                  Router.push("/login")
+                }
+                else {
+                  localStorage.setItem("code", item.contest_code);
+                  localStorage.setItem("start", item.start_time);
+                  localStorage.setItem("end", item.end_time);
+                  Router.push("/question");
+                }}}
+              src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
+              alt="Second slide"
+            />
+          <MDBMask overlay="black-strong"/>
+          </MDBView>
+          <MDBCarouselCaption>
+            <p><b>{item.contest_name}</b></p>
+            <p>{item.start} - {item.end}</p>
+          </MDBCarouselCaption>
+        </MDBCarouselItem>
+      ))}
 
-          <Card style={{ textAlign: "center", marginBottom: "20px" }}>
-            <CardHeader title="Current Contests" />
-            <CardContent>
-              <Carousel
-                indicators={false}
-              >{this.state.list.map((item) => (
-                <Carousel.Item>
-                  <img
-                    onClick={() => {
-                      if (!localStorage.token) {
-                        Router.push("/login")
-                      }
-                      else {
-                        localStorage.setItem("code", item.contest_code);
-                        localStorage.setItem("start", item.start_time);
-                        localStorage.setItem("end", item.end_time);
-                        Router.push("/question");
-                      }
-                    }}
-                    className={classes.carousel} src="https://i.ytimg.com/vi/J2HGH8LrblU/maxresdefault.jpg"
-                    alt={item.contest_name}
-                  />
-                  <Card>
-                    <h6>{item.contest_name}</h6>
-                    <p>Contest timings</p>
-                    <p>
-                      {item.start} - {item.end}
-                    </p>
-                  </Card>
-
-                </Carousel.Item>
-              ))}
-
-              </Carousel>
-
-            </CardContent>
-          </Card>
-        </Grid>
+      </MDBCarouselInner>
+    </MDBCarousel>
+    </div>
       </Layout>
     );
   }
+
 }
 
 export default withStyles(styles)(IndexPage);

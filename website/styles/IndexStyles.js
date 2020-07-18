@@ -12,13 +12,22 @@ const styles = (theme) => ({
 		}
 	},
 	carousel: {
-		width: 300,
-		height: 168.75,
-		[theme.breakpoints.up('md')]: {
-			width: 800,
-			height: 450,
+		width: 'auto',
+		marginLeft: 'auto',	
+		marginRight: 'auto',
+		fontSize: 12,
+		[theme.breakpoints.down('xs')]: {
+			width: 350,
 			marginLeft: 'auto',
-			marginRight: 'auto'
+			marginRight: 'auto',
+			fontSize: 0
+		},
+		[theme.breakpoints.up('md')]: {
+			width: 1000,
+			height: 562.5,
+			marginLeft: 'auto',
+			marginRight: 'auto',
+			fontSize: 15
 		}
 	},
 	'@keyframes move': {

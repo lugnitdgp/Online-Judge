@@ -4,9 +4,13 @@ import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
 import {withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
+import Viewer from "components/CodeViewer";
 import {Card} from "@material-ui/core"
+import ReactModal from "react-modal";
+import {
+	Button
+  } from "@material-ui/core";
+
 
 const customStyles = () => ({
 	Successful: {
@@ -25,17 +29,28 @@ interface IProps {
 class submissions extends React.Component<IProps, {}> {
 	state = {
 		gotData: false,
-		list: []
+		list: [],
+		showModal: false,
+		view:""
     };
-    
-    nl2br (str) {
-        var breakTag =  '<br/>';
-        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
-     }
-
+	constructor(props: Readonly<IProps>) {
+		super(props)
+	
+	
+		this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+	}
+	
+	handleOpenModal(data) {
+		console.log(data)
+		this.setState({ view: data, showModal: true });
+	  }
+	
+	  handleCloseModal() {
+		this.setState({ showModal: false });
+	  }
 
 	componentDidMount() {
-       var self = this
 		fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personalsubmissions?contest_id=${localStorage.code}`, {
 			method: 'GET',
 			headers: {
@@ -44,14 +59,14 @@ class submissions extends React.Component<IProps, {}> {
 		})
 			.then((resp) => resp.json())
 			.then((res) => {
+				console.log(res)
 				var arr = [];
 				res.map((r)=>{
 					var stat = ""
 					var time = ""
 					var mem = ""
+					console.log(r)
                     const cases = JSON.parse(r.status)
-                    var a= self.nl2br(r.code)
-                    console.log(a)
 					cases.map((testcase)=>{
 							if(testcase.code == 1){
 							stat = "Compilation Error"
@@ -88,7 +103,7 @@ class submissions extends React.Component<IProps, {}> {
 						status : stat,
 						time : time,
                         memory: mem,
-                        code: a}
+                        code: r.code}
 
 					arr.push(payload)
 					
@@ -102,6 +117,7 @@ class submissions extends React.Component<IProps, {}> {
 
     
 	render() {
+
 		const columns = [
 			
 			{
@@ -182,18 +198,21 @@ class submissions extends React.Component<IProps, {}> {
             },
             {
 				name: 'code',
-				label: ' ',
+				label: 'Code',
 				options: {
 					filter: false,
                     sort: false,
-                    display:false,
+                    display:true,
 					setCellHeaderProps: () => ({
-						style: {maxWidth:1, textAlign : 'center',textDecoration: 'bold' }
+						style: { textAlign : 'center',textDecoration: 'bold' }
 					}),
 					
-					setCellProps: () =>({
-						style: {maxWidth:1,fontWeight: 'bolder', fontSize:17,textAlign : 'center' }
-					})
+					customBodyRender: (value) => {
+						return(
+						<Button onClick={()=>{this.handleOpenModal(value)}}> TEST</Button>
+						)
+
+					  }
 				}
 			}
 		];
@@ -201,9 +220,6 @@ class submissions extends React.Component<IProps, {}> {
 			download: false,
 			selectableRows: 'none',
             viewColumns: false,
-            expandableRows: true,
-            expandableRowsHeader: false,
-            expandableRowsOnClick: true,
             setRowProps: (row) => {
 				return {	
 				  className: classnames(
@@ -214,27 +230,6 @@ class submissions extends React.Component<IProps, {}> {
 				};
 			  },
             
-            isRowExpandable: (dataIndex, expandedRows) => {
-              // Prevent expand/collapse of any row if there are 4 rows expanded already (but allow those already expanded to be collapsed)
-              if (expandedRows.data.length > 4 && expandedRows.data.filter(d => d.dataIndex === dataIndex).length === 0) return false;
-              return true;
-            },
-            
-            renderExpandableRow: (rowData) => {
-              const colSpan = rowData.length + 1;                 
-              return (
-                <TableRow>
-                  <TableCell colSpan={colSpan}>
-                      <Card style={{background:'black', color:'white', fontWeight:'bolder', paddingTop:10 ,paddingLeft:20, paddingBottom:10}}>
-                          <code>
-                          <pre dangerouslySetInnerHTML={{ __html: `<div>${rowData[5]}</div>`  }} />
-                          </code>
-                            </Card>
-
-                  </TableCell>
-                </TableRow>
-              );
-            },
 			
         }
 
@@ -249,10 +244,46 @@ class submissions extends React.Component<IProps, {}> {
 
 		return (
 			<Layout>
+			<ReactModal
+			style={{width:'100%'}}
+            isOpen={this.state.showModal}
+            contentLabel="Code basic viewer"
+          	>
+            <div
+              style={{
+                margin: "40px auto",
+                textAlign: "center",
+                height: "0px",
+                backgroundColor: "rgba(0,0,0,0)"
+              }}
+            >
+                <div style={{ margin: "0 auto", textAlign: "center" }}>
+                  
+
+                  <Button
+                    style={{ marginTop: "14px" }}
+                    onClick={this.handleCloseModal}
+                  >
+                    MINIMIZE
+                  </Button>
+				  <Card style={{background:'black'}}>
+						  <Viewer value={this.state.view}
+						  lang="c++"
+							  />
+                            </Card>
+
+                  
+                </div>
+
+               
+                
+            </div>
+          </ReactModal>
+			
 				<div className="contain" style={{ margin: '0 auto', maxWidth: '1000px', width: '100%' }}>
 					<Paper elevation={3}>
 						{' '}
-						<MUIDataTable title={'Submissions'} data={data} columns={columns} options={options} />
+						<MUIDataTable title={'Your Submissions'} data={data} columns={columns} options={options} />
 					</Paper>
 				</div>
 			</Layout>

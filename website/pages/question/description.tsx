@@ -24,6 +24,8 @@ import ReactModal from "react-modal";
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from '@material-ui/icons/FileCopySharp';
+import Timer from "../../components/Timer"
+
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -82,6 +84,8 @@ interface IState {
   data: any;
   question: string
   copied: boolean;
+  timestamp: any;
+  message: string;
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -98,6 +102,8 @@ class QuesDetail extends React.Component<IProps, IState> {
       data: {},
       question: "",
       copied: false,
+      timestamp: '',
+      message: ''
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -117,6 +123,7 @@ class QuesDetail extends React.Component<IProps, IState> {
     });
   }
   submitcode = (code: any, lang: any) => {
+    console.log(encodeURI(code))
     this.setState({
       isLoading: true,
     });
@@ -134,9 +141,11 @@ class QuesDetail extends React.Component<IProps, IState> {
         contest_id: localStorage.code
       }),
     })
-      .then((resp) => resp.json())
+      .then((resp) => {
+        return resp.json()})
       .then((res) => {
-        localStorage.taskid = res["task_id"];
+        
+       localStorage.taskid = res["task_id"];
         self.interval = setInterval(() => self.statuscode(), 2000);
       })
       .catch((error) => console.log(error));
@@ -191,6 +200,29 @@ class QuesDetail extends React.Component<IProps, IState> {
       this.setState({
         data: response
       })
+
+      var today = Date.now()
+        var start = (localStorage.start - 19800) * 1000
+        var end = (localStorage.end - 19800) * 1000
+
+        if (start < today && end > today) {
+          this.setState({
+            timestamp: end,
+            message: 'The Contest ends in ...'
+          })
+        }
+        else if (start < today && end < today) {
+          this.setState({
+            timestamp: 0,
+            message: 'The Contest has ended'
+          })
+        }
+        else if (start > today) {
+          this.setState({
+            timestamp: start,
+            message: 'The Contest begins in ...'
+          })
+        }
     } catch (error) {
       console.error(error);
     }
@@ -426,6 +458,10 @@ class QuesDetail extends React.Component<IProps, IState> {
               </div>
             </div>
           </Paper>
+          <div
+          style={{ maxWidth: "700px", margin: "0px auto" }}>
+          <Timer time={this.state.timestamp} message={this.state.message} />
+        </div>
         </div>
       </Layout>
     );

@@ -104,14 +104,21 @@ class IndexPage extends React.Component<IProps, {}> {
 
 
 
-        <Card style={{ margin: "0 auto", maxWidth: "1200px", }}>
+        <Card style={{ margin: "0 auto", maxWidth: "1200px", backgroundColor: "#cbccff" }}>
           <Typography
-            style={{ textAlign: "center", textTransform: "uppercase", fontSize: "25px", marginTop: "10px" }}>
-            Welcome to OnlineJ
+            style={{ textAlign: "center", textTransform: "uppercase", fontSize: "35px", marginTop: "10px", fontFamily: "'Bree serif', sans-serif", color: "#005" }}>
+            Welcome to Online Judge
+            </Typography>
+          <Typography
+            style={{ textAlign: "center", textTransform: "uppercase", fontSize: "15px", marginTop: "0px", fontFamily: "'Bree serif', sans-serif", color: "#005" }}>
+            Presented to you by Gnu/Linux users' group, Nit durgapur
             </Typography>
           <CardContent>
-            <Typography style={{ textAlign: "center", }}>
+            <Typography style={{ textAlign: "center", margin: "0 auto", maxWidth: "700px", }}>
               A completely material-themed custom Competitive coding
+              platform made by the GNU/Linux User's Group, NIT Durgapur, A completely material-themed custom Competitive coding
+              platform made by the GNU/Linux User's Group, NIT Durgapur, A completely material-themed custom Competitive coding
+              platform made by the GNU/Linux User's Group, NIT Durgapur, A completely material-themed custom Competitive coding
               platform made by the GNU/Linux User's Group, NIT Durgapur
                 </Typography>
           </CardContent>

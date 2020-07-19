@@ -12,10 +12,10 @@ export default function Timer(props) {
 
         return (
             <span>
-                <Card style={{ padding: "0px", margin: "0 auto" }}>
+                <Card style={{ padding: "0px", margin: "0 auto", backgroundColor: "#bbaaff" }}>
 
                     <CardContent>
-                        <Typography style={{ textAlign: "center", margin: "0 auto", padding: "0", textTransform: "uppercase" }}>
+                        <Typography style={{ textAlign: "center", margin: "0 auto", padding: "0", textTransform: "uppercase", fontFamily: "'Bree serif', sans-serif", color: "#005", fontOpticalSizing: "auto" }}>
                             <h4>
                                 This contest ends in : {zeroPad(days, 3)}:{zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
                             </h4>

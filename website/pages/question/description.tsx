@@ -41,7 +41,7 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: theme.spacing(3),
     marginTop: theme.spacing(5),
     minHeight: "80%",
-    maxWidth: "1100px",
+    maxWidth: "1400px",
   },
   paper2: {
     flexDirection: "column",
@@ -49,7 +49,7 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: "auto",
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(2),
-    maxWidth: "1100px",
+    maxWidth: "1400px",
   },
   details: {
     paddingTop: theme.spacing(2),
@@ -159,11 +159,11 @@ class QuesDetail extends React.Component<IProps, IState> {
       .then((resp) => resp.json())
       .then((response) => {
         console.log(response)
-        if(response.status === 302){
+        if (response.status === 302) {
           alert(response.message)
-        }else {
-        self.setState({ res: response, isLoading: false });
-        clearInterval(self.interval);
+        } else {
+          self.setState({ res: response, isLoading: false });
+          clearInterval(self.interval);
         }
       })
       .then(() => console.log(this.state.res))
@@ -207,12 +207,13 @@ class QuesDetail extends React.Component<IProps, IState> {
           >
             <div
               style={{
-                margin: "0 auto",
+                margin: "40px auto",
                 textAlign: "center",
                 height: "0px",
+                backgroundColor: "rgba(0,0,0,0)"
               }}
             >
-              <Paper elevation={3} className={classes.paper2}>
+              <Paper elevation={0} className={classes.paper2}>
                 <div style={{ margin: "0 auto", textAlign: "center" }}>
                   <FormControl className={classes.formControl}>
                     <Select
@@ -362,32 +363,32 @@ class QuesDetail extends React.Component<IProps, IState> {
               </Typography>
               <hr></hr>
               <CopyToClipboard text={this.state.data.input_example} onCopy={this.changeCopyState}>
-              <Typography
-                style={{ fontSize: "18px", color: "#4455dd" }}
-                gutterBottom
-              ><div>
-                <div className="row">
-                  <div className="column" style={{ marginLeft:15, verticalAlign: 'middle'}}>
-                         INPUT EXAMPLE
+                <Typography
+                  style={{ fontSize: "18px", color: "#4455dd" }}
+                  gutterBottom
+                ><div>
+                    <div className="row">
+                      <div className="column" style={{ marginLeft: 15, verticalAlign: 'middle' }}>
+                        INPUT EXAMPLE
                 </div>
-                <div className="column"> 
-                <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
-                    <IconButton aria-label="upload picture">
-                      < FileCopySharpIcon style={{width:20, height:20, bottom:10,position: 'relative' }} />
-                    </IconButton>
-                  </Tooltip>
-                </div></div>
-                <Typography variant="subtitle1" gutterBottom>
-                 
-                  <div
-                    style={{ whiteSpace: "pre-wrap" }}
-                    dangerouslySetInnerHTML={{
-                      __html: this.state.data.input_example,
-                    }}/>
+                      <div className="column">
+                        <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
+                          <IconButton aria-label="upload picture">
+                            < FileCopySharpIcon style={{ width: 20, height: 20, bottom: 10, position: 'relative' }} />
+                          </IconButton>
+                        </Tooltip>
+                      </div></div>
+                    <Typography variant="subtitle1" gutterBottom>
 
+                      <div
+                        style={{ whiteSpace: "pre-wrap" }}
+                        dangerouslySetInnerHTML={{
+                          __html: this.state.data.input_example,
+                        }} />
+
+                    </Typography>
+                  </div>
                 </Typography>
-                </div>
-              </Typography>
               </CopyToClipboard>
               <hr></hr>
               <Typography

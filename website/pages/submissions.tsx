@@ -2,19 +2,19 @@ import React from 'react';
 import Layout from '../components/Layout';
 import MUIDataTable from 'mui-datatables';
 import Paper from '@material-ui/core/Paper';
-import {withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import CheckTwoToneIcon from '@material-ui/icons/CheckTwoTone';import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
+import CheckTwoToneIcon from '@material-ui/icons/CheckTwoTone'; import CloseTwoToneIcon from '@material-ui/icons/CloseTwoTone';
 
 const customStyles = () => ({
 	Successful: {
-	  '& td': { backgroundColor: "#99ff99" }
+		'& td': { backgroundColor: "#99ff99" }
 	},
 	WA: {
-	  '& td': { backgroundColor: "#ff6961" }
+		'& td': { backgroundColor: "#ff6961" }
 	},
-	
-  });
+
+});
 
 interface IProps {
 	classes: any;
@@ -34,62 +34,63 @@ class submissions extends React.Component<IProps, {}> {
 		})
 			.then((resp) => resp.json())
 			.then((res) => {
-			var arr = [];
-			console.log(res)
-				res.map((r)=>{
+				var arr = [];
+				console.log(res)
+				res.map((r) => {
 					var stat = ""
 					var time = ""
 					var mem = ""
 					var isFail = false
 					var sign;
 					const cases = JSON.parse(r.status)
-					cases.map((testcase)=>{
-							if(testcase.code == 1){
+					cases.map((testcase) => {
+						if (testcase.code == 1) {
 							stat = "Compilation Error"
 							isFail = true
-							time ="NA"
+							time = "NA"
 							mem = "NA"
-							}
-							else{
-								if(testcase.status.run_status == "AC"){
-									if(stat == ""){
-										stat ="AC"
-										isFail = false
-										time = testcase.status.elapsed_time + " sec"
-										mem = testcase.status.memory_taken
-
-									}}
-								else{
-									stat = testcase.status.run_status
-									isFail = true
-									time = testcase.status.elapsed_time+" sec"
+						}
+						else {
+							if (testcase.status.run_status == "AC") {
+								if (stat == "") {
+									stat = "AC"
+									isFail = false
+									time = testcase.status.elapsed_time + " sec"
 									mem = testcase.status.memory_taken
-								}
-									
 
+								}
 							}
-							if(isFail == true)
-							 sign = <CloseTwoToneIcon/>;
-							 else
-							 sign = <CheckTwoToneIcon/>
+							else {
+								stat = testcase.status.run_status
+								isFail = true
+								time = testcase.status.elapsed_time + " sec"
+								mem = testcase.status.memory_taken
+							}
+
+
+						}
+						if (isFail == true)
+							sign = <CloseTwoToneIcon />;
+						else
+							sign = <CheckTwoToneIcon />
 
 					})
 
-					
 
-					
+
+
 
 					var payload = {
-						user : r['name'],
-						problem : r.question,
-						status : stat,
-						time : time,
+						user: r['name'],
+						problem: r.question,
+						status: stat,
+						time: time,
 						memory: mem,
 						isFail: sign
 					}
 
 					arr.push(payload)
-					
+
 				})
 				this.setState({ list: arr });
 			})
@@ -107,11 +108,11 @@ class submissions extends React.Component<IProps, {}> {
 					filter: false,
 					sort: false,
 					setCellHeaderProps: () => ({
-						style: { background: '#000', maxWidth: 5, color: '#fff', textAlign : 'center',textDecoration: 'bold' }
+						style: { background: '#000', maxWidth: 5, color: '#fff', textAlign: 'center', textDecoration: 'bold' }
 					}),
-					
-					setCellProps: () =>({
-						style: { fontWeight: 'bolder', maxWidth: 25,  fontSize:15,textAlign : 'center' }
+
+					setCellProps: () => ({
+						style: { fontWeight: 'bolder', maxWidth: 25, fontSize: 15, textAlign: 'center' }
 					})
 				}
 			},
@@ -122,11 +123,11 @@ class submissions extends React.Component<IProps, {}> {
 					filter: false,
 					sort: false,
 					setCellHeaderProps: () => ({
-						style: { background: '#000', color: '#fff', textAlign : 'center',textDecoration: 'bold' }
+						style: { background: '#000', color: '#fff', textAlign: 'center', textDecoration: 'bold' }
 					}),
-					
-					setCellProps: () =>({
-						style: { fontWeight: 'bolder', fontSize:15,textAlign : 'center' }
+
+					setCellProps: () => ({
+						style: { fontWeight: 'bolder', fontSize: 15, textAlign: 'center' }
 					})
 				}
 			},
@@ -137,15 +138,15 @@ class submissions extends React.Component<IProps, {}> {
 					filter: false,
 					sort: false,
 					setCellHeaderProps: () => ({
-						style: { background: '#000', color: '#fff', textAlign : 'center', fontWeight: 'bolder' }
+						style: { background: '#000', color: '#fff', textAlign: 'center', fontWeight: 'bolder' }
 					}),
-					
-					setCellProps: () =>({
-						style: {fontSize:20,textAlign : 'center' }
+
+					setCellProps: () => ({
+						style: { fontSize: 15, textAlign: 'center' }
 					})
 				}
 			},
-			
+
 			{
 				name: 'status',
 				label: 'STATUS',
@@ -153,11 +154,11 @@ class submissions extends React.Component<IProps, {}> {
 					filter: true,
 					sort: false,
 					setCellHeaderProps: () => ({
-						style: { background: '#000', color: '#fff',textAlign : 'center'}
+						style: { background: '#000', color: '#fff', textAlign: 'center' }
 					}),
-					
-					setCellProps: () =>({
-						style: {  fontSize:20,textAlign : 'center' }
+
+					setCellProps: () => ({
+						style: { fontSize: 14, textAlign: 'center' }
 					})
 				}
 			},
@@ -168,11 +169,11 @@ class submissions extends React.Component<IProps, {}> {
 					filter: false,
 					sort: false,
 					setCellHeaderProps: () => ({
-						style: { background: '#000', color: '#fff',textAlign : 'center', textDecoration: 'bold' }
+						style: { background: '#000', color: '#fff', textAlign: 'center', textDecoration: 'bold' }
 					}),
-					
-					setCellProps: () =>({
-						style: { fontWeight: 'bolder', fontSize:17,textAlign : 'center' }
+
+					setCellProps: () => ({
+						style: { fontWeight: 'bolder', fontSize: 14, textAlign: 'center' }
 					})
 				}
 			},
@@ -183,11 +184,11 @@ class submissions extends React.Component<IProps, {}> {
 					filter: false,
 					sort: false,
 					setCellHeaderProps: () => ({
-						style: { background: '#000', color: '#fff', textAlign : 'center',textDecoration: 'bold' }
+						style: { background: '#000', color: '#fff', textAlign: 'center', textDecoration: 'bold' }
 					}),
-					
-					setCellProps: () =>({
-						style: { fontWeight: 'bolder', fontSize:17,textAlign : 'center' }
+
+					setCellProps: () => ({
+						style: { fontWeight: 'bolder', fontSize: 14, textAlign: 'center' }
 					})
 				}
 			}
@@ -197,22 +198,22 @@ class submissions extends React.Component<IProps, {}> {
 			selectableRows: 'none',
 			viewColumns: false,
 			setRowProps: (row) => {
-				return {	
-				  className: classnames(
-					{
-					  [this.props.classes.Successful]: row[3] === "AC",
-					  [this.props.classes.WA]: row[3] === "WA"
-					}),
+				return {
+					className: classnames(
+						{
+							[this.props.classes.Successful]: row[3] === "AC",
+							[this.props.classes.WA]: row[3] === "WA"
+						}),
 				};
-			  }
+			}
 		};
 		const data = this.state.list;
 		return (
 			<Layout>
-				<div className="contain" style={{ margin: '0 auto', maxWidth: '1000px', width: '100%' }}>
-					<Paper elevation={3}>
+				<div className="contain" style={{ margin: '0 auto', maxWidth: '1000px', width: '100%', fontSize: "17px" }}>
+					<Paper elevation={0}>
 						{' '}
-						<MUIDataTable title={'Submissions'} data={data} columns={columns} options={options} />
+						<MUIDataTable elevation={0} title={'Submissions'} data={data} columns={columns} options={options} style={{ fontSize: "17px" }} />
 					</Paper>
 				</div>
 			</Layout>

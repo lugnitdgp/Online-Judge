@@ -95,7 +95,8 @@ class IndexPage extends React.Component<IProps, {}> {
                     <p>{item.start} - {item.end}</p>
                   </MDBCarouselCaption>
                 </MDBCarouselItem>
-              ))}
+              ))
+              }
 
             </MDBCarouselInner>
           </MDBCarousel>

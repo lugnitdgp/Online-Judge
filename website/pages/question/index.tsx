@@ -1,59 +1,63 @@
 import React from "react";
 import Layout from "components/Layout";
-import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
+import {
+  TableContainer,
+  TableHead,
+  TableCell,
+  Paper,
+  Button,
+} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
-import Timer from "../../components/Timer"
-
+import Timer from "../../components/Timer";
+import Router from "next/router";
 
 class questionlist extends React.Component {
   state = {
     list: [],
-    timestamp: '',
-    message: ''
-  }
-
+    timestamp: "",
+    message: "",
+  };
 
   componentDidMount() {
-    if (!(localStorage.token) || !(localStorage.code))
-      window.location.href = "/"
+    if (!localStorage.token || !localStorage.code) window.location.href = "/";
 
-
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Token ${localStorage.token}`,
-      },
-    })
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${localStorage.token}`,
+        },
+      }
+    )
       .then((resp) => resp.json())
       .then((res) => {
-        this.setState({ list: res })
-        var today = Date.now()
-        var start = (localStorage.start - 19800) * 1000
-        var end = (localStorage.end - 19800) * 1000
+        this.setState({ list: res });
+        var today = Date.now();
+        var start = (localStorage.start - 19800) * 1000;
+        var end = (localStorage.end - 19800) * 1000;
 
         if (start < today && end > today) {
           this.setState({
             timestamp: end,
-            message: 'The Contest ends in ...'
-          })
-        }
-        else if (start < today && end < today) {
+            message: "The Contest ends in ...",
+          });
+        } else if (start < today && end < today) {
           this.setState({
             timestamp: 0,
-            message: 'The Contest has ended'
-          })
-        }
-        else if (start > today) {
+            message: "The Contest has ended",
+          });
+        } else if (start > today) {
           this.setState({
             timestamp: start,
-            message: 'The Contest begins in ...'
-          })
+            message: "The Contest begins in ...",
+          });
         }
       })
       .catch((error) => {
-        error = JSON.stringify(error)
+        error = JSON.stringify(error);
         console.log(error);
       });
   }
@@ -61,15 +65,72 @@ class questionlist extends React.Component {
   render() {
     return (
       <Layout>
+        <div
+          style={{ maxWidth: "1000px", margin: "0 auto", marginTop: "50px" }}
+        >
+          <img
+            src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
+            alt="."
+            style={{
+              maxWidth: "1000px",
+              width: "100%",
+              height: "auto",
+              margin: "0px auto",
+              marginBottom: "0px",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            maxWidth: "1000px",
+            margin: "0 auto",
+            backgroundColor: "#3344ff",
+            height: "50px",
+            color: "white",
+            textAlign: "center",
+            fontSize: "19px",
+            padding: "5px",
+          }}
+        >
+          {localStorage.onlinejudge_info ? (
+            <Button color="inherit" onClick={() => Router.push("/submissions")}>
+              All Submissons
+            </Button>
+          ) : (
+            <div></div>
+          )}
+
+          {localStorage.onlinejudge_info ? (
+            <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
+              Leaderboard
+            </Button>
+          ) : (
+            <div></div>
+          )}
+          {localStorage.onlinejudge_info ? (
+            <Button
+              color="inherit"
+              onClick={() => Router.push("/personalsubmissions")}
+            >
+              My Submissions
+            </Button>
+          ) : (
+            <div></div>
+          )}
+        </div>
         <TableContainer
           component={Paper}
-          style={{ maxWidth: "700px", margin: "30px auto", marginBottom: "0px" }}
+          style={{
+            maxWidth: "1000px",
+            margin: "0px auto",
+            marginBottom: "0px",
+          }}
         >
           <Table
             //className={classes.table}
             size="small"
             aria-label="simple table"
-            style={{ maxWidth: "700px", margin: "0 auto" }}
+            style={{ maxWidth: "1000px", margin: "0 auto" }}
           >
             <TableHead>
               <TableRow style={{ backgroundColor: "#bbaaff" }}>
@@ -81,47 +142,45 @@ class questionlist extends React.Component {
             <TableBody>
               {this.state.list
                 ? this.state.list.map((item, i) => (
-                  <TableRow key={i}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ textDecoration: "None", color: "#512daa" }}
-                    >
-                      <a
-                        href={`/question/description?id=${item.question_code}`}
+                    <TableRow key={i}>
+                      <TableCell
+                        component="th"
+                        scope="row"
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
-                        {item.question_code}
-                      </a>
-                    </TableCell>
+                        <a
+                          href={`/question/description?id=${item.question_code}`}
+                          style={{ textDecoration: "None", color: "#512daa" }}
+                        >
+                          {item.question_code}
+                        </a>
+                      </TableCell>
 
-                    <TableCell
-                      align="left"
-                      style={{ textDecoration: "None" }}
-                    >
-                      <a
-                        href={`/question/description?id=${item.question_code}`}
-                        style={{ textDecoration: "None", color: "#512daa" }}
+                      <TableCell
+                        align="left"
+                        style={{ textDecoration: "None" }}
                       >
-                        {item.question_name}
-                      </a>
-                    </TableCell>
+                        <a
+                          href={`/question/description?id=${item.question_code}`}
+                          style={{ textDecoration: "None", color: "#512daa" }}
+                        >
+                          {item.question_name}
+                        </a>
+                      </TableCell>
 
-                    <TableCell
-                      align="right"
-                      style={{ textDecoration: "None", color: "#441199" }}
-                    >
-                      {item.question_score}
-                    </TableCell>
-                  </TableRow>
-                ))
+                      <TableCell
+                        align="right"
+                        style={{ textDecoration: "None", color: "#441199" }}
+                      >
+                        {item.question_score}
+                      </TableCell>
+                    </TableRow>
+                  ))
                 : null}
             </TableBody>
           </Table>
-
         </TableContainer>
-        <div
-          style={{ maxWidth: "700px", margin: "0px auto" }}>
+        <div style={{ maxWidth: "1000px", margin: "0px auto" }}>
           <Timer time={this.state.timestamp} message={this.state.message} />
         </div>
       </Layout>
@@ -131,8 +190,8 @@ class questionlist extends React.Component {
 
 export default questionlist;
 
-
-{/* <CopyToClipboard text={this.props.data.input_example} onCopy={this.changeCopyState}>
+{
+  /* <CopyToClipboard text={this.props.data.input_example} onCopy={this.changeCopyState}>
                 <Typography variant="subtitle1" gutterBottom>
                   <div
                     style={{ whiteSpace: "pre-wrap" }}
@@ -148,4 +207,5 @@ export default questionlist;
                   </Tooltip>
 
                 </Typography>
-              </CopyToClipboard> */}
+              </CopyToClipboard> */
+}

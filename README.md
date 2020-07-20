@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://debsocnitd.herokuapp.com">
+  <a href="#">
     <img alt="logo" src="website/public/oj.png" width="140" />
   </a>
 </p>

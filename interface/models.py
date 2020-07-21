@@ -110,6 +110,7 @@ class Job(models.Model):
     name = models.CharField(max_length=200, null=True, help_text="Name goes here")
     question_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
     code = models.TextField(blank=True, help_text="Code goes here")
+    lang = models.CharField(max_length=100, blank=True, help_text="language of the code")
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
     WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
@@ -137,6 +138,15 @@ def testcases_delete(sender, instance, using, **kwargs):
         os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(instance.question.pk)),
                      "output{}.out".format(instance.pk)))
 
+class Answer(models.Model):
+    user = models.ForeignKey(Coder, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest ,on_delete=models.CASCADE)
+    correct = models.IntegerField(default=0, help_text="Number of correct attempts")
+    wrong = models.IntegerField(default=0, help_text="Number of wrong attempts")
+
+    def __str__(self):
+        return self.question.question_name + " " + self.coder.name
 
 class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from interface.models import Question, Contest, Job
+from interface.models import Question, Contest, Job, Answer
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -34,4 +34,9 @@ class SubmissionSerializer(serializers.ModelSerializer):
 class PersonalSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ('question','contest','question_name','name','code','coder','status','AC_no','WA_no', 'timestamp')
+        fields = ('question','contest','question_name','name','code','lang','coder','status','AC_no','WA_no', 'timestamp')
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'

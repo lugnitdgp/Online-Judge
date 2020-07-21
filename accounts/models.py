@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone as t
-from jsonfield import JSONField
 
 # Create your models here.
 class Coder(models.Model):
@@ -15,8 +14,6 @@ class Coder(models.Model):
     score = models.IntegerField(default=0, help_text="Score of the user")
     correct_answers = models.IntegerField(default=0, help_text="Number of correct answers of the user")
     solved_ques = models.CharField(max_length=200, blank=True, help_text="Questions solved by the user")
-    solved = models.CharField(max_length=500, blank=True, help_text="Wrong attempts by the user")
-    wrong_ques = models.TextField(blank=True, help_text="Wrong attempts by the user")
     time_stamp = models.DateTimeField(default=t.now, help_text="To check the least time taken for a common score")
 
     def __str__(self):

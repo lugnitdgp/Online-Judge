@@ -9,5 +9,6 @@ urlpatterns = [
     path('leaderboard', views.leaderboard, name="LeaderBoardapi"),
     path('contests', views.GetContestList, name="Contest"),
     path('submissions', views.GetSubmissions, name="submission"),
-    path('personalsubmissions', views.GetPersonalSubmissions, name="personalsubmission")
+    path('personalsubmissions', views.GetPersonalSubmissions, name="personalsubmission"),
+    path('getanswer', views.GetAnswer, name="GetAnswer")
 ]

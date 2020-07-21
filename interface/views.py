@@ -79,7 +79,7 @@ def status(request):
         coder = Coder.objects.get(user=request.user)
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         penalty = contest.penalty
-        penalty_total = penalty * ((t.now() - contest.start_time).total_seconds() / 60)
+        penalty_total = penalty * (((t.now() - contest.start_time).total_seconds()) / 60)
         question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
         answer = Answer.objects.get_or_create(question=question, user=coder, contest=contest)[0]
@@ -92,9 +92,11 @@ def status(request):
                 coder.put_solved(question.pk)
                 coder.correct_answers += 1
                 answer.correct +=1
-                coder_contest_score.score += max(
+                ques_score = max(
                     ((int)(question.question_score / (contest.min_score))),
                     (question.question_score - penalty_total - (coder_contest_score.wa * contest.wa_penalty)))
+                coder_contest_score.score += ques_score
+                answer.score = ques_score
                 coder_contest_score.timestamp = t.now()
         else:
             coder_contest_score.wa += 1

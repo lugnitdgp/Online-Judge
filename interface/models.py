@@ -72,6 +72,8 @@ class Question(models.Model):
         else:
             os.mkdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk)))
 
+    class Meta:
+        ordering = ['question_score']
 
 class Testcases(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -144,9 +146,10 @@ class Answer(models.Model):
     contest = models.ForeignKey(Contest ,on_delete=models.CASCADE)
     correct = models.IntegerField(default=0, help_text="Number of correct attempts")
     wrong = models.IntegerField(default=0, help_text="Number of wrong attempts")
+    score = models.IntegerField(default=0, help_text="Score of the question")
 
     def __str__(self):
-        return self.question.question_name + " " + self.coder.name
+        return self.question.question_name + " " + self.user.name
 
 class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)

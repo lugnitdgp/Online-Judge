@@ -10,7 +10,6 @@ import Layout from "../components/Layout";
 import Router from "next/router";
 import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask } from
   "mdbreact";
-
 interface IProps {
   classes: any;
 }
@@ -18,7 +17,7 @@ interface IProps {
 class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
-    leasttime: 0,
+    count: 0,
     list: [],
   };
   componentDidMount() {
@@ -27,10 +26,9 @@ class IndexPage extends React.Component<IProps, {}> {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        var least = 0;
+        var count = 1;
         res.map((contest) => {
-          if (least == 0 || contest["start_time"] < least)
-            least = contest["start_time"]
+         
 
           var dateObj = new Date((contest["start_time"] - 19800) * 1000);
 
@@ -38,12 +36,13 @@ class IndexPage extends React.Component<IProps, {}> {
           contest["start"] = dateObj.toString()
           contest["start"] = contest["start"].substring()
           dateObj = new Date((contest["end_time"] - 19800) * 1000);
-
+          contest.num = count;
+          count++;
           contest['end'] = dateObj.toString()
           console.log(contest)
         });
         this.setState({ list: res });
-        this.setState({ leasttime: least });
+        this.setState({ count: count-1 });
 
       })
       .catch((error) => {
@@ -55,14 +54,15 @@ class IndexPage extends React.Component<IProps, {}> {
 
   render() {
     const { classes } = this.props;
-
+    const total = this.state.count
+    console.log(total)
     return (
       <Layout>
 
         <div className={classes.carousel}>
           <MDBCarousel
             activeItem={1}
-            length={1}
+            length={total}
             showControls={true}
             showIndicators={true}
             //className="z-depth-1"
@@ -70,7 +70,7 @@ class IndexPage extends React.Component<IProps, {}> {
           >
             <MDBCarouselInner style={{ margin: "0 auto", padding: "0 auto" }} >
               {this.state.list.map((item) => (
-                <MDBCarouselItem itemId="1" style={{ margin: "0 auto" }}>
+                <MDBCarouselItem itemId={item.num} style={{ margin: "0 auto" }}>
                   <MDBView>
                     <img
                       className="d-block w-100"

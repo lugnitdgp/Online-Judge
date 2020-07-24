@@ -65,7 +65,7 @@ class questionlist extends React.Component {
   render() {
     return (
       <Layout>
-        <div
+        {/* <div
           style={{ maxWidth: "1000px", margin: "0 auto", marginTop: "50px" }}
         >
           <img
@@ -79,11 +79,12 @@ class questionlist extends React.Component {
               marginBottom: "0px",
             }}
           />
-        </div>
+        </div> */}
         <div
           style={{
             maxWidth: "1000px",
-            margin: "0 auto",
+            margin: "30px auto",
+            borderRadius: "5px",
             backgroundColor: "#3344ff",
             height: "50px",
             color: "white",

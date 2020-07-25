@@ -144,6 +144,7 @@ class Answer(models.Model):
     user = models.ForeignKey(Coder, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest ,on_delete=models.CASCADE)
+    ques_name = models.CharField(max_length=200, blank=True, null=True, help_text="Question name")
     correct = models.IntegerField(default=0, help_text="Number of correct attempts")
     wrong = models.IntegerField(default=0, help_text="Number of wrong attempts")
     score = models.IntegerField(default=0, help_text="Score of the question")

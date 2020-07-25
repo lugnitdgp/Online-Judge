@@ -39,4 +39,5 @@ class PersonalSubmissionSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = '__all__'
+        fields = ('ques_name','correct','wrong','score')
+

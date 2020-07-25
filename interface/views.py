@@ -91,6 +91,7 @@ def status(request):
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
                 coder.correct_answers += 1
+                answer.ques_name = question.question_name
                 answer.correct +=1
                 ques_score = max(
                     ((int)(question.question_score / (contest.min_score))),
@@ -101,7 +102,7 @@ def status(request):
         else:
             coder_contest_score.wa += 1
             coder.wrong_answers += 1
-            answer = Answer.objects.get(question=question, user=coder, contest=contest)
+            answer.ques_name = question.question_name
             answer.wrong +=1
             coder_contest_score.timestamp = t.now()
         coder.save()
@@ -160,10 +161,10 @@ def GetPersonalSubmissions(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnswer(request):
+    coder_ans = []
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
     coder = Coder.objects.get(user=request.user)
-    question = Question.objects.get(question_code=request.GET['ques_id'])
-    query_set = Answer.objects.filter(contest=contest, user=coder, question=question)
+    query_set = Answer.objects.filter(contest=contest, user=coder)
     serializer = AnswerSerializer(query_set, many=True)
     if contest.isStarted():
         return Response(serializer.data)

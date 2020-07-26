@@ -28,23 +28,6 @@ interface IProps {
   classes: any;
 }
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
 
 class submissions extends React.Component<IProps, {}> {
   state = {
@@ -52,6 +35,9 @@ class submissions extends React.Component<IProps, {}> {
     list: [],
     showModal: false,
     view: "",
+    modallang:"",
+    exec:[]
+
   };
   constructor(props: Readonly<IProps>) {
     super(props);
@@ -61,8 +47,21 @@ class submissions extends React.Component<IProps, {}> {
   }
 
   handleOpenModal(data) {
-    console.log(data);
-    this.setState({ view: data, showModal: true });
+    data.testcases.map((a) => {
+        if(a[`code`] == 1){
+          var status={
+            run_status:"Compilation Error",
+            cpu_time:"NA",
+            elapsed_time:"NA",
+            memory_taken:"NA"
+          }
+
+          a.status=status
+        }
+    })
+
+
+    this.setState({ view: data.source,modallang:data.lang, exec:data.testcases,showModal: true });
   }
 
   handleCloseModal() {
@@ -81,13 +80,12 @@ class submissions extends React.Component<IProps, {}> {
     )
       .then((resp) => resp.json())
       .then((res) => {
-        console.log(res);
         var arr = [];
+        console.log(res)
         res.map((r) => {
           var stat = "";
           var time = "";
           var mem = "";
-          console.log(r);
           const cases = JSON.parse(r.status);
           cases.map((testcase) => {
             if (testcase.code == 1) {
@@ -109,13 +107,19 @@ class submissions extends React.Component<IProps, {}> {
             }
           });
 
+          var runtimestats={
+            source: r.code,
+            testcases: cases,
+            lang: r.lang
+          };
+
           var payload = {
             user: r.name,
             problem: r.question_name,
             status: stat,
             time: time,
             memory: mem,
-            code: r.code,
+            code: runtimestats
           };
 
           arr.push(payload);
@@ -224,7 +228,7 @@ class submissions extends React.Component<IProps, {}> {
                 }}
               >
                 {" "}
-                TEST
+                View Your Code
               </Button>
             );
           },
@@ -285,31 +289,27 @@ class submissions extends React.Component<IProps, {}> {
                 <Table aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Dessert (100g serving)</TableCell>
-                      <TableCell align="right">Calories</TableCell>
-                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                      <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Memory&nbsp;(kb)</TableCell>
+                      <TableCell align="center">Time&nbsp;(s)</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
+                    {
+                    this.state.exec.map((row)=>(
+                        <TableRow>
+                  <TableCell align="center">{row.status.run_status}</TableCell> 
+                  <TableCell align="center">{row.status.memory_taken}</TableCell> 
+                  <TableCell align="center">{row.status.cpu_time}</TableCell> 
                       </TableRow>
-                    ))}
+                    ))
+                    }
                   </TableBody>
                 </Table>
               </TableContainer>
 
               <Card style={{ background: "black" }}>
-                <Viewer value={this.state.view} lang="c++" />
+                <Viewer value={this.state.view} lang={this.state.modallang}/>
               </Card>
             </div>
           </div>

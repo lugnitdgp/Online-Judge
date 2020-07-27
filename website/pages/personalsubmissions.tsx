@@ -28,16 +28,14 @@ interface IProps {
   classes: any;
 }
 
-
 class submissions extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     list: [],
     showModal: false,
     view: "",
-    modallang:"",
-    exec:[]
-
+    modallang: "",
+    exec: [],
   };
   constructor(props: Readonly<IProps>) {
     super(props);
@@ -48,20 +46,24 @@ class submissions extends React.Component<IProps, {}> {
 
   handleOpenModal(data) {
     data.testcases.map((a) => {
-        if(a[`code`] == 1){
-          var status={
-            run_status:"Compilation Error",
-            cpu_time:"NA",
-            elapsed_time:"NA",
-            memory_taken:"NA"
-          }
+      if (a[`code`] == 1) {
+        var status = {
+          run_status: "Compilation Error",
+          cpu_time: "NA",
+          elapsed_time: "NA",
+          memory_taken: "NA",
+        };
 
-          a.status=status
-        }
-    })
+        a.status = status;
+      }
+    });
 
-
-    this.setState({ view: data.source,modallang:data.lang, exec:data.testcases,showModal: true });
+    this.setState({
+      view: data.source,
+      modallang: data.lang,
+      exec: data.testcases,
+      showModal: true,
+    });
   }
 
   handleCloseModal() {
@@ -81,7 +83,7 @@ class submissions extends React.Component<IProps, {}> {
       .then((resp) => resp.json())
       .then((res) => {
         var arr = [];
-        console.log(res)
+        console.log(res);
         res.map((r) => {
           var stat = "";
           var time = "";
@@ -107,10 +109,10 @@ class submissions extends React.Component<IProps, {}> {
             }
           });
 
-          var runtimestats={
+          var runtimestats = {
             source: r.code,
             testcases: cases,
-            lang: r.lang
+            lang: r.lang,
           };
 
           var payload = {
@@ -119,7 +121,7 @@ class submissions extends React.Component<IProps, {}> {
             status: stat,
             time: time,
             memory: mem,
-            code: runtimestats
+            code: runtimestats,
           };
 
           arr.push(payload);
@@ -144,7 +146,7 @@ class submissions extends React.Component<IProps, {}> {
           }),
 
           setCellProps: () => ({
-            style: { fontWeight: "bolder", fontSize: 15, textAlign: "left" },
+            style: { fontWeight: "bolder", fontSize: 14, textAlign: "left" },
           }),
         },
       },
@@ -159,7 +161,7 @@ class submissions extends React.Component<IProps, {}> {
           }),
 
           setCellProps: () => ({
-            style: { fontSize: 20, textAlign: "center" },
+            style: { fontSize: 15, textAlign: "center" },
           }),
         },
       },
@@ -175,7 +177,7 @@ class submissions extends React.Component<IProps, {}> {
           }),
 
           setCellProps: () => ({
-            style: { fontSize: 20, textAlign: "center" },
+            style: { fontSize: 15, textAlign: "center" },
           }),
         },
       },
@@ -190,7 +192,7 @@ class submissions extends React.Component<IProps, {}> {
           }),
 
           setCellProps: () => ({
-            style: { fontWeight: "bolder", fontSize: 17, textAlign: "center" },
+            style: { fontWeight: "bolder", fontSize: 15, textAlign: "center" },
           }),
         },
       },
@@ -205,7 +207,7 @@ class submissions extends React.Component<IProps, {}> {
           }),
 
           setCellProps: () => ({
-            style: { fontWeight: "bolder", fontSize: 17, textAlign: "center" },
+            style: { fontWeight: "bolder", fontSize: 15, textAlign: "center" },
           }),
         },
       },
@@ -295,21 +297,25 @@ class submissions extends React.Component<IProps, {}> {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {
-                    this.state.exec.map((row)=>(
-                        <TableRow>
-                  <TableCell align="center">{row.status.run_status}</TableCell> 
-                  <TableCell align="center">{row.status.memory_taken}</TableCell> 
-                  <TableCell align="center">{row.status.cpu_time}</TableCell> 
+                    {this.state.exec.map((row) => (
+                      <TableRow>
+                        <TableCell align="center">
+                          {row.status.run_status}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.status.memory_taken}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.status.cpu_time}
+                        </TableCell>
                       </TableRow>
-                    ))
-                    }
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
 
               <Card style={{ background: "black" }}>
-                <Viewer value={this.state.view} lang={this.state.modallang}/>
+                <Viewer value={this.state.view} lang={this.state.modallang} />
               </Card>
             </div>
           </div>
@@ -319,13 +325,14 @@ class submissions extends React.Component<IProps, {}> {
           className="contain"
           style={{ margin: "0 auto", maxWidth: "1000px", width: "100%" }}
         >
-          <Paper elevation={3}>
+          <Paper elevation={0} style={{ backgroundColor: "#eeeeff" }}>
             {" "}
             <MUIDataTable
               title={"Your Submissions"}
               data={data}
               columns={columns}
               options={options}
+              elevation={0}
             />
           </Paper>
         </div>

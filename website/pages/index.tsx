@@ -22,8 +22,8 @@ interface IProps {
 class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
-    count: 0,
-    list: [],
+    ongoing: [],
+    upcoming:[]
   };
   componentDidMount() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
@@ -31,20 +31,25 @@ class IndexPage extends React.Component<IProps, {}> {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        var count = 1;
+        var ongoing=[]
+        var upcoming=[]
         res.map((contest) => {
           var dateObj = new Date((contest["start_time"] - 19800) * 1000);
-
           contest["start"] = dateObj.toString();
-          contest["start"] = contest["start"].substring();
+          var today=Date.now()
           dateObj = new Date((contest["end_time"] - 19800) * 1000);
-          contest.num = count;
-          count++;
           contest["end"] = dateObj.toString();
+          if(((contest["start_time"]-19800)*1000) < today && ((contest["end_time"] - 19800) * 1000) > today){
+            contest["timestamp"]=(contest["end_time"] - 19800) * 1000
+            ongoing.push(contest)
+          }
+          else if(((contest["start_time"]-19800)*1000) > today){
+            contest["timestamp"]=(contest["start_time"]-19800)*1000
+            upcoming.push(contest)
+          }
           console.log(contest);
         });
-        this.setState({ list: res });
-        this.setState({ count: count - 1 });
+        this.setState({ ongoing:ongoing, upcoming:upcoming });
       })
       .catch((error) => {
         console.log(error);
@@ -52,8 +57,6 @@ class IndexPage extends React.Component<IProps, {}> {
   }
 
   render() {
-    const total = this.state.count;
-    console.log(total);
     return (
       <Layout>
         {/* <div className={classes.carousel}>
@@ -102,7 +105,7 @@ class IndexPage extends React.Component<IProps, {}> {
           style={{
             margin: "0 auto",
             width: "100%",
-
+            height:"100%",
             backgroundColor: "#cbccff",
           }}
         >
@@ -178,6 +181,7 @@ class IndexPage extends React.Component<IProps, {}> {
             >
               Ongoing contests
             </Typography>
+            {this.state.ongoing.length > 0 ? (
             <Grid
               container
               spacing={3}
@@ -188,19 +192,26 @@ class IndexPage extends React.Component<IProps, {}> {
                 paddingBottom: "50px",
               }}
             >
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
+              {this.state.ongoing.map((res)=>(
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <ContestCard contestInfo = {res}/>
               </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
-              </Grid>
+            ))}
+            
             </Grid>
+            ):(<Typography
+              style={{
+                textAlign: "center",
+                textTransform: "uppercase",
+                fontSize: "30px",
+                margin: "0px",
+                fontFamily: "'Bree serif', sans-serif",
+                color: "#005",
+                backgroundColor: "#cbccff",
+              }}
+            >
+             There are no ongoing contests right now.
+            </Typography>)}
             <Typography
               style={{
                 textAlign: "center",
@@ -214,6 +225,7 @@ class IndexPage extends React.Component<IProps, {}> {
             >
               Upcoming contests
             </Typography>
+            {this.state.upcoming.length > 0 ? (
             <Grid
               container
               spacing={3}
@@ -224,19 +236,26 @@ class IndexPage extends React.Component<IProps, {}> {
                 paddingBottom: "50px",
               }}
             >
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
+              {this.state.upcoming.map((res)=>(
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <ContestCard contestInfo = {res}/>
               </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard />
-              </Grid>
+            ))}
+            
             </Grid>
+            ):(<Typography
+              style={{
+                textAlign: "center",
+                textTransform: "uppercase",
+                fontSize: "30px",
+                margin: "0px",
+                fontFamily: "'Bree serif', sans-serif",
+                color: "#005",
+                backgroundColor: "#cbccff",
+              }}
+            >
+             Keep watching this space!
+            </Typography>)}
           </div>
         </div>
       </Layout>

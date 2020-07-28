@@ -266,9 +266,9 @@ class QuesDetail extends React.Component<IProps, IState> {
                 {this.state.data.question_name}
               </Typography>
 
-              <Typography variant="subtitle1" gutterBottom>
-                {this.state.data.question_text}
-              </Typography>
+             <div style={{fontSize:15}} dangerouslySetInnerHTML={{
+                          __html: this.state.data.question_text,
+                        }}/>
               <hr></hr>
               <CopyToClipboard
                 text={this.state.data.input_example}

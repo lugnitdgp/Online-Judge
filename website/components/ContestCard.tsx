@@ -8,6 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Countdown, { zeroPad } from "react-countdown";
+import Router from "next/router";
 
 const useStyles = makeStyles({
   root: {
@@ -21,7 +22,6 @@ const useStyles = makeStyles({
 
 export default function ContestCard(props) {
   const classes = useStyles();
-
   const renderer = ({ days, hours, minutes, seconds }) => {
     return (
       <span>
@@ -36,6 +36,7 @@ export default function ContestCard(props) {
             fontOpticalSizing: "auto",
           }}
         >
+          Time remaining
           <h5>
             {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:
             {zeroPad(seconds)}
@@ -45,33 +46,55 @@ export default function ContestCard(props) {
     );
   };
   return (
+    
     <Card className={classes.root}>
+      {props.contestInfo?(
+        <div>
       <CardActionArea>
         <CardMedia
           className={classes.media}
+          // image={props.contestInfo.contest_image}
           image="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
           title="Contemplative Reptile"
         />
         <CardContent>
+          <div>
           <Typography gutterBottom variant="h5" component="h2">
-            CodeCracker
+            {props.contestInfo.contest_name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
-          </Typography>
+                    <p>{props.contestInfo.start} - {props.contestInfo.end}</p>
+          </Typography></div>
+          
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
+        <tr>
+          <td>
+        <Button size="small" color="primary" 
+        onClick={() => {
+          if (!localStorage.token) {
+            Router.push("/login")
+          }
+          else {
+            localStorage.setItem("code", props.contestInfo.contest_code);
+            localStorage.setItem("start", props.contestInfo.start_time);
+            localStorage.setItem("end", props.contestInfo.end_time);
+            Router.push("/question");
+          }
+        }}>
           Enter Contest
-        </Button>
+        </Button></td><td style={{paddingLeft:'50px'}}>
         <Countdown
-          date={new Date(props.time)}
+          date={new Date(props.contestInfo.timestamp)}
           intervalDelay={1}
           renderer={renderer}
-        />
+        /></td>
+        </tr>
       </CardActions>
+      </div>
+      ):(<div>loading</div>)}
     </Card>
+    
   );
 }

@@ -62,8 +62,8 @@ export default function ContestCard(props) {
           <Typography gutterBottom variant="h5" component="h2">
             {props.contestInfo.contest_name}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-                    <p>{props.contestInfo.start} - {props.contestInfo.end}</p>
+          <Typography style={{align:"center"}} variant="body2" color="textPrimary" component="p">
+              <b><p>{props.contestInfo.start} - {props.contestInfo.end}</p></b>
           </Typography></div>
           
         </CardContent>
@@ -71,7 +71,7 @@ export default function ContestCard(props) {
       <CardActions>
         <tr>
           <td>
-        <Button size="small" color="primary" 
+        <Button size="large" color="primary" 
         onClick={() => {
           if (!localStorage.token) {
             Router.push("/login")

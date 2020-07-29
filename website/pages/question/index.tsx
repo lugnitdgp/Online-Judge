@@ -22,7 +22,35 @@ class questionlist extends React.Component {
 
   componentDidMount() {
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
+    if(!localStorage.source){
+      var contestdeet =[{
+        name: localStorage.code
+      }]      
+        var arr=contestdeet
+        console.log(arr)
+        
+        localStorage.setItem('source', JSON.stringify(arr))
+    }
+    else{
+      console.log(JSON.parse(localStorage.source))
+        var source = JSON.parse(localStorage.source)
+        var flag = false;
+        source.map((el)=>{
+          console.log(el)
+             if(el.name === localStorage.code)
+              flag = true;
+        })
+           if(flag===false){
+            var newdeet={
+              name:localStorage.code
+            }
+            source.push(newdeet)
+            localStorage.setItem('source', JSON.stringify(source))
+           }
 
+      
+        
+    };
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
       {

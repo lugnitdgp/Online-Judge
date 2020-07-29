@@ -88,6 +88,7 @@ interface IState {
 
 class QuesDetail extends React.Component<IProps, IState> {
   interval: any;
+  autosave: any;
   constructor(props: Readonly<IProps>) {
     super(props);
     this.state = {
@@ -121,7 +122,6 @@ class QuesDetail extends React.Component<IProps, IState> {
     });
   }
   submitcode = (code: any, lang: any) => {
-    console.log(encodeURI(code));
     this.setState({
       isLoading: true,
     });
@@ -147,6 +147,43 @@ class QuesDetail extends React.Component<IProps, IState> {
         self.interval = setInterval(() => self.statuscode(), 2000);
       })
       .catch((error) => console.log(error));
+  };
+
+  source =[]
+
+  autosavecode = (code:any, lang:any)=>{
+    // var source2=[]
+    var source = this.source
+    var source2=[]
+  source.map((contest)=>{
+    if (contest.name === localStorage.code){
+      var sourcecode = {
+        lang: lang,
+        code: encodeURI(code),
+        qid: getParameterByName("id") 
+      }
+      if(!contest.questions){
+        contest.questions=[sourcecode]
+      }
+      else{
+        var flag=false
+        contest.questions.map((ques)=>{
+          if(ques.qid === sourcecode.qid){
+              ques.code= sourcecode.code
+              ques.lang =sourcecode.lang              
+              flag=true
+            }
+        })
+        if(flag === false){
+        contest.questions.push(sourcecode)}
+        
+      }
+
+      
+  }source2.push(contest)
+})
+this.source = source2
+  localStorage.setItem('source', JSON.stringify(this.source))
   };
 
   statuscode = () => {
@@ -176,11 +213,29 @@ class QuesDetail extends React.Component<IProps, IState> {
       .then(() => console.log(this.state.res))
       .catch((err) => console.log(err));
   };
-
   async componentDidMount() {
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
     const cookie = new Cookie();
     cookie.parse(document.cookie || "");
+    if(!localStorage.source)
+    window.location.href="/question"
+    else{
+        this.source = JSON.parse(localStorage.source)
+        var source = JSON.parse(localStorage.source)
+        source.map((contest)=>{
+          if(contest.name===localStorage.code){
+            if(contest.questions)
+              contest.questions.map((ques)=>{
+                if(ques.qid === getParameterByName("id"))
+                    this.setState({
+                      value: decodeURI(ques.code),
+                      lang: ques.lang
+                    })
+              })
+          }
+        })
+
+    }
 
     try {
       let resp = await fetch(
@@ -220,9 +275,11 @@ class QuesDetail extends React.Component<IProps, IState> {
           message: "The Contest begins in ...",
         });
       }
+
     } catch (error) {
       console.error(error);
     }
+    //this.autosave = setInterval(() => this.autosavecode(this.state.value, this.state.lang) ,1000 )
   }
 
   render() {
@@ -401,11 +458,12 @@ class QuesDetail extends React.Component<IProps, IState> {
                 value={this.state.value}
                 lang={this.state.lang}
                 theme={this.state.theme}
-                setValue={(d) =>
+                setValue={(d) =>{
                   this.setState({
                     value: d,
-                  })
-                }
+                  },()=>{
+                    this.autosavecode(this.state.value, this.state.lang)})              
+                }}
               />
 
               {this.state.isLoading ? (

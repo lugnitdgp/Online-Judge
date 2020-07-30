@@ -17,7 +17,7 @@ from rest_framework.settings import api_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEST_CASE_DIR = os.path.join(BASE_DIR, "testcases")
+# TEST_CASE_DIR = os.path.join(BASE_DIR, "testcases")
 ENGINE_PATH = os.path.join(os.path.join(BASE_DIR, "engine"), "safeexec")
 OUTPATH_DIR = os.path.join(BASE_DIR, "engine")
 
@@ -162,6 +162,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+TEST_CASE_DIR = os.path.join(MEDIA_ROOT, "testcases")
 
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = 'django-db'

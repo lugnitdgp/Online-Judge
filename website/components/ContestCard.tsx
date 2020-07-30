@@ -1,22 +1,25 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import Countdown, { zeroPad } from "react-countdown";
 import Router from "next/router";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    Width: "90%",
+    maxWidth: "700px",
     margin: "0 auto",
+    padding: 0,
+
+
+
+
   },
   media: {
-    height: 140,
+    height: 150,
+    margin: "0 auto",
   },
 });
 
@@ -49,50 +52,69 @@ export default function ContestCard(props) {
 
     <Card className={classes.root}>
       {props.contestInfo ? (
-        <div>
-          <CardActionArea>
-            <CardMedia
-              className={classes.media}
-              // image={props.contestInfo.contest_image}
-              image="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
-              title="Contemplative Reptile"
-            />
-            <CardContent>
-              <div>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {props.contestInfo.contest_name}
-                </Typography>
-                <Typography style={{ textAlign: "center" }} variant="body2" color="textPrimary" component="p">
-                  <b><p>{props.contestInfo.start} - {props.contestInfo.end}</p></b>
-                </Typography></div>
+        <Grid
+          container
+          spacing={3}
+          style={{
+            width: "100%",
 
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <tr>
-              <td>
-                <Button size="large" color="primary"
-                  onClick={() => {
-                    if (!localStorage.token) {
-                      Router.push("/login")
-                    }
-                    else {
-                      localStorage.setItem("code", props.contestInfo.contest_code);
-                      localStorage.setItem("start", props.contestInfo.start_time);
-                      localStorage.setItem("end", props.contestInfo.end_time);
-                      Router.push("/question");
-                    }
-                  }}>
-                  Enter Contest
-        </Button></td><td style={{ paddingLeft: '50px' }}>
-                <Countdown
-                  date={new Date(props.contestInfo.timestamp)}
-                  intervalDelay={1}
-                  renderer={renderer}
-                /></td>
-            </tr>
-          </CardActions>
-        </div>
+            margin: "0 auto",
+            backgroundColor: "#fff",
+            paddingBottom: "0px",
+          }}
+        >
+          <Grid item xs={12} sm={6} style={{ margin: "0 auto", textAlign: "center" }}>
+            <div>
+              <img
+                className={classes.media}
+                // image={props.contestInfo.contest_image}
+                src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
+                title="Contemplative Reptile"
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6} style={{ margin: "0 auto" }}>
+            <div style={{ maxWidth: "345px", textAlign: "center" }}>
+              <div >
+                <h3>
+                  {props.contestInfo.contest_name}
+                </h3>
+                <div style={{ textAlign: "center" }} color="textPrimary" >
+                  <b><p>{props.contestInfo.start} - {props.contestInfo.end}</p></b>
+                </div>
+              </div>
+
+
+
+              <div style={{ textAlign: "center" }}>
+                <tr style={{ margin: "0 auto", textAlign: "center", padding: "1px" }}>
+                  <td>
+                    <Button size="large" color="primary"
+                      style={{ margin: "0 auto", paddingLeft: "60px" }}
+                      onClick={() => {
+                        if (!localStorage.token) {
+                          Router.push("/login")
+                        }
+                        else {
+                          localStorage.setItem("code", props.contestInfo.contest_code);
+                          localStorage.setItem("start", props.contestInfo.start_time);
+                          localStorage.setItem("end", props.contestInfo.end_time);
+                          Router.push("/question");
+                        }
+                      }}>
+                      Enter Contest
+                    </Button></td><td>
+                    <Countdown
+
+                      date={new Date(props.contestInfo.timestamp)}
+                      intervalDelay={1}
+                      renderer={renderer}
+                    /></td>
+                </tr>
+              </div>
+            </div>
+          </Grid>
+        </Grid>
       ) : (<div>loading</div>)}
     </Card>
 

@@ -22,34 +22,34 @@ class questionlist extends React.Component {
 
   componentDidMount() {
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
-    if(!localStorage.source){
-      var contestdeet =[{
+    if (!localStorage.source) {
+      var contestdeet = [{
         name: localStorage.code
-      }]      
-        var arr=contestdeet
-        console.log(arr)
-        
-        localStorage.setItem('source', JSON.stringify(arr))
-    }
-    else{
-      console.log(JSON.parse(localStorage.source))
-        var source = JSON.parse(localStorage.source)
-        var flag = false;
-        source.map((el)=>{
-          console.log(el)
-             if(el.name === localStorage.code)
-              flag = true;
-        })
-           if(flag===false){
-            var newdeet={
-              name:localStorage.code
-            }
-            source.push(newdeet)
-            localStorage.setItem('source', JSON.stringify(source))
-           }
+      }]
+      var arr = contestdeet
+      console.log(arr)
 
-      
-        
+      localStorage.setItem('source', JSON.stringify(arr))
+    }
+    else {
+      console.log(JSON.parse(localStorage.source))
+      var source = JSON.parse(localStorage.source)
+      var flag = false;
+      source.map((el) => {
+        console.log(el)
+        if (el.name === localStorage.code)
+          flag = true;
+      })
+      if (flag === false) {
+        var newdeet = {
+          name: localStorage.code
+        }
+        source.push(newdeet)
+        localStorage.setItem('source', JSON.stringify(source))
+      }
+
+
+
     };
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
@@ -93,21 +93,7 @@ class questionlist extends React.Component {
   render() {
     return (
       <Layout>
-        {/* <div
-          style={{ maxWidth: "1000px", margin: "0 auto", marginTop: "50px" }}
-        >
-          <img
-            src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
-            alt="."
-            style={{
-              maxWidth: "1000px",
-              width: "100%",
-              height: "auto",
-              margin: "0px auto",
-              marginBottom: "0px",
-            }}
-          />
-        </div> */}
+
         <div
           style={{
             maxWidth: "1000px",
@@ -126,16 +112,16 @@ class questionlist extends React.Component {
               All Submissons
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
 
           {localStorage.onlinejudge_info ? (
             <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
               Leaderboard
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           {localStorage.onlinejudge_info ? (
             <Button
               color="inherit"
@@ -144,8 +130,8 @@ class questionlist extends React.Component {
               My Submissions
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
         </div>
         <TableContainer
           component={Paper}
@@ -171,40 +157,40 @@ class questionlist extends React.Component {
             <TableBody>
               {this.state.list
                 ? this.state.list.map((item, i) => (
-                    <TableRow key={i}>
-                      <TableCell
-                        component="th"
-                        scope="row"
+                  <TableRow key={i}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ textDecoration: "None", color: "#512daa" }}
+                    >
+                      <a
+                        href={`/question/description?id=${item.question_code}`}
                         style={{ textDecoration: "None", color: "#512daa" }}
                       >
-                        <a
-                          href={`/question/description?id=${item.question_code}`}
-                          style={{ textDecoration: "None", color: "#512daa" }}
-                        >
-                          {item.question_code}
-                        </a>
-                      </TableCell>
+                        {item.question_code}
+                      </a>
+                    </TableCell>
 
-                      <TableCell
-                        align="left"
-                        style={{ textDecoration: "None" }}
+                    <TableCell
+                      align="left"
+                      style={{ textDecoration: "None" }}
+                    >
+                      <a
+                        href={`/question/description?id=${item.question_code}`}
+                        style={{ textDecoration: "None", color: "#512daa" }}
                       >
-                        <a
-                          href={`/question/description?id=${item.question_code}`}
-                          style={{ textDecoration: "None", color: "#512daa" }}
-                        >
-                          {item.question_name}
-                        </a>
-                      </TableCell>
+                        {item.question_name}
+                      </a>
+                    </TableCell>
 
-                      <TableCell
-                        align="right"
-                        style={{ textDecoration: "None", color: "#441199" }}
-                      >
-                        {item.question_score}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                    <TableCell
+                      align="right"
+                      style={{ textDecoration: "None", color: "#441199" }}
+                    >
+                      {item.question_score}
+                    </TableCell>
+                  </TableRow>
+                ))
                 : null}
             </TableBody>
           </Table>

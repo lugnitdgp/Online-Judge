@@ -115,31 +115,7 @@ class Newappbar extends Component {
             }}
           >
             <List className={this.props.classes.list}>
-              {/* {localStorage.onlinejudge_info ? (
-                <ListItem key={1} button divider>
-                  <Button
-                    color="inherit"
-                    onClick={() => Router.push("/submissions")}
-                  >
-                    Submissons
-                  </Button>
-                </ListItem>
-              ) : (
-                  <div></div>
-                )}
 
-              {localStorage.onlinejudge_info ? (
-                <ListItem key={2} button divider>
-                  <Button
-                    color="inherit"
-                    onClick={() => Router.push("/leaderboard")}
-                  >
-                    Leaderboard
-                  </Button>
-                </ListItem>
-              ) : (
-                  <div></div>
-                )} */}
 
               <ListItem key={3} button divider>
                 <Button color="inherit" onClick={() => Router.push("/")}>
@@ -212,20 +188,7 @@ class Newappbar extends Component {
             <img src="/oj.png" alt="." style={{ width: "45px", borderRadius: "5px" }} />
             &nbsp;&nbsp;&nbsp;Online Judge
           </Typography>
-          {/* {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/submissions")}>
-              Submissons
-            </Button>
-          ) : (
-              <div></div>
-            )}
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
-              Leaderboard
-            </Button>
-          ) : (
-              <div></div>
-            )} */}
+
           {/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
           <Button color="inherit" onClick={() => Router.push("/")}>
             Contests

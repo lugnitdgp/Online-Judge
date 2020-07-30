@@ -161,3 +161,14 @@ class Contest_Score(models.Model):
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name
+
+class Editorial(models.Model):
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    ques_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
+    solution = models.TextField(blank=True, help_text="Hint and Explanation Goes Here")
+    code = HTMLField()
+
+
+    def __str__(self):
+        return self.contest.contest_name

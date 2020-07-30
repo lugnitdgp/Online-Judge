@@ -10,5 +10,6 @@ urlpatterns = [
     path('contests', views.GetContestList, name="Contest"),
     path('submissions', views.GetSubmissions, name="submission"),
     path('personalsubmissions', views.GetPersonalSubmissions, name="personalsubmission"),
-    path('getanswer', views.GetAnswer, name="GetAnswer")
+    path('getanswer', views.GetAnswer, name="getanswer"),
+    path('geteditorial', views.GetEditorial, name="geteditorial")
 ]

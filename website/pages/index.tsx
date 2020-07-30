@@ -23,7 +23,7 @@ class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     ongoing: [],
-    upcoming:[]
+    upcoming: []
   };
   componentDidMount() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
@@ -31,25 +31,25 @@ class IndexPage extends React.Component<IProps, {}> {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        var ongoing=[]
-        var upcoming=[]
+        var ongoing = []
+        var upcoming = []
         res.map((contest) => {
           var dateObj = new Date((contest["start_time"] - 19800) * 1000);
           contest["start"] = dateObj.toString();
-          var today=Date.now()
+          var today = Date.now()
           dateObj = new Date((contest["end_time"] - 19800) * 1000);
           contest["end"] = dateObj.toString();
-          if(((contest["start_time"]-19800)*1000) < today && ((contest["end_time"] - 19800) * 1000) > today){
-            contest["timestamp"]=(contest["end_time"] - 19800) * 1000
+          if (((contest["start_time"] - 19800) * 1000) < today && ((contest["end_time"] - 19800) * 1000) > today) {
+            contest["timestamp"] = (contest["end_time"] - 19800) * 1000
             ongoing.push(contest)
           }
-          else if(((contest["start_time"]-19800)*1000) > today){
-            contest["timestamp"]=(contest["start_time"]-19800)*1000
+          else if (((contest["start_time"] - 19800) * 1000) > today) {
+            contest["timestamp"] = (contest["start_time"] - 19800) * 1000
             upcoming.push(contest)
           }
           console.log(contest);
         });
-        this.setState({ ongoing:ongoing, upcoming:upcoming });
+        this.setState({ ongoing: ongoing, upcoming: upcoming });
       })
       .catch((error) => {
         console.log(error);
@@ -105,7 +105,7 @@ class IndexPage extends React.Component<IProps, {}> {
           style={{
             margin: "0 auto",
             width: "100%",
-            height:"100%",
+            height: "100%",
             backgroundColor: "#cbccff",
           }}
         >
@@ -117,7 +117,8 @@ class IndexPage extends React.Component<IProps, {}> {
               backgroundColor: "#cbccff",
             }}
           >
-            <Card
+            <br />
+            {/* <Card
               style={{
                 margin: "0 auto",
                 maxWidth: "1400px",
@@ -125,7 +126,7 @@ class IndexPage extends React.Component<IProps, {}> {
               }}
               elevation={0}
             >
-              <Typography
+              {/* <Typography
                 style={{
                   textAlign: "center",
                   textTransform: "uppercase",
@@ -135,7 +136,7 @@ class IndexPage extends React.Component<IProps, {}> {
                   color: "#005",
                 }}
               >
-                Welcome to Online Judge
+                Online Judge
               </Typography>
               <Typography
                 style={{
@@ -148,8 +149,8 @@ class IndexPage extends React.Component<IProps, {}> {
                 }}
               >
                 Presented to you by Gnu/Linux users' group, Nit durgapur
-              </Typography>
-              <CardContent>
+              </Typography> */}
+            {/* <CardContent>
                 <Typography
                   style={{
                     textAlign: "center",
@@ -166,96 +167,104 @@ class IndexPage extends React.Component<IProps, {}> {
                   material-themed custom Competitive coding platform made by the
                   GNU/Linux User's Group, NIT Durgapur
                 </Typography>
-              </CardContent>
+              </CardContent> 
+            </Card> */}
+            <Card style={{ backgroundColor: "#fff", width: "93%", margin: "0 auto" }} elevation={4}>
+              <Typography
+                style={{
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  fontSize: "30px",
+                  margin: "0px",
+                  fontFamily: "'Bree serif', sans-serif",
+                  color: "#005",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Ongoing contests
+            </Typography>
+              {this.state.ongoing.length > 0 ? (
+                <Grid
+                  container
+                  spacing={3}
+                  style={{
+                    width: "100%",
+                    margin: "0 auto",
+                    backgroundColor: "#fff",
+                    paddingBottom: "50px",
+                  }}
+                >
+                  {this.state.ongoing.map((res) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} style={{ margin: "0 auto" }}>
+                      <ContestCard contestInfo={res} />
+                    </Grid>
+                  ))}
+
+                </Grid>
+              ) : (<Typography
+                style={{
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  fontSize: "30px",
+                  margin: "0px",
+                  fontFamily: "'Bree serif', sans-serif",
+                  color: "#005",
+                  backgroundColor: "#fff",
+                }}
+              >
+                There are no ongoing contests right now.
+              </Typography>)}
             </Card>
-            <Typography
-              style={{
-                textAlign: "center",
-                textTransform: "uppercase",
-                fontSize: "30px",
-                margin: "0px",
-                fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
-                backgroundColor: "#cbccff",
-              }}
-            >
-              Ongoing contests
+            <br />
+            <Card style={{ backgroundColor: "#fff", width: "93%", margin: "0 auto" }} elevation={4}>
+              <Typography
+                style={{
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  fontSize: "30px",
+                  margin: "0px",
+                  fontFamily: "'Bree serif', sans-serif",
+                  color: "#005",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Upcoming contests
             </Typography>
-            {this.state.ongoing.length > 0 ? (
-            <Grid
-              container
-              spacing={3}
-              style={{
-                width: "100%",
-                margin: "0 auto",
-                backgroundColor: "#cbccff",
-                paddingBottom: "50px",
-              }}
-            >
-              {this.state.ongoing.map((res)=>(
-                <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard contestInfo = {res}/>
-              </Grid>
-            ))}
-            
-            </Grid>
-            ):(<Typography
-              style={{
-                textAlign: "center",
-                textTransform: "uppercase",
-                fontSize: "30px",
-                margin: "0px",
-                fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
-                backgroundColor: "#cbccff",
-              }}
-            >
-             There are no ongoing contests right now.
-            </Typography>)}
-            <Typography
-              style={{
-                textAlign: "center",
-                textTransform: "uppercase",
-                fontSize: "30px",
-                margin: "0px",
-                fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
-                backgroundColor: "#cbccff",
-              }}
-            >
-              Upcoming contests
-            </Typography>
-            {this.state.upcoming.length > 0 ? (
-            <Grid
-              container
-              spacing={3}
-              style={{
-                width: "100%",
-                margin: "0 auto",
-                backgroundColor: "#cbccff",
-                paddingBottom: "50px",
-              }}
-            >
-              {this.state.upcoming.map((res)=>(
-                <Grid item xs={12} sm={6} md={4} lg={3}>
-                <ContestCard contestInfo = {res}/>
-              </Grid>
-            ))}
-            
-            </Grid>
-            ):(<Typography
-              style={{
-                textAlign: "center",
-                textTransform: "uppercase",
-                fontSize: "30px",
-                margin: "0px",
-                fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
-                backgroundColor: "#cbccff",
-              }}
-            >
-             Keep watching this space!
-            </Typography>)}
+              {this.state.upcoming.length > 0 ? (
+                <Grid
+                  container
+                  spacing={3}
+                  style={{
+                    width: "100%",
+                    margin: "0 auto",
+                    backgroundColor: "#fff",
+                    paddingBottom: "50px",
+
+                  }}
+                >
+                  {this.state.upcoming.map((res) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} style={{ margin: "0 auto" }}>
+                      <ContestCard contestInfo={res} />
+                    </Grid>
+                  ))}
+
+                </Grid>
+              ) : (<Typography
+                style={{
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  fontSize: "30px",
+                  margin: "0px",
+                  fontFamily: "'Bree serif', sans-serif",
+                  color: "#005",
+                  backgroundColor: "#fff",
+                }}
+              >
+                Keep watching this space!
+              </Typography>)}
+            </Card>
+            <br /><br />
+            <br /><br />
           </div>
         </div>
       </Layout>

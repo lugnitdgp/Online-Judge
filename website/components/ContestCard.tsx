@@ -46,55 +46,55 @@ export default function ContestCard(props) {
     );
   };
   return (
-    
+
     <Card className={classes.root}>
-      {props.contestInfo?(
+      {props.contestInfo ? (
         <div>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          // image={props.contestInfo.contest_image}
-          image="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
-          title="Contemplative Reptile"
-        />
-        <CardContent>
-          <div>
-          <Typography gutterBottom variant="h5" component="h2">
-            {props.contestInfo.contest_name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-                    <p>{props.contestInfo.start} - {props.contestInfo.end}</p>
-          </Typography></div>
-          
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <tr>
-          <td>
-        <Button size="small" color="primary" 
-        onClick={() => {
-          if (!localStorage.token) {
-            Router.push("/login")
-          }
-          else {
-            localStorage.setItem("code", props.contestInfo.contest_code);
-            localStorage.setItem("start", props.contestInfo.start_time);
-            localStorage.setItem("end", props.contestInfo.end_time);
-            Router.push("/question");
-          }
-        }}>
-          Enter Contest
-        </Button></td><td style={{paddingLeft:'50px'}}>
-        <Countdown
-          date={new Date(props.contestInfo.timestamp)}
-          intervalDelay={1}
-          renderer={renderer}
-        /></td>
-        </tr>
-      </CardActions>
-      </div>
-      ):(<div>loading</div>)}
+          <CardActionArea>
+            <CardMedia
+              className={classes.media}
+              // image={props.contestInfo.contest_image}
+              image="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
+              title="Contemplative Reptile"
+            />
+            <CardContent>
+              <div>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {props.contestInfo.contest_name}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  <p>{props.contestInfo.start} <br /> {props.contestInfo.end}</p>
+                </Typography></div>
+
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
+            <tr>
+              <td>
+                <Button size="small" color="primary"
+                  onClick={() => {
+                    if (!localStorage.token) {
+                      Router.push("/login")
+                    }
+                    else {
+                      localStorage.setItem("code", props.contestInfo.contest_code);
+                      localStorage.setItem("start", props.contestInfo.start_time);
+                      localStorage.setItem("end", props.contestInfo.end_time);
+                      Router.push("/question");
+                    }
+                  }}>
+                  Enter Contest
+        </Button></td><td style={{ paddingLeft: '50px' }}>
+                <Countdown
+                  date={new Date(props.contestInfo.timestamp)}
+                  intervalDelay={1}
+                  renderer={renderer}
+                /></td>
+            </tr>
+          </CardActions>
+        </div>
+      ) : (<div>loading</div>)}
     </Card>
-    
+
   );
 }

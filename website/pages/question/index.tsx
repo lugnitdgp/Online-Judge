@@ -64,8 +64,8 @@ class questionlist extends React.Component {
       .then((res) => {
         this.setState({ list: res });
         var today = Date.now();
-        var start = (localStorage.start - 19800) * 1000;
-        var end = (localStorage.end - 19800) * 1000;
+        var start = (localStorage.start) * 1000;
+        var end = (localStorage.end) * 1000;
 
         if (start < today && end > today) {
           this.setState({

@@ -34,20 +34,24 @@ class IndexPage extends React.Component<IProps, {}> {
         var ongoing = []
         var upcoming = []
         res.map((contest) => {
-          var dateObj = new Date((contest["start_time"] - 19800) * 1000);
-          contest["start"] = dateObj.toString();
+          var dateObj = new Date((contest["start_time"]) * 1000);
+          contest["start"] = dateObj.toString()
+          contest["start"] = contest["start"].substring(0, 10) + contest["start"].substring(15, 24)
           var today = Date.now()
-          dateObj = new Date((contest["end_time"] - 19800) * 1000);
+          var dateo = new Date(today)
+          console.log(dateObj.toString(), "   ", dateo.toString(), "  ")
+          dateObj = new Date((contest["end_time"]) * 1000);
           contest["end"] = dateObj.toString();
-          if (((contest["start_time"] - 19800) * 1000) < today && ((contest["end_time"] - 19800) * 1000) > today) {
-            contest["timestamp"] = (contest["end_time"] - 19800) * 1000
+          contest["end"] = contest["end"].substring(0, 10) + contest["end"].substring(15, 24)
+          console.log(contest["end"])
+          if (((contest["start_time"]) * 1000) < today && ((contest["end_time"]) * 1000) > today) {
+            contest["timestamp"] = (contest["end_time"]) * 1000
             ongoing.push(contest)
           }
-          else if (((contest["start_time"] - 19800) * 1000) > today) {
-            contest["timestamp"] = (contest["start_time"] - 19800) * 1000
+          else if (((contest["start_time"]) * 1000) > today) {
+            contest["timestamp"] = (contest["start_time"]) * 1000
             upcoming.push(contest)
           }
-          console.log(contest);
         });
         this.setState({ ongoing: ongoing, upcoming: upcoming });
       })

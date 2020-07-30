@@ -14,7 +14,7 @@ class Coder(models.Model):
     score = models.IntegerField(default=0, help_text="Score of the user")
     correct_answers = models.IntegerField(default=0, help_text="Number of correct answers of the user")
     solved_ques = models.CharField(max_length=200, blank=True, help_text="Questions solved by the user")
-    time_stamp = models.DateTimeField(default=t.now, help_text="To check the least time taken for a common score")
+    time_stamp = models.DateTimeField(default=t.now, help_text="To check the time span between submitting codes")
 
     def __str__(self):
         return self.name

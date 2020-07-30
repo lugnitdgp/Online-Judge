@@ -63,6 +63,12 @@ def submitCode(request):
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         coder = Coder.objects.get(user=request.user)
+        coder_time = coder.time_stamp
+        time_dif = (t.now() - coder_time).total_seconds()
+        if time_dif < 30:
+            return Response({'status': 302, 'message': 'Please wait 30 sec before submitting another code'})
+        coder.time_stamp = t.now()
+        coder.save()
         task = execute.delay(
             QuestionSerializer(question).data,
             CoderSerializer(coder).data, code, lang,

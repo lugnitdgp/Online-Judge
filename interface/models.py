@@ -145,7 +145,7 @@ def testcases_delete(sender, instance, using, **kwargs):
                      "input{}.in".format(instance.pk)))
     os.remove(
         os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(instance.question.pk)),
-                     "output{}.output".format(instance.pk)))
+                     "output{}.out".format(instance.pk)))
 
 class Answer(models.Model):
     user = models.ForeignKey(Coder, on_delete=models.CASCADE)
@@ -175,7 +175,6 @@ class Editorial(models.Model):
     ques_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
     solution = models.TextField(blank=True, help_text="Hint and Explanation Goes Here")
     code = HTMLField()
-
 
     def __str__(self):
         return self.contest.contest_name

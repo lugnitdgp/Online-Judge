@@ -94,9 +94,12 @@ def status(request):
                 coder.correct_answers += 1
                 answer.correct +=1
                 if contest.isOver() == False and contest.isStarted():
-                    ques_score = max(
-                        ((int)(question.question_score / (contest.min_score))),
-                        (question.question_score - penalty_total - (coder_contest_score.wa * contest.wa_penalty)))
+                    try :
+                        mn_score = (int)(question.question_score / (contest.min_score))
+                    except :
+                        mn_score = question.question_score
+                    score = question.question_score - penalty_total - (coder_contest_score.wa * contest.wa_penalty)
+                    ques_score = max(mn_score, score)
                     coder_contest_score.score += ques_score
                     answer.score = ques_score
                     coder_contest_score.timestamp = t.now()
@@ -132,7 +135,6 @@ def leaderboard(request):
             "image": participant.coder.image_link,
             "answer": serializer.data
         })
-    print(coder_array)
     return Response(coder_array)
 
 

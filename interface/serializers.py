@@ -46,3 +46,4 @@ class EditorialSerializer(serializers.ModelSerializer):
         model = Editorial
         fields = ('question','solution','code','ques_name')
 
+

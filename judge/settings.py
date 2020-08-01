@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_celery_results',
     'tinymce',
+    "pinax.announcements",
 ]
 
 MIDDLEWARE = [

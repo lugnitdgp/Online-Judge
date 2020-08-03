@@ -3,6 +3,9 @@ import red from "@material-ui/core/colors/red";
 
 // Create a theme instance.
 const theme = createMuiTheme({
+  typography: { 
+    fontFamily: ['Noto Sans TC' ].join(','),
+   },
   palette: {
     primary: {
       main: "#4455dd",
@@ -16,7 +19,8 @@ const theme = createMuiTheme({
     background: {
       default: "#eeeeff",
     },
-  },
+  }
+
 });
 
 export default theme;

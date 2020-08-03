@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Fredoka+One&family=Noto+Sans+TC&display=swap');
+body{
+	font-family: 'Noto Sans TC', sans-serif;
+}
 .table th {
 	text-align: center;
 }

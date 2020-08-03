@@ -15,6 +15,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
 import Router from "next/router";
 
+
 const styleSheet = {
   list: {
     width: 200,
@@ -87,7 +88,8 @@ class Newappbar extends Component {
                 alignItems="Right"
                 style={{ textAlign: "Right" }}
               >
-                Online Judge
+                Online Judge &nbsp;&nbsp;
+                <img src="/oj.png" alt="." style={{ width: "30px", borderRadius: "5px" }} />
               </Typography>
             </Grid>
           </Toolbar>
@@ -113,31 +115,7 @@ class Newappbar extends Component {
             }}
           >
             <List className={this.props.classes.list}>
-              {localStorage.onlinejudge_info ? (
-                <ListItem key={1} button divider>
-                  <Button
-                    color="inherit"
-                    onClick={() => Router.push("/submissions")}
-                  >
-                    Submissons
-                  </Button>
-                </ListItem>
-              ) : (
-                <div></div>
-              )}
 
-              {localStorage.onlinejudge_info ? (
-                <ListItem key={2} button divider>
-                  <Button
-                    color="inherit"
-                    onClick={() => Router.push("/leaderboard")}
-                  >
-                    Leaderboard
-                  </Button>
-                </ListItem>
-              ) : (
-                <div></div>
-              )}
 
               <ListItem key={3} button divider>
                 <Button color="inherit" onClick={() => Router.push("/")}>
@@ -167,8 +145,8 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                <div></div>
-              )}
+                  <div></div>
+                )}
               <ListItem key={4} button divider>
                 {localStorage.onlinejudge_info ? (
                   <React.Fragment>
@@ -176,17 +154,17 @@ class Newappbar extends Component {
                       src={JSON.parse(localStorage.onlinejudge_info).image_link}
                     />
                     &nbsp;
-                    {
+                    {/* {
                       JSON.parse(localStorage.onlinejudge_info).email.split(
                         "@"
                       )[0]
-                    }
+                    } */}
                   </React.Fragment>
                 ) : (
-                  <Button color="inherit" onClick={() => Router.push("/login")}>
-                    Login
-                  </Button>
-                )}
+                    <Button color="inherit" onClick={() => Router.push("/login")}>
+                      Login
+                    </Button>
+                  )}
               </ListItem>
             </List>
           </div>
@@ -201,27 +179,16 @@ class Newappbar extends Component {
     return (
       <AppBar position="static">
         <Toolbar>
+
           <Typography
             variant="h6"
             className={classes.title}
             onClick={() => Router.push("/")}
           >
-            Online Judge
+            <img src="/oj.png" alt="." style={{ width: "45px", borderRadius: "5px" }} />
+            &nbsp;&nbsp;&nbsp;Online Judge
           </Typography>
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/submissions")}>
-              Submissons
-            </Button>
-          ) : (
-            <div></div>
-          )}
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
-              Leaderboard
-            </Button>
-          ) : (
-            <div></div>
-          )}
+
           {/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
           <Button color="inherit" onClick={() => Router.push("/")}>
             Contests
@@ -244,21 +211,21 @@ class Newappbar extends Component {
               Logout
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           {localStorage.onlinejudge_info ? (
             <React.Fragment>
               <Avatar
                 src={JSON.parse(localStorage.onlinejudge_info).image_link}
               />
               &nbsp;
-              {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]}
+              {/* {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]} */}
             </React.Fragment>
           ) : (
-            <Button color="inherit" onClick={() => Router.push("/login")}>
-              Login
-            </Button>
-          )}
+              <Button color="inherit" onClick={() => Router.push("/login")}>
+                Login
+              </Button>
+            )}
         </Toolbar>
       </AppBar>
     );

@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-} from "@material-ui/core";
+import { Typography, Card } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "../styles/IndexStyles";
 import Layout from "../components/Layout";
-import Carousel from 'react-bootstrap/Carousel'
-import Router from "next/router";
+import Grid from "@material-ui/core/Grid";
+import ContestCard from "../components/ContestCard";
 
 interface IProps {
   classes: any;
@@ -19,8 +13,8 @@ interface IProps {
 class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
-    leasttime: 0,
-    list: [],
+    ongoing: [],
+    upcoming: [],
   };
   componentDidMount() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
@@ -28,113 +22,220 @@ class IndexPage extends React.Component<IProps, {}> {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        var least = 0;
+        var ongoing = [];
+        var upcoming = [];
         res.map((contest) => {
-          if (least == 0 || contest["start_time"] < least)
-            least = contest["start_time"]
-
-          var dateObj = new Date((contest["start_time"] - 19800) * 1000);
-
-
-          contest["start"] = dateObj.toString()
-          contest["start"] = contest["start"].substring()
-          dateObj = new Date((contest["end_time"] - 19800) * 1000);
-
-          contest['end'] = dateObj.toString()
-          console.log(contest)
+          var dateObj = new Date(contest["start_time"] * 1000);
+          contest["start"] = dateObj.toString();
+          contest["start"] =
+            contest["start"].substring(0, 10) +
+            contest["start"].substring(15, 24);
+          var today = Date.now();
+          var dateo = new Date(today);
+          console.log(dateObj.toString(), "   ", dateo.toString(), "  ");
+          dateObj = new Date(contest["end_time"] * 1000);
+          contest["end"] = dateObj.toString();
+          contest["end"] =
+            contest["end"].substring(0, 10) + contest["end"].substring(15, 24);
+          console.log(contest["end"]);
+          if (
+            contest["start_time"] * 1000 < today &&
+            contest["end_time"] * 1000 > today
+          ) {
+            contest["timestamp"] = contest["end_time"] * 1000;
+            ongoing.push(contest);
+          } else if (contest["start_time"] * 1000 > today) {
+            contest["timestamp"] = contest["start_time"] * 1000;
+            upcoming.push(contest);
+          }
         });
-        this.setState({ list: res });
-        this.setState({ leasttime: least });
-
+        this.setState({ ongoing: ongoing, upcoming: upcoming });
       })
       .catch((error) => {
         console.log(error);
       });
   }
-  Item(props) {
-    const img = `./img/${props.item.contest_code}.jpg`
-    console.log(img)
-    return (
-      <div>
-        {/* <Card elevation={0}>
-          <img
-            onClick={() => {
-              localStorage.setItem("code", props.item.contest_code);
-              Router.push("/question");
-            }}zz
-            className={props.classes.carousel}
-            src={img}
-          />
-        </Card> */}
-        <h2>{props.item.contest_name}</h2>
-        <p>Contest timings</p>
-        <h4>
-          {props.item.start_time} to {props.item.end_time}
-        </h4>
-      </div>
-    );
-  }
 
   render() {
-    const { classes } = this.props;
-
     return (
       <Layout>
-        <Grid container justify="center" alignItems="center" direction="column">
+        <Grid container spacing={3} style={{ height: "100vh" }}>
+          <Grid
+            item
+            xs={12}
+            md={9}
+            style={{ margin: "0 auto", height: "100%" }}
+          >
+            <div
+              style={{
+                margin: "0 auto",
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#cbccff",
+              }}
+            >
+              <div
+                style={{
+                  margin: "0 auto",
+                  maxWidth: "1000px",
 
-          <main className={classes.main}>
+                  backgroundColor: "#cbccff",
+                }}
+              >
+                <br />
 
-            <Card className={classes.card}>
-              <CardHeader
-                style={{ textAlign: "center" }}
-                title="Welcome to OnlineJ"
-              />
-              <CardContent>
-                <Typography style={{ textAlign: "center" }}>
-                  A completely material-themed custom Competitive coding
-                  platform made by the GNU/Linux User's Group, NIT Durgapur
-                </Typography>
-              </CardContent>
-            </Card>
-          </main>
+                <Card
+                  style={{
+                    backgroundColor: "#fff",
+                    width: "93%",
+                    margin: "0 auto",
+                  }}
+                  elevation={4}
+                >
+                  <Typography
+                    style={{
+                      textAlign: "center",
 
-          <Card style={{ textAlign: "center", marginBottom: "20px" }}>
-            <CardHeader title="Current Contests" />
-            <CardContent>
-              <Carousel
-                indicators={false}
-              >{this.state.list.map((item) => (
-                <Carousel.Item>
-                  <img
-                    onClick={() => {
-                      if (!localStorage.token) {
-                        Router.push("/login")
-                      }
-                      else {
-                        localStorage.setItem("code", item.contest_code);
-                        localStorage.setItem("start", item.start_time);
-                        localStorage.setItem("end", item.end_time);
-                        Router.push("/question");
-                      }
+                      fontSize: "30px",
+                      margin: "0px",
+                      fontFamily: "'Bree serif', sans-serif",
+                      color: "#005",
+                      backgroundColor: "#fff",
                     }}
-                    className={classes.carousel} src="https://i.ytimg.com/vi/J2HGH8LrblU/maxresdefault.jpg"
-                    alt={item.contest_name}
-                  />
-                  <Card>
-                    <h6>{item.contest_name}</h6>
-                    <p>Contest timings</p>
-                    <p>
-                      {item.start} - {item.end}
-                    </p>
-                  </Card>
+                  >
+                    Ongoing Contests
+                  </Typography>
+                  {this.state.ongoing.length > 0 ? (
+                    <Grid
+                      container
+                      spacing={3}
+                      style={{
+                        width: "100%",
+                        margin: "0 auto",
+                        backgroundColor: "#fff",
+                        paddingBottom: "50px",
+                      }}
+                    >
+                      {this.state.ongoing.map((res) => (
+                        <Grid item xs={12} style={{ margin: "0 auto" }}>
+                          <ContestCard contestInfo={res} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ) : (
+                    <Typography
+                      style={{
+                        textAlign: "center",
+                        textTransform: "uppercase",
+                        fontSize: "30px",
+                        margin: "0px",
+                        fontFamily: "'Bree serif', sans-serif",
+                        color: "#005",
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      There are no ongoing contests right now.
+                    </Typography>
+                  )}
+                </Card>
+                <br />
+                <Card
+                  style={{
+                    backgroundColor: "#fff",
+                    width: "93%",
+                    margin: "0 auto",
+                  }}
+                  elevation={4}
+                >
+                  <Typography
+                    style={{
+                      textAlign: "center",
 
-                </Carousel.Item>
-              ))}
-
-              </Carousel>
-
-            </CardContent>
-          </Card>
+                      fontSize: "30px",
+                      margin: "0px",
+                      fontFamily: "'Bree serif', sans-serif",
+                      color: "#005",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Upcoming Contests
+                  </Typography>
+                  {this.state.upcoming.length > 0 ? (
+                    <Grid
+                      container
+                      spacing={3}
+                      style={{
+                        width: "100%",
+                        margin: "0 auto",
+                        backgroundColor: "#fff",
+                        paddingBottom: "50px",
+                      }}
+                    >
+                      {this.state.upcoming.map((res) => (
+                        <Grid item xs={12} style={{ margin: "0 auto" }}>
+                          <ContestCard contestInfo={res} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ) : (
+                    <Typography
+                      style={{
+                        textAlign: "center",
+                        textTransform: "uppercase",
+                        fontSize: "30px",
+                        margin: "0px",
+                        fontFamily: "'Bree serif', sans-serif",
+                        color: "#005",
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      Keep watching this space!
+                    </Typography>
+                  )}
+                </Card>
+                <br />
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={12} md={3} style={{ margin: "0 auto" }}>
+            <h3
+              style={{
+                fontSize: "20px",
+                margin: "20px",
+                fontFamily: "'Bree serif', sans-serif",
+                color: "#005",
+              }}
+            >
+              Announcement :
+            </h3>
+            <ul>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+            </ul>
+            <br />
+            <h3
+              style={{
+                fontSize: "20px",
+                margin: "20px",
+                fontFamily: "'Bree serif', sans-serif",
+                color: "#005",
+              }}
+            >
+              Playing Rules (Honor code) :
+            </h3>
+            <ul>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+              <li>Anouncemment 1 (sample announcement)</li>
+            </ul>
+          </Grid>
         </Grid>
       </Layout>
     );

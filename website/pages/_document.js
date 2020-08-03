@@ -14,10 +14,12 @@ export default class MyDocument extends Document {
 						name="viewport"
 						content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
 					/>
+					 <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Fredoka+One&family=Noto+Sans+TC&display=swap" />
 					<meta name="robots" content="all" />
 					<meta name="theme-color" content={theme.palette.primary.main} />
+					<link href="/fonts/noto.woff2" rel="preload" as="font" crossOrigin="" />
 				</Head>
-				<body>
+				<body >
 					<Main />
 					<NextScript />
 				</body>

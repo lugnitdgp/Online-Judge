@@ -66,11 +66,11 @@ class questionlist extends React.Component {
         var today = Date.now();
         var start = (localStorage.start) * 1000;
         var end = (localStorage.end) * 1000;
-
+        console.log(start+"   "+today+"  "+end)
         if (start < today && end > today) {
           this.setState({
             timestamp: end,
-            message: "The Contest ends in ...",
+            message: "The Contest ends in",
           });
         } else if (start < today && end < today) {
           this.setState({
@@ -80,7 +80,7 @@ class questionlist extends React.Component {
         } else if (start > today) {
           this.setState({
             timestamp: start,
-            message: "The Contest begins in ...",
+            message: "The Contest begins in",
           });
         }
       })
@@ -155,8 +155,8 @@ class questionlist extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.list
-                ? this.state.list.map((item, i) => (
+              {this.state.list.length>0
+                ? (this.state.list.map((item, i) => (
                   <TableRow key={i}>
                     <TableCell
                       component="th"
@@ -191,7 +191,7 @@ class questionlist extends React.Component {
                     </TableCell>
                   </TableRow>
                 ))
-                : null}
+                ): (null)}
             </TableBody>
           </Table>
         </TableContainer>

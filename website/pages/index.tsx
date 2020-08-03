@@ -14,6 +14,7 @@ class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     ongoing: [],
+    ended:[],
     upcoming: [],
   };
   componentDidMount() {
@@ -24,7 +25,9 @@ class IndexPage extends React.Component<IProps, {}> {
       .then((res) => {
         var ongoing = [];
         var upcoming = [];
+        var ended =[];
         res.map((contest) => {
+          console.log(contest)
           var dateObj = new Date(contest["start_time"] * 1000);
           contest["start"] = dateObj.toString();
           contest["start"] =
@@ -42,14 +45,18 @@ class IndexPage extends React.Component<IProps, {}> {
             contest["start_time"] * 1000 < today &&
             contest["end_time"] * 1000 > today
           ) {
-            contest["timestamp"] = contest["end_time"] * 1000;
-            ongoing.push(contest);
+            contest["timestamp"] = contest["end_time"] * 1000
+            ongoing.push(contest)
           } else if (contest["start_time"] * 1000 > today) {
+            contest["upcoming"]=true
             contest["timestamp"] = contest["start_time"] * 1000;
             upcoming.push(contest);
           }
+          else{
+              ended.push(contest)
+          }
         });
-        this.setState({ ongoing: ongoing, upcoming: upcoming });
+        this.setState({ ongoing: ongoing, upcoming: upcoming, ended:ended});
       })
       .catch((error) => {
         console.log(error);
@@ -194,6 +201,61 @@ class IndexPage extends React.Component<IProps, {}> {
                   )}
                 </Card>
                 <br />
+                <Card
+                  style={{
+                    backgroundColor: "#fff",
+                    width: "93%",
+                    margin: "0 auto",
+                  }}
+                  elevation={4}
+                >
+                  <Typography
+                    style={{
+                      textAlign: "center",
+
+                      fontSize: "30px",
+                      margin: "0px",
+                      fontFamily: "'Bree serif', sans-serif",
+                      color: "#005",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Already Finished Contests
+                  </Typography>
+                  {this.state.ended.length > 0 ? (
+                    <Grid
+                      container
+                      spacing={3}
+                      style={{
+                        width: "100%",
+                        margin: "0 auto",
+                        backgroundColor: "#fff",
+                        paddingBottom: "50px",
+                      }}
+                    >
+                      {this.state.ended.map((res) => (
+                        <Grid item xs={12} style={{ margin: "0 auto" }}>
+                          <ContestCard contestInfo={res} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ) : (
+                    <Typography
+                      style={{
+                        textAlign: "center",
+                        textTransform: "uppercase",
+                        fontSize: "30px",
+                        margin: "0px",
+                        fontFamily: "'Bree serif', sans-serif",
+                        color: "#005",
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      Keep watching this space!
+                    </Typography>
+                  )}
+                </Card>
+                <br/>
               </div>
             </div>
           </Grid>

@@ -90,10 +90,12 @@ export default function ContestCard(props) {
             xs={12}
             sm={4}
             style={{ margin: "0 auto", textAlign: "center" }}
-          >
+          >{props.contestInfo.upcoming?(
             <Button
               size="large"
               color="primary"
+              variant ="outlined"
+              disabled
               onClick={() => {
                 if (!localStorage.token) {
                   Router.push("/login");
@@ -106,13 +108,42 @@ export default function ContestCard(props) {
               }}
             >
               Enter Contest
-            </Button>
-
+            </Button>):(<Button
+              size="large"
+              color="primary"
+              variant ="outlined"
+              onClick={() => {
+                if (!localStorage.token) {
+                  Router.push("/login");
+                } else {
+                  localStorage.setItem("code", props.contestInfo.contest_code);
+                  localStorage.setItem("start", props.contestInfo.start_time);
+                  localStorage.setItem("end", props.contestInfo.end_time);
+                  Router.push("/question");
+                }
+              }}
+            >
+              Enter Contest
+            </Button>)}{
+            props.contestInfo.timestamp?(
             <Countdown
               date={new Date(props.contestInfo.timestamp)}
               intervalDelay={1}
               renderer={renderer}
-            />
+            />):(<div
+              style={{
+                textAlign: "center",
+                margin: "0 auto",
+                padding: "0",
+                textTransform: "uppercase",
+                fontFamily: "'Bree serif', sans-serif",
+                color: "#005",
+                fontOpticalSizing: "auto",
+              }}
+            >
+              Already Ended!
+            </div>)
+            }
           </Grid>
         </Grid>
       ) : (

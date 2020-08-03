@@ -14,15 +14,14 @@ export default function Timer(props) {
                 textAlign: "center",
                 margin: "0 auto",
                 padding: "0",
-                textTransform: "uppercase",
                 fontFamily: "'Bree serif', sans-serif",
                 color: "#005",
                 fontOpticalSizing: "auto",
               }}
             >
               <h4>
-                This contest ends in : {zeroPad(days)}:{zeroPad(hours)}:
-                {zeroPad(minutes)}:{zeroPad(seconds)}
+                {props.message}{days+hours+minutes+seconds>0?(<div>{zeroPad(days)}:{zeroPad(hours)}:
+                {zeroPad(minutes)}:{zeroPad(seconds)}</div>):(<p> </p>)}
               </h4>
             </div>
           </CardContent>

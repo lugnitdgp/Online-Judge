@@ -262,7 +262,7 @@ this.source = source2
       if (start < today && end > today) {
         this.setState({
           timestamp: end,
-          message: "The Contest ends in ...",
+          message: "The Contest ends in",
         });
       } else if (start < today && end < today) {
         this.setState({
@@ -272,7 +272,7 @@ this.source = source2
       } else if (start > today) {
         this.setState({
           timestamp: start,
-          message: "The Contest begins in ...",
+          message: "The Contest begins in",
         });
       }
 

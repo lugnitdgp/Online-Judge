@@ -105,7 +105,6 @@ class IndexPage extends React.Component<IProps, {}> {
 
                       fontSize: "30px",
                       margin: "0px",
-                      fontFamily: "'Bree serif', sans-serif",
                       color: "#005",
                       backgroundColor: "#fff",
                     }}
@@ -136,7 +135,6 @@ class IndexPage extends React.Component<IProps, {}> {
                         textTransform: "uppercase",
                         fontSize: "30px",
                         margin: "0px",
-                        fontFamily: "'Bree serif', sans-serif",
                         color: "#005",
                         backgroundColor: "#fff",
                       }}
@@ -160,7 +158,6 @@ class IndexPage extends React.Component<IProps, {}> {
 
                       fontSize: "30px",
                       margin: "0px",
-                      fontFamily: "'Bree serif', sans-serif",
                       color: "#005",
                       backgroundColor: "#fff",
                     }}
@@ -191,7 +188,6 @@ class IndexPage extends React.Component<IProps, {}> {
                         textTransform: "uppercase",
                         fontSize: "30px",
                         margin: "0px",
-                        fontFamily: "'Bree serif', sans-serif",
                         color: "#005",
                         backgroundColor: "#fff",
                       }}
@@ -215,7 +211,6 @@ class IndexPage extends React.Component<IProps, {}> {
 
                       fontSize: "30px",
                       margin: "0px",
-                      fontFamily: "'Bree serif', sans-serif",
                       color: "#005",
                       backgroundColor: "#fff",
                     }}
@@ -246,7 +241,6 @@ class IndexPage extends React.Component<IProps, {}> {
                         textTransform: "uppercase",
                         fontSize: "30px",
                         margin: "0px",
-                        fontFamily: "'Bree serif', sans-serif",
                         color: "#005",
                         backgroundColor: "#fff",
                       }}
@@ -264,7 +258,6 @@ class IndexPage extends React.Component<IProps, {}> {
               style={{
                 fontSize: "20px",
                 margin: "20px",
-                fontFamily: "'Bree serif', sans-serif",
                 color: "#005",
               }}
             >
@@ -283,7 +276,6 @@ class IndexPage extends React.Component<IProps, {}> {
               style={{
                 fontSize: "20px",
                 margin: "20px",
-                fontFamily: "'Bree serif', sans-serif",
                 color: "#005",
               }}
             >

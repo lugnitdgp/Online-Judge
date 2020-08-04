@@ -75,16 +75,15 @@ class Question(models.Model):
     class Meta:
         ordering = ['question_score']
 
-def input_dir(self, filename):
-    return os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
-                            "input{}.in".format(self.pk))
+def input_dir(instance, filename):
+    return os.path.join(TEST_CASE_DIR, "ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
 
-def output_dir(self, filename):
-    return os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
-                            "output{}.out".format(self.pk))
+def output_dir(instance, filename):
+    return os.path.join(TEST_CASE_DIR, "ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
 
 class Testcases(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    test_case_no = models.IntegerField(default= 1, help_text="Test Case ID for the particular question")
     input_test = models.FileField(upload_to=input_dir, help_text="Input test case")
     output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
 
@@ -92,25 +91,10 @@ class Testcases(models.Model):
         return ("Testcase of " + self.question.question_code)
 
     def input_path(self):
-        return os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
-                            "input{}.in".format(self.pk))
+        return self.input_test.path
 
     def output_path(self):
-        return os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
-                            "output{}.out".format(self.pk))
-
-    # def save(self, *args, **kwargs):
-    #     super(Testcases, self).save(*args, **kwargs)
-    #     with open(
-    #             os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
-    #                          "input{}.in".format(self.pk)), "w") as f:
-    #         # f.write(self.input_test.replace("\\n", "\n"))
-    #         f.close()
-    #     with open(
-    #             os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(self.question.pk)),
-    #                          "output{}.out".format(self.pk)), "w") as f:
-    #         # f.write(self.output_test.replace("\\n", "\n"))
-    #         f.close()
+        return self.output_test.path
 
 class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True, on_delete=models.CASCADE)

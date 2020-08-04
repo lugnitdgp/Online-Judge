@@ -13,14 +13,15 @@ class Layout extends React.Component {
           style={{
             position: "fixed",
             bottom: "0",
-            height: "40px",
+            height: "60px",
             width: "100%",
-            backgroundColor: "#3344ff",
+            backgroundColor: "#000000",
             textAlign: "center",
-            color: "#fff",
-            textTransform: "uppercase",
-            fontSize: "10px",
-            paddingTop: "14px",
+            color: "#ffffff",
+            fontSize: "15px",
+            textTransform:"uppercase",
+            fontWeight:"bolder",
+            paddingTop: "20px",
             zIndex: 9999,
           }}
         >

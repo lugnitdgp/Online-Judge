@@ -29,9 +29,7 @@ export default function ContestCard(props) {
             textAlign: "center",
             margin: "0 auto",
             padding: "0",
-            textTransform: "uppercase",
-            fontFamily: "'Bree serif', sans-serif",
-            color: "#005",
+            textTransform: "uppercase",            color: "#005",
             fontOpticalSizing: "auto",
           }}
         >
@@ -69,7 +67,7 @@ export default function ContestCard(props) {
                 className={classes.media}
                 // image={props.contestInfo.contest_image}
                 src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
-                title="Contemplative Reptile"
+                title={props.contestInfo.contest_name}
               />
             </div>
           </Grid>
@@ -124,7 +122,7 @@ export default function ContestCard(props) {
               }}
             >
               Enter Contest
-            </Button>)}{
+            </Button>)}<br/>{
             props.contestInfo.timestamp?(
             <Countdown
               date={new Date(props.contestInfo.timestamp)}
@@ -136,7 +134,6 @@ export default function ContestCard(props) {
                 margin: "0 auto",
                 padding: "0",
                 textTransform: "uppercase",
-                fontFamily: "'Bree serif', sans-serif",
                 color: "#005",
                 fontOpticalSizing: "auto",
               }}

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.coos.path.join(os.path.join(BASE_DIR, "engine"), "safeexec")ntrib.messages',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
     'interface',
     'rest_framework',

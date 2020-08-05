@@ -8,13 +8,16 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
   root: {
-    Width: "90%",
-    maxWidth: "700px",
+    maxWidth: "300px",
     margin: "0 auto",
     padding: 0,
+    borderTop: "10px solid #104E8B",
+    borderBottom: "10px solid #104E8B",
+    border: "2px solid #104E8B",
+    borderRadius: "20px",
   },
   media: {
-    height: 90,
+    width: "95%",
     margin: "0 auto",
   },
 });
@@ -29,7 +32,8 @@ export default function ContestCard(props) {
             textAlign: "center",
             margin: "0 auto",
             padding: "0",
-            textTransform: "uppercase",            color: "#005",
+            textTransform: "uppercase",
+            color: "#104e8b",
             fontOpticalSizing: "auto",
           }}
         >
@@ -43,25 +47,21 @@ export default function ContestCard(props) {
     );
   };
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} elevation={0}>
       {props.contestInfo ? (
         <Grid
           container
           spacing={3}
           style={{
             width: "100%",
+            maxWidth: "300px",
             verticalAlign: "middle",
             margin: "0 auto",
-            backgroundColor: "#eee",
+
             paddingBottom: "0px",
           }}
         >
-          <Grid
-            item
-            xs={12}
-            sm={4}
-            style={{ margin: "0 auto", textAlign: "center" }}
-          >
+          <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
             <div>
               <img
                 className={classes.media}
@@ -71,8 +71,8 @@ export default function ContestCard(props) {
               />
             </div>
           </Grid>
-          <Grid item xs={12} sm={4} style={{ margin: "0 auto" }}>
-            <div>
+          <Grid item xs={12} style={{ margin: "0 auto" }}>
+            <div style={{ textAlign: "center", color: "#104e8b" }}>
               <h4>{props.contestInfo.contest_name}</h4>
               <div color="textPrimary">
                 <b>
@@ -83,64 +83,75 @@ export default function ContestCard(props) {
               </div>
             </div>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={4}
-            style={{ margin: "0 auto", textAlign: "center" }}
-          >{props.contestInfo.upcoming?(
-            <Button
-              size="large"
-              color="primary"
-              variant ="outlined"
-              disabled
-              onClick={() => {
-                if (!localStorage.token) {
-                  Router.push("/login");
-                } else {
-                  localStorage.setItem("code", props.contestInfo.contest_code);
-                  localStorage.setItem("start", props.contestInfo.start_time);
-                  localStorage.setItem("end", props.contestInfo.end_time);
-                  Router.push("/question");
-                }
-              }}
-            >
-              Enter Contest
-            </Button>):(<Button
-              size="large"
-              color="primary"
-              variant ="outlined"
-              onClick={() => {
-                if (!localStorage.token) {
-                  Router.push("/login");
-                } else {
-                  localStorage.setItem("code", props.contestInfo.contest_code);
-                  localStorage.setItem("start", props.contestInfo.start_time);
-                  localStorage.setItem("end", props.contestInfo.end_time);
-                  Router.push("/question");
-                }
-              }}
-            >
-              Enter Contest
-            </Button>)}<br/>{
-            props.contestInfo.timestamp?(
-            <Countdown
-              date={new Date(props.contestInfo.timestamp)}
-              intervalDelay={1}
-              renderer={renderer}
-            />):(<div
-              style={{
-                textAlign: "center",
-                margin: "0 auto",
-                padding: "0",
-                textTransform: "uppercase",
-                color: "#005",
-                fontOpticalSizing: "auto",
-              }}
-            >
-              Already Ended!
-            </div>)
-            }
+          <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
+            {props.contestInfo.upcoming ? (
+              <Button
+                size="large"
+                color="primary"
+                variant="outlined"
+                style={{ outline: "none", border: "none" }}
+                disabled
+                onClick={() => {
+                  if (!localStorage.token) {
+                    Router.push("/login");
+                  } else {
+                    localStorage.setItem(
+                      "code",
+                      props.contestInfo.contest_code
+                    );
+                    localStorage.setItem("start", props.contestInfo.start_time);
+                    localStorage.setItem("end", props.contestInfo.end_time);
+                    Router.push("/question");
+                  }
+                }}
+              >
+                Enter Contest
+              </Button>
+            ) : (
+              <Button
+                size="large"
+                color="primary"
+                variant="outlined"
+                style={{ outline: "none", border: "none" }}
+                onClick={() => {
+                  if (!localStorage.token) {
+                    Router.push("/login");
+                  } else {
+                    localStorage.setItem(
+                      "code",
+                      props.contestInfo.contest_code
+                    );
+                    localStorage.setItem("start", props.contestInfo.start_time);
+                    localStorage.setItem("end", props.contestInfo.end_time);
+                    Router.push("/question");
+                  }
+                }}
+              >
+                Enter Contest
+              </Button>
+            )}
+            <br />
+            {props.contestInfo.timestamp ? (
+              <Countdown
+                date={new Date(props.contestInfo.timestamp)}
+                intervalDelay={1}
+                renderer={renderer}
+              />
+            ) : (
+              <div
+                style={{
+                  textAlign: "center",
+                  margin: "0 auto",
+                  padding: "0",
+                  textTransform: "uppercase",
+                  color: "#104e8b",
+                  fontOpticalSizing: "auto",
+                }}
+              >
+                <br />
+                Already Ended!
+              </div>
+            )}
           </Grid>
         </Grid>
       ) : (

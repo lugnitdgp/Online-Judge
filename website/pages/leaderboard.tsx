@@ -139,12 +139,12 @@ class Leaderboard extends React.Component<IProps, {}> {
 							Leaderboard
 						</h1>
 					</div>
-					<div className="contain" style={{ margin: '0 auto', maxWidth: '900px', width: '100%' }}>
-						<Card elevation={0} style={{ msOverflowX: 'scroll', margin: '0 auto', border: "1px solid #003" }}>
+					<div className="contain" style={{padding:"1px", maxWidth: '900px', width: '100%', position:"relative" }}>
+						<Card elevation={0} style={{ msOverflowX: 'scroll', border: "1px solid #003", marginBottom:"30px"}}>
 							{/* <MUIDataTable title={'STANDINGS'} data={data} columns={columns} options={options} /> */}
 							<Paper>
-								<TableContainer>
-									<Table stickyHeader aria-label="sticky table">
+								<TableContainer style={{ position:"relative" }}>
+									<Table stickyHeader aria-label="sticky table" >
 										<TableHead>
 											<TableRow >
 												{columns.map((columns) => (

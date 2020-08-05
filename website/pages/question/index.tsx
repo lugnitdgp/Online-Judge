@@ -12,6 +12,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import Timer from "../../components/Timer";
 import Router from "next/router";
+import Grid from "@material-ui/core/Grid";
 
 class questionlist extends React.Component {
   state = {
@@ -99,14 +100,23 @@ class questionlist extends React.Component {
             maxWidth: "1000px",
             margin: "30px auto",
             borderRadius: "5px",
-            backgroundColor: "#3344ff",
+            backgroundColor: "#fff",
             height: "50px",
-            color: "white",
+            color: "#104e8b",
             textAlign: "center",
             fontSize: "19px",
             padding: "5px",
+            borderTop:"2px solid #104e8b",
+            borderBottom:"2px solid #104e8b",
           }}
         >
+          {localStorage.onlinejudge_info ? (
+            <Button color="inherit" onClick={() => Router.push("/question")}>
+             Questions
+            </Button>
+          ) : (
+              <div></div>
+            )}
           {localStorage.onlinejudge_info ? (
             <Button color="inherit" onClick={() => Router.push("/submissions")}>
               All Submissons
@@ -133,39 +143,59 @@ class questionlist extends React.Component {
               <div></div>
             )}
         </div>
+        <div style={{ maxWidth: "1000px", margin: "10px auto" }}>
+        <Grid container spacing={0}>
+        <Grid item xs={12} md={6}>
+          <p style={{width:"100%", height:"100%", display:"flex", fontSize:"30px", color:"#104e8b", fontWeight:"bold", justifyContent:"center", alignItems:"center", padding:"0"}}>
+          {/* {localStorage.contest_name} */}
+          Contest Name
+          </p>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Timer time={this.state.timestamp} message={this.state.message} />
+          </Grid>
+          </Grid>
+        </div>
         <TableContainer
           component={Paper}
           style={{
             maxWidth: "1000px",
-            margin: "0px auto",
-            marginBottom: "0px",
+            margin: "20px auto",
+            marginBottom: "100px",
+
           }}
         >
           <Table
             //className={classes.table}
             size="small"
             aria-label="simple table"
-            style={{ maxWidth: "1000px", margin: "0 auto" }}
+            style={{ maxWidth: "1000px", margin: "0px auto",border:"2px solid #104e8b", borderRadius:"10px"}}
           >
-            <TableHead>
-              <TableRow style={{ backgroundColor: "#bbaaff" }}>
-                <TableCell>Question Code</TableCell>
-                <TableCell align="left">Question</TableCell>
-                <TableCell align="right">Score</TableCell>
+            <TableHead style={{paddingBottom:"20px"}}>
+              <TableRow style={{ backgroundColor: "#104e8b", color:"#fff",paddingBottom:"20px" }}>
+                <TableCell style={{color:"#fff", padding:"20px"}}>Question Code</TableCell>
+                <TableCell align="left" style={{color:"#fff", marginBottom:"20px"}}>Question</TableCell>
+                <TableCell align="right" style={{color:"#fff", marginBottom:"20px"}}>Score</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
+              
+              
               {this.state.list.length>0
                 ? (this.state.list.map((item, i) => (
-                  <TableRow key={i}>
+                  <>
+                  
+                  
+                  <TableRow key={i} style={{borderTop:"2px solid #104e8b", borderBottom:"2px solid #104e8b", borderRadius:"10px", width:"100%"}}>
+                    
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ textDecoration: "None", color: "#512daa" }}
+                      style={{ textDecoration: "None", color: "#104e8b", padding:"20px", margin:"10px" }}
                     >
                       <a
                         href={`/question/description?id=${item.question_code}`}
-                        style={{ textDecoration: "None", color: "#512daa" }}
+                        style={{ textDecoration: "None", color: "#104e8b" }}
                       >
                         {item.question_code}
                       </a>
@@ -173,11 +203,11 @@ class questionlist extends React.Component {
 
                     <TableCell
                       align="left"
-                      style={{ textDecoration: "None" }}
+                      style={{ textDecoration: "None",  borderRadius:"10px"}}
                     >
                       <a
                         href={`/question/description?id=${item.question_code}`}
-                        style={{ textDecoration: "None", color: "#512daa" }}
+                        style={{ textDecoration: "None", color: "#104e8b" }}
                       >
                         {item.question_name}
                       </a>
@@ -185,19 +215,21 @@ class questionlist extends React.Component {
 
                     <TableCell
                       align="right"
-                      style={{ textDecoration: "None", color: "#441199" }}
+                      style={{ textDecoration: "None", color: "#104e8b" }}
                     >
                       {item.question_score}
                     </TableCell>
+                    
                   </TableRow>
+
+                  
+                  </>
                 ))
                 ): (null)}
             </TableBody>
           </Table>
         </TableContainer>
-        <div style={{ maxWidth: "1000px", margin: "0px auto" }}>
-          <Timer time={this.state.timestamp} message={this.state.message} />
-        </div>
+        
       </Layout>
     );
   }

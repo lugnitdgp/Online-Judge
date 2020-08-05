@@ -15,13 +15,20 @@ export default function Timer(props) {
                 margin: "0 auto",
                 padding: "0",
                 fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
+                color: "#104e8b",
                 fontOpticalSizing: "auto",
               }}
             >
               <h4>
-                {props.message}{days+hours+minutes+seconds>0?(<div>{zeroPad(days)}:{zeroPad(hours)}:
-                {zeroPad(minutes)}:{zeroPad(seconds)}</div>):(<p> </p>)}
+                {props.message}
+                {days + hours + minutes + seconds > 0 ? (
+                  <div>
+                    {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:
+                    {zeroPad(seconds)}
+                  </div>
+                ) : (
+                  <p> </p>
+                )}
               </h4>
             </div>
           </CardContent>

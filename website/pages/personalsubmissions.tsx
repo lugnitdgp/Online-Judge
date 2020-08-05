@@ -142,11 +142,20 @@ class submissions extends React.Component<IProps, {}> {
           filter: false,
           sort: false,
           setCellHeaderProps: () => ({
-            style: { textAlign: "left", textDecoration: "bold" },
+            style: {
+              textAlign: "left",
+              textDecoration: "bold",
+              color: "#104e8b",
+            },
           }),
 
           setCellProps: () => ({
-            style: { fontWeight: "bolder", fontSize: 14, textAlign: "left" },
+            style: {
+              fontWeight: "bolder",
+              fontSize: 14,
+              textAlign: "left",
+              color: "#104e8b",
+            },
           }),
         },
       },
@@ -157,11 +166,15 @@ class submissions extends React.Component<IProps, {}> {
           filter: false,
           sort: false,
           setCellHeaderProps: () => ({
-            style: { textAlign: "center", fontWeight: "bolder" },
+            style: {
+              textAlign: "center",
+              fontWeight: "bolder",
+              color: "#104e8b",
+            },
           }),
 
           setCellProps: () => ({
-            style: { fontSize: 15, textAlign: "center" },
+            style: { fontSize: 15, textAlign: "center", color: "#104e8b" },
           }),
         },
       },
@@ -173,11 +186,11 @@ class submissions extends React.Component<IProps, {}> {
           filter: true,
           sort: false,
           setCellHeaderProps: () => ({
-            style: { textAlign: "center" },
+            style: { textAlign: "center", color: "#104e8b" },
           }),
 
           setCellProps: () => ({
-            style: { fontSize: 15, textAlign: "center" },
+            style: { fontSize: 15, textAlign: "center", color: "#104e8b" },
           }),
         },
       },
@@ -188,11 +201,20 @@ class submissions extends React.Component<IProps, {}> {
           filter: false,
           sort: false,
           setCellHeaderProps: () => ({
-            style: { textAlign: "center", textDecoration: "bold" },
+            style: {
+              textAlign: "center",
+              textDecoration: "bold",
+              color: "#104e8b",
+            },
           }),
 
           setCellProps: () => ({
-            style: { fontWeight: "bolder", fontSize: 15, textAlign: "center" },
+            style: {
+              fontWeight: "bolder",
+              fontSize: 15,
+              textAlign: "center",
+              color: "#104e8b",
+            },
           }),
         },
       },
@@ -203,11 +225,20 @@ class submissions extends React.Component<IProps, {}> {
           filter: false,
           sort: false,
           setCellHeaderProps: () => ({
-            style: { textAlign: "center", textDecoration: "bold" },
+            style: {
+              textAlign: "center",
+              textDecoration: "bold",
+              color: "#104e8b",
+            },
           }),
 
           setCellProps: () => ({
-            style: { fontWeight: "bolder", fontSize: 15, textAlign: "center" },
+            style: {
+              fontWeight: "bolder",
+              fontSize: 15,
+              textAlign: "center",
+              color: "#104e8b",
+            },
           }),
         },
       },
@@ -219,7 +250,11 @@ class submissions extends React.Component<IProps, {}> {
           sort: false,
           display: true,
           setCellHeaderProps: () => ({
-            style: { textAlign: "center", textDecoration: "bold" },
+            style: {
+              textAlign: "center",
+              textDecoration: "bold",
+              color: "#104e8b",
+            },
           }),
 
           customBodyRender: (value) => {
@@ -228,6 +263,7 @@ class submissions extends React.Component<IProps, {}> {
                 onClick={() => {
                   this.handleOpenModal(value);
                 }}
+                style={{ color: "#104e8b" }}
               >
                 {" "}
                 View Your Code
@@ -260,6 +296,7 @@ class submissions extends React.Component<IProps, {}> {
             width: "50%",
             marginTop: "100px !important",
             border: "none !important",
+            zIndex: 9999,
           }}
           border="none"
           margin="0"
@@ -323,9 +360,22 @@ class submissions extends React.Component<IProps, {}> {
 
         <div
           className="contain"
-          style={{ margin: "0 auto", maxWidth: "1000px", width: "100%" }}
+          style={{
+            maxWidth: "1000px",
+            width: "100%",
+            color: "#104e8b",
+            position: "relative",
+            marginBottom: "100px",
+          }}
         >
-          <Paper elevation={0} style={{ backgroundColor: "#eeeeff" }}>
+          <Paper
+            elevation={0}
+            style={{
+              backgroundColor: "#eeeeff",
+              position: "relative",
+              color: "#104e8b",
+            }}
+          >
             {" "}
             <MUIDataTable
               title={"Your Submissions"}
@@ -333,6 +383,7 @@ class submissions extends React.Component<IProps, {}> {
               columns={columns}
               options={options}
               elevation={0}
+              color={"#104e8b"}
             />
           </Paper>
         </div>

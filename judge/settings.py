@@ -18,7 +18,7 @@ from rest_framework.settings import api_settings
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # TEST_CASE_DIR = os.path.join(BASE_DIR, "testcases")
-ENGINE_PATH = os.path.join(os.path.join(BASE_DIR, "engine"), "safeexec")
+ENGINE_PATH = os.path.join(BASE_DIR, "safeexec", "safeexec")
 OUTPATH_DIR = os.path.join(BASE_DIR, "engine")
 
 # Quick-start development settings - unsuitable for production
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
+    'django.coos.path.join(os.path.join(BASE_DIR, "engine"), "safeexec")ntrib.messages',
     'django.contrib.staticfiles',
     'interface',
     'rest_framework',

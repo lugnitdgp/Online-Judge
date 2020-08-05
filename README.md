@@ -12,7 +12,7 @@ Port of the Online Judge in Python
 
 ## Working
 
-Initially the user chooses a language in the code editor and starts to write the answer based on the coding question. When the user submits the answer, the answer passes to the server. In the server a task id is being created in the postgres sql and the job is being sent to the rabbit mq queue. Then celery picks up the job and executes it in a sandbox environment which is developed using C. This helps to increase security and prevents malicius code injection attacks on the platform. When the job finnishes execution the result is sent to the frontend using long polling. In this way the system verifies the users code, evaluate it and generates it ranking based on scores from other peers.
+Initially the user chooses a language in the code editor and starts to write the answer based on the coding question. When the user submits the answer, the answer passes to the server. In the server a task id is being created in the PostgreSQL and the job is being sent to the Redis queue. Then celery picks up the job and executes it in a sandbox environment which is developed using C. This helps to increase security and prevents malicious code injection attacks on the platform. When the job finnishes execution the result is sent to the frontend using long polling. In this way the system verifies the users code, evaluate it and generates it ranking based on scores from other peers.
 
 ## Documentation to help with Celery
 https://docs.celeryproject.org/en/stable/getting-started/next-steps.html#next-steps
@@ -21,6 +21,22 @@ https://docs.celeryproject.org/en/stable/getting-started/next-steps.html#next-st
 
 https://documenter.getpostman.com/view/7834053/Szmh1vuz?version=latest
 
+## Safeexec Submodule
+
+The sandbox environment has been submoduled to the original repo so the changes immediately reflect back here.
+To work with submodules:
+
+```
+1. git submodule init
+2. git submodule update
+
+```
+From next time onwards, we need to check if the submodules have been updated, to do that:
+
+```
+git pull --recurse-submodules
+
+```
 
 ## Development Environment Config
 This project uses PEP8 code style, please make sure to follow. Yapf is our preffered formatting tool.

@@ -50,7 +50,7 @@ jobs:
         privatekey: ${{ secrets.SSHKEY }}
         command: |
                 cd OJ/Online-Judge/
-                git pull
+                git pull --recurse-submodules
                 source ../env/bin/activate
                 pip install -r requirements.txt
                 python manage.py makemigrations

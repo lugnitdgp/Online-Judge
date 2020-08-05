@@ -13,7 +13,16 @@ from judge.settings import OUTPATH_DIR, ENGINE_PATH
 
 
 def db_store(question, user, result, ac, wa, job_id, contest, code, lang):
-    j = Job(question=question, coder=user, code=code, status=json.dumps(result), AC_no=ac, WA_no=wa, job_id=job_id, contest=contest, timestamp=t.now(), lang=lang)
+    j = Job(question=question,
+            coder=user,
+            code=code,
+            status=json.dumps(result),
+            AC_no=ac,
+            WA_no=wa,
+            job_id=job_id,
+            contest=contest,
+            timestamp=t.now(),
+            lang=lang)
     j.save()
 
 
@@ -23,12 +32,12 @@ def execute(question, coder, code, lang, contest):
     ext = language[lang]
     filename = execute.request.id.__str__() + "." + ext
     try:
-        with open(os.path.join(os.path.dirname(ENGINE_PATH), filename), "w+") as file:
+        with open(os.path.join(OUTPATH_DIR, filename), "w+") as file:
             file.write(code)
             file.close()
     except:
         print("Exception")
-    f = os.path.join(os.path.dirname(ENGINE_PATH), filename)
+    f = os.path.join(OUTPATH_DIR, filename)
     question = Question.objects.get(question_name=question['question_name'])
     user = Coder.objects.get(name=coder['name'])
     contest = Contest.objects.get(contest_name=contest['contest_name'])

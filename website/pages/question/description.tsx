@@ -24,8 +24,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../components/Timer";
-import Router from "next/router";
-
+import SecondaryNav from "../../components/SecondaryNav";
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -292,54 +291,7 @@ class QuesDetail extends React.Component<IProps, IState> {
     const { classes } = this.props;
     return (
       <Layout>
-        <div
-          style={{
-            maxWidth: "1000px",
-            margin: "30px auto",
-            borderRadius: "5px",
-            backgroundColor: "#fff",
-            height: "50px",
-            color: "#104e8b",
-            textAlign: "center",
-            fontSize: "19px",
-            padding: "5px",
-            borderTop: "2px solid #104e8b",
-            borderBottom: "2px solid #104e8b",
-          }}
-        >
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/question")}>
-              Questions
-            </Button>
-          ) : (
-            <div></div>
-          )}
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/submissions")}>
-              All Submissons
-            </Button>
-          ) : (
-            <div></div>
-          )}
-
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
-              Leaderboard
-            </Button>
-          ) : (
-            <div></div>
-          )}
-          {localStorage.onlinejudge_info ? (
-            <Button
-              color="inherit"
-              onClick={() => Router.push("/personalsubmissions")}
-            >
-              My Submissions
-            </Button>
-          ) : (
-            <div></div>
-          )}
-        </div>
+        <SecondaryNav />
         <div style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}>
           <Timer
             time={this.state.timestamp}

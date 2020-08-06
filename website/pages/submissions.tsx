@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
 import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
+import SecondaryNav from "../components/SecondaryNav";
 
 const customStyles = () => ({
   Successful: {
@@ -249,6 +250,7 @@ class submissions extends React.Component<IProps, {}> {
     const data = this.state.list;
     return (
       <Layout>
+        <SecondaryNav />
         <div
           className="contain"
           style={{
@@ -256,7 +258,8 @@ class submissions extends React.Component<IProps, {}> {
             width: "100%",
             fontSize: "16px",
             position: "relative",
-            marginBottom: "100px",
+            marginBottom: "50px",
+            marginTop: "10px",
           }}
         >
           <MUIDataTable

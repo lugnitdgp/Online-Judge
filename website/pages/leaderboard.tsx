@@ -12,6 +12,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import SecondaryNav from "../components/SecondaryNav";
 interface IProps {
   classes: any;
 }
@@ -136,6 +137,7 @@ class Leaderboard extends React.Component<IProps, {}> {
     return (
       <div>
         <Layout>
+          <SecondaryNav />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"

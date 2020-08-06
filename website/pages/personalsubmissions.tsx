@@ -14,6 +14,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import SecondaryNav from "../components/SecondaryNav";
 
 const customStyles = () => ({
   Successful: {
@@ -291,6 +292,7 @@ class submissions extends React.Component<IProps, {}> {
 
     return (
       <Layout>
+        <SecondaryNav />
         <ReactModal
           style={{
             width: "50%",

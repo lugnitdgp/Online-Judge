@@ -8,7 +8,7 @@ export default function Timer(props) {
     return (
       <span>
         <Card style={{ padding: "0px", margin: "0 auto" }} elevation={0}>
-          <CardContent>
+          <CardContent style={{ padding: "0px", margin: "0 auto" }}>
             <div
               style={{
                 textAlign: "center",
@@ -19,8 +19,8 @@ export default function Timer(props) {
                 fontOpticalSizing: "auto",
               }}
             >
-              <h4>
-                {props.message}
+              <h4 style={{ margin: "0 auto", padding: "0" }}>
+                {/* {props.message}{" "}
                 {days + hours + minutes + seconds > 0 ? (
                   <div>
                     {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:
@@ -28,7 +28,9 @@ export default function Timer(props) {
                   </div>
                 ) : (
                   <p> </p>
-                )}
+                )} */}
+                {props.message} {zeroPad(days)}:{zeroPad(hours)}:
+                {zeroPad(minutes)}:{zeroPad(seconds)}
               </h4>
             </div>
           </CardContent>

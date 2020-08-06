@@ -3,25 +3,23 @@ import red from "@material-ui/core/colors/red";
 
 // Create a theme instance.
 const theme = createMuiTheme({
-  typography: { 
-    fontFamily: ['Quicksand' ].join(','),
-    
-   },
+  typography: {
+    fontFamily: ["Quicksand"].join(","),
+  },
   palette: {
     primary: {
-      main: "#4455dd",
+      main: "#104E8B",
     },
     secondary: {
-      main: "#3344ff",
+      main: "#104E8B",
     },
     error: {
       main: red.A400,
     },
     background: {
-      default: "#eeeeff",
+      default: "#FFF",
     },
-  }
-
+  },
 });
 
 export default theme;

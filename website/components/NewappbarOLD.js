@@ -15,9 +15,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
 import Router from "next/router";
 
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 
 const styleSheet = {
   list: {
@@ -40,35 +37,14 @@ const styleSheet = {
     flexGrow: 1,
     cursor: "pointer",
   },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: "#fff",
-    border: '2px solid #104e8b',
-    borderTop:"10px solid #104e8b",
-    borderBottom:"10px solid #104e8b",
-    outline:"none",
-    padding: "30px",
-    borderRadius:"20px",
-    minWidth:"50%",
-    minHeight:"50%",
-    color:"#104e8b",
-    
-  },
 };
 
 class Newappbar extends Component {
   constructor(props) {
     super(props);
-    this.state = { drawerActivate: false, drawer: false, open: false };
+    this.state = { drawerActivate: false, drawer: false };
     this.createDrawer = this.createDrawer.bind(this);
     this.destroyDrawer = this.destroyDrawer.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleOpen = this.handleOpen.bind(this);
-    this.modal = this.modal.bind(this);
   }
 
   componentDidMount() {
@@ -85,60 +61,11 @@ class Newappbar extends Component {
     });
   }
 
-  modal(){
-    const { classes } = this.props;
-    return(
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={this.state.open}
-        onClose={this.handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={this.state.open}>
-          <div className={classes.paper}>
-            <h2>Announcement/Rules</h2>
-            <ul>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-              <li>Sample announcement or rule here. Sample announcement or rule here.</li>
-            </ul>
-          </div>
-        </Fade>
-      </Modal>
-    );
-  }
-
-  handleOpen = () => {
-    this.setState({open: true});
-    
-  };
-
-  handleClose = () => {
-    this.setState({open: false});
-    
-  };
-
- 
   //Small Screens
   createDrawer() {
     const { classes } = this.props;
     return (
       <div>
-        {this.modal()}
         <AppBar position="static">
           <Toolbar>
             <Grid
@@ -162,18 +89,13 @@ class Newappbar extends Component {
                 style={{ textAlign: "Right" }}
               >
                 Online Judge &nbsp;&nbsp;
-                <img
-                  src="/oj.png"
-                  alt="."
-                  style={{ width: "30px", borderRadius: "5px" }}
-                />
+                <img src="/oj.png" alt="." style={{ width: "30px", borderRadius: "5px" }} />
               </Typography>
             </Grid>
           </Toolbar>
         </AppBar>
 
         <SwipeableDrawer
-        style={{zIndex:9999,}}
           open={this.state.drawer}
           onClose={() => {
             this.setState({ drawer: false });
@@ -193,38 +115,15 @@ class Newappbar extends Component {
             }}
           >
             <List className={this.props.classes.list}>
-            {localStorage.onlinejudge_info ? (
-              <ListItem key={3} button >
 
+
+              <ListItem key={3} button divider>
                 <Button color="inherit" onClick={() => Router.push("/")}>
                   Contests
                 </Button>
               </ListItem>
-            ) : (
-              <div></div>
-            )}
-            {localStorage.onlinejudge_info ? (
-              <ListItem key={2} button >
-
-                <Button color="inherit" onClick={this.handleOpen}>
-                  Announcements
-                </Button>
-              </ListItem>
-            ) : (
-              <div></div>
-            )}
-            {localStorage.onlinejudge_info ? (
-              <ListItem key={1} button >
-
-                <Button color="inherit" onClick={this.handleOpen}>
-                  Rules
-                </Button>
-              </ListItem>
-            ) : (
-              <div></div>
-            )}
               {localStorage.onlinejudge_info ? (
-                <ListItem key={5} button>
+                <ListItem key={5} button divider>
                   <Button
                     color="inherit"
                     onClick={() => {
@@ -246,22 +145,26 @@ class Newappbar extends Component {
                   </Button>
                 </ListItem>
               ) : (
-                <div></div>
-              )}
-              <ListItem key={4} button>
+                  <div></div>
+                )}
+              <ListItem key={4} button divider>
                 {localStorage.onlinejudge_info ? (
                   <React.Fragment>
                     <Avatar
                       src={JSON.parse(localStorage.onlinejudge_info).image_link}
                     />
                     &nbsp;
-                    
+                    {/* {
+                      JSON.parse(localStorage.onlinejudge_info).email.split(
+                        "@"
+                      )[0]
+                    } */}
                   </React.Fragment>
                 ) : (
-                  <Button color="inherit" onClick={() => Router.push("/login")}>
-                    Login
-                  </Button>
-                )}
+                    <Button color="inherit" onClick={() => Router.push("/login")}>
+                      Login
+                    </Button>
+                  )}
               </ListItem>
             </List>
           </div>
@@ -274,47 +177,22 @@ class Newappbar extends Component {
   destroyDrawer() {
     const { classes } = this.props;
     return (
-      <div>
-      {this.modal()}
-    
-      <AppBar position="static" elevation={0}>
-        
-        <Toolbar disableElevation>
+      <AppBar position="static">
+        <Toolbar>
+
           <Typography
             variant="h6"
             className={classes.title}
             onClick={() => Router.push("/")}
           >
-            <img
-              src="/oj.png"
-              alt="."
-              style={{ width: "45px", borderRadius: "5px" }}
-            />
+            <img src="/oj.png" alt="." style={{ width: "45px", borderRadius: "5px" }} />
             &nbsp;&nbsp;&nbsp;Online Judge
           </Typography>
 
-          
-          {localStorage.onlinejudge_info ? (
-          <Button color="inherit" onClick={this.handleOpen}>
-            Announcements
-          </Button>
-          ) : (
-            <div></div>
-          )}
-          {localStorage.onlinejudge_info ? (
-          <Button color="inherit" onClick={this.handleOpen}>
-            Rules
-          </Button>
-          ) : (
-            <div></div>
-          )}
-          {localStorage.onlinejudge_info ? (
+          {/* <Button color="inherit" onClick={() => Router.push("/announcement")}>Announcement</Button> */}
           <Button color="inherit" onClick={() => Router.push("/")}>
             Contests
           </Button>
-          ) : (
-            <div></div>
-          )}
           {localStorage.onlinejudge_info ? (
             <Button
               color="inherit"
@@ -333,8 +211,8 @@ class Newappbar extends Component {
               Logout
             </Button>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           {localStorage.onlinejudge_info ? (
             <React.Fragment>
               <Avatar
@@ -344,19 +222,22 @@ class Newappbar extends Component {
               {/* {JSON.parse(localStorage.onlinejudge_info).email.split("@")[0]} */}
             </React.Fragment>
           ) : (
-            <Button color="inherit" onClick={() => Router.push("/login")}>
-              Login
-            </Button>
-          )}
+              <Button color="inherit" onClick={() => Router.push("/login")}>
+                Login
+              </Button>
+            )}
         </Toolbar>
       </AppBar>
-      </div>
     );
   }
 
   render() {
     return (
       <div>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
         {this.state.drawerActivate ? this.createDrawer() : this.destroyDrawer()}
       </div>
     );

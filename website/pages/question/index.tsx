@@ -1,17 +1,12 @@
 import React from "react";
 import Layout from "components/Layout";
-import {
-  TableContainer,
-  TableHead,
-  TableCell,
-  Paper,
-  Button,
-} from "@material-ui/core";
+import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import Timer from "../../components/Timer";
-import Router from "next/router";
+import Grid from "@material-ui/core/Grid";
+import SecondaryNav from "../../components/SecondaryNav";
 
 class questionlist extends React.Component {
   state = {
@@ -23,34 +18,31 @@ class questionlist extends React.Component {
   componentDidMount() {
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
     if (!localStorage.source) {
-      var contestdeet = [{
-        name: localStorage.code
-      }]
-      var arr = contestdeet
-      console.log(arr)
+      var contestdeet = [
+        {
+          name: localStorage.code,
+        },
+      ];
+      var arr = contestdeet;
+      console.log(arr);
 
-      localStorage.setItem('source', JSON.stringify(arr))
-    }
-    else {
-      console.log(JSON.parse(localStorage.source))
-      var source = JSON.parse(localStorage.source)
+      localStorage.setItem("source", JSON.stringify(arr));
+    } else {
+      console.log(JSON.parse(localStorage.source));
+      var source = JSON.parse(localStorage.source);
       var flag = false;
       source.map((el) => {
-        console.log(el)
-        if (el.name === localStorage.code)
-          flag = true;
-      })
+        console.log(el);
+        if (el.name === localStorage.code) flag = true;
+      });
       if (flag === false) {
         var newdeet = {
-          name: localStorage.code
-        }
-        source.push(newdeet)
-        localStorage.setItem('source', JSON.stringify(source))
+          name: localStorage.code,
+        };
+        source.push(newdeet);
+        localStorage.setItem("source", JSON.stringify(source));
       }
-
-
-
-    };
+    }
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
       {
@@ -64,9 +56,9 @@ class questionlist extends React.Component {
       .then((res) => {
         this.setState({ list: res });
         var today = Date.now();
-        var start = (localStorage.start) * 1000;
-        var end = (localStorage.end) * 1000;
-        console.log(start+"   "+today+"  "+end)
+        var start = localStorage.start * 1000;
+        var end = localStorage.end * 1000;
+        console.log(start + "   " + today + "  " + end);
         if (start < today && end > today) {
           this.setState({
             timestamp: end,
@@ -93,111 +85,135 @@ class questionlist extends React.Component {
   render() {
     return (
       <Layout>
-
-        <div
-          style={{
-            maxWidth: "1000px",
-            margin: "30px auto",
-            borderRadius: "5px",
-            backgroundColor: "#3344ff",
-            height: "50px",
-            color: "white",
-            textAlign: "center",
-            fontSize: "19px",
-            padding: "5px",
-          }}
-        >
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/submissions")}>
-              All Submissons
-            </Button>
-          ) : (
-              <div></div>
-            )}
-
-          {localStorage.onlinejudge_info ? (
-            <Button color="inherit" onClick={() => Router.push("/leaderboard")}>
-              Leaderboard
-            </Button>
-          ) : (
-              <div></div>
-            )}
-          {localStorage.onlinejudge_info ? (
-            <Button
-              color="inherit"
-              onClick={() => Router.push("/personalsubmissions")}
-            >
-              My Submissions
-            </Button>
-          ) : (
-              <div></div>
-            )}
+        <SecondaryNav />
+        <div style={{ maxWidth: "1000px", margin: "10px auto" }}>
+          <Grid container spacing={0}>
+            <Grid item xs={12} md={6}>
+              <p
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  fontSize: "30px",
+                  color: "#104e8b",
+                  fontWeight: "bold",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "0",
+                }}
+              >
+                {/* {localStorage.contest_name} */}
+                Contest Name
+              </p>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Timer time={this.state.timestamp} message={this.state.message} />
+            </Grid>
+          </Grid>
         </div>
         <TableContainer
           component={Paper}
           style={{
             maxWidth: "1000px",
-            margin: "0px auto",
-            marginBottom: "0px",
+            margin: "20px auto",
+            marginBottom: "100px",
           }}
         >
           <Table
             //className={classes.table}
             size="small"
             aria-label="simple table"
-            style={{ maxWidth: "1000px", margin: "0 auto" }}
+            style={{
+              maxWidth: "1000px",
+              margin: "0px auto",
+              border: "2px solid #104e8b",
+              borderRadius: "10px",
+            }}
           >
-            <TableHead>
-              <TableRow style={{ backgroundColor: "#bbaaff" }}>
-                <TableCell>Question Code</TableCell>
-                <TableCell align="left">Question</TableCell>
-                <TableCell align="right">Score</TableCell>
+            <TableHead style={{ paddingBottom: "20px" }}>
+              <TableRow
+                style={{
+                  backgroundColor: "#104e8b",
+                  color: "#fff",
+                  paddingBottom: "20px",
+                }}
+              >
+                <TableCell style={{ color: "#fff", padding: "20px" }}>
+                  Question Code
+                </TableCell>
+                <TableCell
+                  align="left"
+                  style={{ color: "#fff", marginBottom: "20px" }}
+                >
+                  Question
+                </TableCell>
+                <TableCell
+                  align="right"
+                  style={{ color: "#fff", marginBottom: "20px" }}
+                >
+                  Score
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.list.length>0
-                ? (this.state.list.map((item, i) => (
-                  <TableRow key={i}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ textDecoration: "None", color: "#512daa" }}
-                    >
-                      <a
-                        href={`/question/description?id=${item.question_code}`}
-                        style={{ textDecoration: "None", color: "#512daa" }}
+              {this.state.list.length > 0
+                ? this.state.list.map((item, i) => (
+                    <>
+                      <TableRow
+                        key={i}
+                        style={{
+                          borderTop: "2px solid #104e8b",
+                          borderBottom: "2px solid #104e8b",
+                          borderRadius: "10px",
+                          width: "100%",
+                        }}
                       >
-                        {item.question_code}
-                      </a>
-                    </TableCell>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          style={{
+                            textDecoration: "None",
+                            color: "#104e8b",
+                            padding: "20px",
+                            margin: "10px",
+                          }}
+                        >
+                          <a
+                            href={`/question/description?id=${item.question_code}`}
+                            style={{ textDecoration: "None", color: "#104e8b" }}
+                          >
+                            {item.question_code}
+                          </a>
+                        </TableCell>
 
-                    <TableCell
-                      align="left"
-                      style={{ textDecoration: "None" }}
-                    >
-                      <a
-                        href={`/question/description?id=${item.question_code}`}
-                        style={{ textDecoration: "None", color: "#512daa" }}
-                      >
-                        {item.question_name}
-                      </a>
-                    </TableCell>
+                        <TableCell
+                          align="left"
+                          style={{
+                            textDecoration: "None",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          <a
+                            href={`/question/description?id=${item.question_code}`}
+                            style={{ textDecoration: "None", color: "#104e8b" }}
+                          >
+                            {item.question_name}
+                          </a>
+                        </TableCell>
 
-                    <TableCell
-                      align="right"
-                      style={{ textDecoration: "None", color: "#441199" }}
-                    >
-                      {item.question_score}
-                    </TableCell>
-                  </TableRow>
-                ))
-                ): (null)}
+                        <TableCell
+                          align="right"
+                          style={{ textDecoration: "None", color: "#104e8b" }}
+                        >
+                          {item.question_score}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ))
+                : null}
             </TableBody>
           </Table>
         </TableContainer>
-        <div style={{ maxWidth: "1000px", margin: "0px auto" }}>
-          <Timer time={this.state.timestamp} message={this.state.message} />
-        </div>
       </Layout>
     );
   }

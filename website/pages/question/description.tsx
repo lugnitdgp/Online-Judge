@@ -24,7 +24,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../components/Timer";
-
+import SecondaryNav from "../../components/SecondaryNav";
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -42,7 +42,11 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: theme.spacing(3),
     marginTop: theme.spacing(5),
     minHeight: "80%",
-    maxWidth: "1400px",
+    maxWidth: "1300px",
+    border: "2px solid #104e8b",
+    borderTop: "10px solid #104e8b",
+    borderBottom: "10px solid #104e8b",
+    borderRadius: "20px",
   },
   paper2: {
     flexDirection: "column",
@@ -50,7 +54,12 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: "auto",
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(8),
-    maxWidth: "1400px",
+    maxWidth: "1300px",
+    overflow: "hidden",
+    border: "2px solid #104e8b",
+    borderTop: "10px solid #104e8b",
+    borderBottom: "10px solid #104e8b",
+    borderRadius: "20px",
   },
   details: {
     paddingTop: theme.spacing(2),
@@ -62,6 +71,7 @@ const styles = createStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     marginTop: theme.spacing(1.8),
     minWidth: 120,
+    overflow: "hidden",
   },
   button: {
     marginTop: theme.spacing(3),
@@ -149,41 +159,39 @@ class QuesDetail extends React.Component<IProps, IState> {
       .catch((error) => console.log(error));
   };
 
-  source =[]
+  source = [];
 
-  autosavecode = (code:any, lang:any)=>{
+  autosavecode = (code: any, lang: any) => {
     // var source2=[]
-    var source = this.source
-    var source2=[]
-  source.map((contest)=>{
-    if (contest.name === localStorage.code){
-      var sourcecode = {
-        lang: lang,
-        code: encodeURI(code),
-        qid: getParameterByName("id") 
-      }
-      if(!contest.questions){
-        contest.questions=[sourcecode]
-      }
-      else{
-        var flag=false
-        contest.questions.map((ques)=>{
-          if(ques.qid === sourcecode.qid){
-              ques.code= sourcecode.code
-              ques.lang =sourcecode.lang              
-              flag=true
+    var source = this.source;
+    var source2 = [];
+    source.map((contest) => {
+      if (contest.name === localStorage.code) {
+        var sourcecode = {
+          lang: lang,
+          code: encodeURI(code),
+          qid: getParameterByName("id"),
+        };
+        if (!contest.questions) {
+          contest.questions = [sourcecode];
+        } else {
+          var flag = false;
+          contest.questions.map((ques) => {
+            if (ques.qid === sourcecode.qid) {
+              ques.code = sourcecode.code;
+              ques.lang = sourcecode.lang;
+              flag = true;
             }
-        })
-        if(flag === false){
-        contest.questions.push(sourcecode)}
-        
+          });
+          if (flag === false) {
+            contest.questions.push(sourcecode);
+          }
+        }
       }
-
-      
-  }source2.push(contest)
-})
-this.source = source2
-  localStorage.setItem('source', JSON.stringify(this.source))
+      source2.push(contest);
+    });
+    this.source = source2;
+    localStorage.setItem("source", JSON.stringify(this.source));
   };
 
   statuscode = () => {
@@ -217,24 +225,22 @@ this.source = source2
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
     const cookie = new Cookie();
     cookie.parse(document.cookie || "");
-    if(!localStorage.source)
-    window.location.href="/question"
-    else{
-        this.source = JSON.parse(localStorage.source)
-        var source = JSON.parse(localStorage.source)
-        source.map((contest)=>{
-          if(contest.name===localStorage.code){
-            if(contest.questions)
-              contest.questions.map((ques)=>{
-                if(ques.qid === getParameterByName("id"))
-                    this.setState({
-                      value: decodeURI(ques.code),
-                      lang: ques.lang
-                    })
-              })
-          }
-        })
-
+    if (!localStorage.source) window.location.href = "/question";
+    else {
+      this.source = JSON.parse(localStorage.source);
+      var source = JSON.parse(localStorage.source);
+      source.map((contest) => {
+        if (contest.name === localStorage.code) {
+          if (contest.questions)
+            contest.questions.map((ques) => {
+              if (ques.qid === getParameterByName("id"))
+                this.setState({
+                  value: decodeURI(ques.code),
+                  lang: ques.lang,
+                });
+            });
+        }
+      });
     }
 
     try {
@@ -256,8 +262,8 @@ this.source = source2
       });
 
       var today = Date.now();
-      var start = (localStorage.start) * 1000;
-      var end = (localStorage.end) * 1000;
+      var start = localStorage.start * 1000;
+      var end = localStorage.end * 1000;
 
       if (start < today && end > today) {
         this.setState({
@@ -275,7 +281,6 @@ this.source = source2
           message: "The Contest begins in",
         });
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -286,26 +291,17 @@ this.source = source2
     const { classes } = this.props;
     return (
       <Layout>
-        <div>
-          {/* <ReactModal
-            isOpen={this.state.showModal}
-            contentLabel="Minimal Modal Example"
-          >
-            <div
-              style={{
-                margin: "40px auto",
-                textAlign: "center",
-                height: "0px",
-                backgroundColor: "rgba(0,0,0,0)"
-              }}
-            >
-             
-            </div>
-          </ReactModal> */}
+        <SecondaryNav />
+        <div style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}>
+          <Timer
+            time={this.state.timestamp}
+            message={this.state.message}
+            style={{ fontSize: "12px" }}
+          />
         </div>
         <div style={{ margin: "20px" }}>
           <Paper
-            elevation={3}
+            elevation={0}
             className={classes.paper}
             style={{ margin: "20px auto" }}
           >
@@ -313,7 +309,7 @@ this.source = source2
               <Typography
                 className={classes.title}
                 style={{
-                  color: "#4455dd",
+                  color: "#104e8b",
                   fontSize: "18px",
                   textTransform: "capitalize",
                 }}
@@ -323,16 +319,19 @@ this.source = source2
                 {this.state.data.question_name}
               </Typography>
 
-             <div style={{fontSize:15}} dangerouslySetInnerHTML={{
-                          __html: this.state.data.question_text,
-                        }}/>
+              <div
+                style={{ fontSize: 15 }}
+                dangerouslySetInnerHTML={{
+                  __html: this.state.data.question_text,
+                }}
+              />
               <hr></hr>
               <CopyToClipboard
                 text={this.state.data.input_example}
                 onCopy={this.changeCopyState}
               >
                 <Typography
-                  style={{ fontSize: "18px", color: "#4455dd" }}
+                  style={{ fontSize: "18px", color: "#104e8b" }}
                   gutterBottom
                 >
                   <div>
@@ -375,7 +374,7 @@ this.source = source2
               </CopyToClipboard>
               <hr></hr>
               <Typography
-                style={{ fontSize: "18px", color: "#4455dd" }}
+                style={{ fontSize: "18px", color: "#104e8b" }}
                 gutterBottom
               >
                 OUTPUT EXAMPLE
@@ -407,12 +406,6 @@ this.source = source2
                   CODE
                 </Button>
               </div> */}
-              <div style={{ maxWidth: "700px", margin: "0px auto" }}>
-                <Timer
-                  time={this.state.timestamp}
-                  message={this.state.message}
-                />
-              </div>
             </div>
           </Paper>
 
@@ -458,11 +451,15 @@ this.source = source2
                 value={this.state.value}
                 lang={this.state.lang}
                 theme={this.state.theme}
-                setValue={(d) =>{
-                  this.setState({
-                    value: d,
-                  },()=>{
-                    this.autosavecode(this.state.value, this.state.lang)})              
+                setValue={(d) => {
+                  this.setState(
+                    {
+                      value: d,
+                    },
+                    () => {
+                      this.autosavecode(this.state.value, this.state.lang);
+                    }
+                  );
                 }}
               />
 
@@ -475,7 +472,7 @@ this.source = source2
                   variant="outlined"
                   style={{
                     border: "None",
-                    backgroundColor: "#7788ff",
+                    backgroundColor: "#104e8b",
                     height: "30px",
                     width: "100px",
                     borderRadius: "5px",

@@ -20,32 +20,12 @@ class Leaderboard extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     leaderBoard: [],
+    columns:[]
   };
 
   componentDidMount() {
-    // axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?format=json`).then(data => {
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?contest_id=${localStorage.code}`
-      )
-      .then((data) => {
-        data.data.map((entry) => {
-          entry[`image`] = <Avatar src={entry[`image`]} />;
-        });
-        this.setState({ gotData: true, leaderBoard: data.data });
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error);
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        }
-      });
-  }
 
-  render() {
-    const columns = [
+    var columns = [
       {
         name: "rank",
         label: "RANK",
@@ -99,11 +79,25 @@ class Leaderboard extends React.Component<IProps, {}> {
           }),
         },
       },
+    ];
+
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
       {
-        name: "score",
-        label: "SCORE",
+        method: "GET",
+        headers: {
+          Authorization: `Token ${localStorage.token}`,
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((res) => {console.log(res)
+        res.map((ques)=>{
+          var newCol ={
+            name: `${ques.question_name}`,
+        label: `${ques.question_name}`,
         options: {
-          filter: true,
+          filter: false,
           sort: false,
           setCellHeaderProps: () => ({
             style: {
@@ -116,9 +110,64 @@ class Leaderboard extends React.Component<IProps, {}> {
           setCellProps: () => ({
             style: { fontWeight: "900", textAlign: "center" },
           }),
-        },
-      },
-    ];
+        }}
+
+        columns.push(newCol)
+        })
+          var scoreCol = {
+            name: "score",
+            label: "SCORE",
+            options: {
+              filter: true,
+              sort: false,
+              setCellHeaderProps: () => ({
+                style: {
+                  textAlign: "center",
+                  background: "#000",
+                  color: "#fff",
+                  textDecoration: "bold",
+                },
+              }),
+              setCellProps: () => ({
+                style: { fontWeight: "900", textAlign: "center" },
+              }),
+            },
+          }
+          columns.push(scoreCol)
+          this.setState({columns:columns})
+       
+      }).then(()=>{
+        axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/leaderboard?contest_id=${localStorage.code}`
+        )
+        .then((data) => {
+          console.log(data.data)
+          data.data.map((entry) => {
+            entry[`image`] = <Avatar src={entry[`image`]} />;
+            var answers= entry.answer
+            answers.map((answer)=>{
+              entry[`${answer.ques_name}`] = "- "+answer.wrong
+            })
+  
+          });
+          this.setState({ gotData: true, leaderBoard: data.data });
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error);
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          }
+        })
+      })
+
+
+    
+  }
+
+  render() {
+    const columns = this.state.columns
     const options = {
       download: false,
       selectableRows: "none",
@@ -181,6 +230,7 @@ class Leaderboard extends React.Component<IProps, {}> {
               {/* <MUIDataTable title={'STANDINGS'} data={data} columns={columns} options={options} /> */}
               <Paper>
                 <TableContainer style={{ position: "relative" }}>
+                  {}
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                       <TableRow>

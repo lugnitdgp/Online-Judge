@@ -107,7 +107,39 @@ export default function ContestCard(props) {
               >
                 Enter Contest
               </Button>
-            ) : (
+            ) : (<div>{props.contestInfo.ended?(<div>
+              <Button
+              size="large"
+              color="primary"
+              variant="outlined"
+              style={{ outline: "none", border: "none" }}
+              onClick={() => {
+                if (!localStorage.token) {
+                  Router.push("/login");
+                } else {
+                  localStorage.setItem(
+                    "code",
+                    props.contestInfo.contest_code
+                  );
+                  localStorage.setItem("start", props.contestInfo.start_time);
+                  localStorage.setItem("end", props.contestInfo.end_time);
+                  Router.push("/question");
+                }
+              }}
+            >
+              Enter Contest
+            </Button>
+            <br/>
+            <Button
+            size="large"
+            color="primary"
+            variant="outlined"
+            style={{ outline: "none", border: "none" }}
+            onClick={() => {}
+            }
+          >
+            View Editorial
+          </Button></div>):(
               <Button
                 size="large"
                 color="primary"
@@ -129,7 +161,7 @@ export default function ContestCard(props) {
               >
                 Enter Contest
               </Button>
-            )}
+            )}</div>)}
             <br />
             {props.contestInfo.timestamp ? (
               <Countdown
@@ -137,21 +169,7 @@ export default function ContestCard(props) {
                 intervalDelay={1}
                 renderer={renderer}
               />
-            ) : (
-              <div
-                style={{
-                  textAlign: "center",
-                  margin: "0 auto",
-                  padding: "0",
-                  textTransform: "uppercase",
-                  color: "#104e8b",
-                  fontOpticalSizing: "auto",
-                }}
-              >
-                <br />
-                Already Ended!
-              </div>
-            )}
+            ) : null}
           </Grid>
         </Grid>
       ) : (

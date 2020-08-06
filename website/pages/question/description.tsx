@@ -489,7 +489,7 @@ class QuesDetail extends React.Component<IProps, IState> {
               )}
             </div>
 
-            {this.state.res.length > 1 ? (
+            {this.state.res.length > 0 ? (
               <TableContainer component={Paper}>
                 <Table
                   style={{

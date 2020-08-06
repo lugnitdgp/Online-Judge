@@ -57,13 +57,13 @@ class submissions extends React.Component<IProps, {}> {
                 if (stat == "") {
                   stat = "AC";
                   isFail = false;
-                  time = testcase.status.elapsed_time + " sec";
+                  time = testcase.status.cpu_time + " sec";
                   mem = testcase.status.memory_taken;
                 }
               } else {
                 stat = testcase.status.run_status;
                 isFail = true;
-                time = testcase.status.elapsed_time + " sec";
+                time = testcase.status.cpu_time + " sec";
                 mem = testcase.status.memory_taken;
               }
             }
@@ -188,12 +188,11 @@ class submissions extends React.Component<IProps, {}> {
         label: "TIME",
         options: {
           filter: false,
-          sort: false,
+          sort: true,
           setCellHeaderProps: () => ({
             style: {
               background: "#104e8b",
               color: "#fff",
-              textAlign: "center",
               textDecoration: "bold",
             },
           }),
@@ -202,7 +201,6 @@ class submissions extends React.Component<IProps, {}> {
             style: {
               fontWeight: "bolder",
               fontSize: 14,
-              textAlign: "center",
               color: "#104e8b",
             },
           }),
@@ -213,12 +211,11 @@ class submissions extends React.Component<IProps, {}> {
         label: "MEMORY",
         options: {
           filter: false,
-          sort: false,
+          sort: true,
           setCellHeaderProps: () => ({
             style: {
               background: "#104e8b",
               color: "#fff",
-              textAlign: "center",
               textDecoration: "bold",
             },
           }),
@@ -227,7 +224,6 @@ class submissions extends React.Component<IProps, {}> {
             style: {
               fontWeight: "bolder",
               fontSize: 14,
-              textAlign: "center",
               color: "#104e8b",
             },
           }),

@@ -53,6 +53,7 @@ class IndexPage extends React.Component<IProps, {}> {
             contest["timestamp"] = contest["start_time"] * 1000;
             upcoming.push(contest);
           } else {
+            contest["ended"]=true;
             ended.push(contest);
           }
         });

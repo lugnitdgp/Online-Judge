@@ -19,3 +19,4 @@ interface/migrations/
 accounts/migrations
 media
 contest_images/
+static

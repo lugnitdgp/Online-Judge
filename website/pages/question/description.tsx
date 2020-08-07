@@ -86,7 +86,7 @@ interface IState {
   value: string;
   lang: string;
   theme: string;
-  res: Array<any>;
+  res: any;
   isLoading: boolean;
   showModal: boolean;
   data: any;
@@ -134,6 +134,7 @@ class QuesDetail extends React.Component<IProps, IState> {
   submitcode = (code: any, lang: any) => {
     this.setState({
       isLoading: true,
+      res:[]
     });
     var self = this;
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
@@ -153,8 +154,15 @@ class QuesDetail extends React.Component<IProps, IState> {
         return resp.json();
       })
       .then((res) => {
+        if(res.status === 302){
+          alert(res.message)
+          this.setState({
+            isLoading:false
+          })
+        }
+        else{
         localStorage.taskid = res["task_id"];
-        self.interval = setInterval(() => self.statuscode(), 2000);
+        self.interval = setInterval(() => self.statuscode(), 2000);}
       })
       .catch((error) => console.log(error));
   };
@@ -214,6 +222,7 @@ class QuesDetail extends React.Component<IProps, IState> {
         if (response.status === 302) {
           alert(response.message);
         } else {
+          console.log(response)
           self.setState({ res: response, isLoading: false });
           clearInterval(self.interval);
         }
@@ -373,22 +382,52 @@ class QuesDetail extends React.Component<IProps, IState> {
                 </Typography>
               </CopyToClipboard>
               <hr></hr>
-              <Typography
-                style={{ fontSize: "18px", color: "#104e8b" }}
-                gutterBottom
+              <CopyToClipboard
+                text={this.state.data.output_example}
+                onCopy={this.changeCopyState}
               >
-                OUTPUT EXAMPLE
-              </Typography>
-
-              <Typography variant="subtitle1" gutterBottom>
-                <div
-                  style={{ whiteSpace: "pre-wrap" }}
-                  dangerouslySetInnerHTML={{
-                    __html: this.state.data.output_example,
-                  }}
-                />
-              </Typography>
-              <hr></hr>
+                <Typography
+                  style={{ fontSize: "18px", color: "#104e8b" }}
+                  gutterBottom
+                >
+                  <div>
+                    <div className="row">
+                      <div
+                        className="column"
+                        style={{ marginLeft: 15, verticalAlign: "middle" }}
+                      >
+                        OUTPUT EXAMPLE
+                      </div>
+                      <div className="column">
+                        <Tooltip
+                          title={
+                            this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"
+                          }
+                        >
+                          <IconButton aria-label="upload picture">
+                            <FileCopySharpIcon
+                              style={{
+                                width: 20,
+                                height: 20,
+                                bottom: 10,
+                                position: "relative",
+                              }}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <div
+                        style={{ whiteSpace: "pre-wrap" }}
+                        dangerouslySetInnerHTML={{
+                          __html: this.state.data.output_example,
+                        }}
+                      />
+                    </Typography>
+                  </div>
+                </Typography>
+              </CopyToClipboard>
               {/* 
               <div>
                 <Button
@@ -489,7 +528,7 @@ class QuesDetail extends React.Component<IProps, IState> {
               )}
             </div>
 
-            {this.state.res.length > 0 ? (
+            {this.state.res.length>1? (
               <TableContainer component={Paper}>
                 <Table
                   style={{
@@ -506,32 +545,69 @@ class QuesDetail extends React.Component<IProps, IState> {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {this.state.res.map((res, index) => (
+                    {this.state.res.map((resa, index) => (
                       <TableRow key={index}>
                         <TableCell component="th" scope="row">
                           {index + 1}
                         </TableCell>
                         <TableCell align="right">
-                          <ResultStatus status={res.status.run_status} />
+                          <ResultStatus status={resa.status.run_status} />
                         </TableCell>
                         <TableCell align="right">
-                          {res.status.cpu_time}
+                          {resa.status.cpu_time}
                         </TableCell>
                         <TableCell align="right">
-                          {res.status.memory_taken}
+                          {resa.status.memory_taken}
                         </TableCell>
                       </TableRow>
+                      
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             ) : (
               <React.Fragment>
-                {this.state.res.map((res, index) => (
+                {this.state.res.map((resa, index) => (
+                  <div>
+                    {resa.message?(
                   <div key={index}>
                     <p>Compilation Error</p>
-                    <p>{res.message}</p>
-                  </div>
+                    <p>{resa.message.split(',',2)[1]}</p>
+                    </div>):(<TableContainer component={Paper}>
+                <Table
+                  style={{
+                    minWidth: 650,
+                  }}
+                  aria-label="simple table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>TestCase (Number)</TableCell>
+                      <TableCell align="right">Status</TableCell>
+                      <TableCell align="right">Run-Time</TableCell>
+                      <TableCell align="right">Memory Used</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                  
+                      <TableRow key={index}>
+                        <TableCell component="th" scope="row">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell align="right">
+                          <ResultStatus status={resa.status.run_status} />
+                        </TableCell>
+                        <TableCell align="right">
+                          {resa.status.cpu_time}
+                        </TableCell>
+                        <TableCell align="right">
+                          {resa.status.memory_taken}
+                        </TableCell>
+                      </TableRow>
+                    
+                  </TableBody>
+                </Table>
+              </TableContainer>)}</div>
                 ))}
               </React.Fragment>
             )}

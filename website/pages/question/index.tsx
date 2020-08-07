@@ -7,12 +7,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Timer from "../../components/Timer";
 import Grid from "@material-ui/core/Grid";
 import SecondaryNav from "../../components/SecondaryNav";
+import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
+import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
 
 class questionlist extends React.Component {
   state = {
     list: [],
     timestamp: "",
     message: "",
+    performance:[]
   };
 
   componentDidMount() {
@@ -44,7 +47,7 @@ class questionlist extends React.Component {
       }
     }
     fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/getanswer?contest_id=${localStorage.code}`,
       {
         method: "GET",
         headers: {
@@ -52,34 +55,65 @@ class questionlist extends React.Component {
         },
       }
     )
-      .then((resp) => resp.json())
-      .then((res) => {
-        this.setState({ list: res });
-        var today = Date.now();
-        var start = localStorage.start * 1000;
-        var end = localStorage.end * 1000;
-        console.log(start + "   " + today + "  " + end);
-        if (start < today && end > today) {
-          this.setState({
-            timestamp: end,
-            message: "The Contest ends in",
-          });
-        } else if (start < today && end < today) {
-          this.setState({
-            timestamp: 0,
-            message: "The Contest has ended",
-          });
-        } else if (start > today) {
-          this.setState({
-            timestamp: start,
-            message: "The Contest begins in",
-          });
-        }
-      })
-      .catch((error) => {
-        error = JSON.stringify(error);
-        console.log(error);
-      });
+      .then((response) => response.json())
+      .then((resp) => {
+        console.log('start')
+        console.log(resp)
+        this.setState({performance:resp})
+        console.log('end')
+      }).then(()=>{
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Token ${localStorage.token}`,
+            },
+          }
+        )
+          .then((respon) => respon.json())
+          .then((res) => {
+            res.map((question)=>{
+              console.log(question)
+              question.icon= <div></div>
+              this.state.performance.map((ques)=>{
+                if(ques.ques_name === question.question_name){
+                  if(ques.correct >=1)
+                    question.icon = <CheckTwoToneIcon/>
+                  else
+                    question.icon = <CloseTwoToneIcon/>
+                }
+              })
+            })
+            this.setState({ list: res });
+            var today = Date.now();
+            var start = localStorage.start * 1000;
+            var end = localStorage.end * 1000;
+            console.log(start + "   " + today + "  " + end);
+            if (start < today && end > today) {
+              this.setState({
+                timestamp: end,
+                message: "The Contest ends in",
+              });
+            } else if (start < today && end < today) {
+              this.setState({
+                timestamp: 0,
+                message: "The Contest has ended",
+              });
+            } else if (start > today) {
+              this.setState({
+                timestamp: start,
+                message: "The Contest begins in",
+              });
+            }
+          })
+          .catch((error) => {
+            error = JSON.stringify(error);
+            console.log(error);
+          })
+        })
+
+    ;
   }
 
   render() {
@@ -151,6 +185,12 @@ class questionlist extends React.Component {
                   align="right"
                   style={{ color: "#fff", marginBottom: "20px" }}
                 >
+                  Status  
+                </TableCell>
+                <TableCell
+                  align="right"
+                  style={{ color: "#fff", marginBottom: "20px" }}
+                >
                   Score
                 </TableCell>
               </TableRow>
@@ -200,7 +240,12 @@ class questionlist extends React.Component {
                             {item.question_name}
                           </a>
                         </TableCell>
-
+                        <TableCell
+                          align="right"
+                          style={{ textDecoration: "None", color: "#104e8b" }}
+                        >
+                          {item.icon}
+                        </TableCell>
                         <TableCell
                           align="right"
                           style={{ textDecoration: "None", color: "#104e8b" }}

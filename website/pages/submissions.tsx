@@ -254,8 +254,8 @@ class submissions extends React.Component<IProps, {}> {
             width: "100%",
             fontSize: "16px",
             position: "relative",
-            marginBottom: "50px",
-            marginTop: "10px",
+            marginBottom: "100px",
+            marginTop: "0px",
           }}
         >
           <MUIDataTable
@@ -263,8 +263,11 @@ class submissions extends React.Component<IProps, {}> {
             data={data}
             columns={columns}
             options={options}
-            style={{ fontSize: "16px" }}
+            style={{ fontSize: "16px", margin: "0 auto" }}
           />
+        </div>
+        <div className="Footer">
+          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
       </Layout>
     );

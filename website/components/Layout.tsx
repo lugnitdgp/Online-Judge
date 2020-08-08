@@ -9,9 +9,6 @@ class Layout extends React.Component {
       <React.Fragment>
         <Newappbar />
         {this.props.children}
-        <div className="Footer">
-          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
-        </div>
       </React.Fragment>
     );
   }

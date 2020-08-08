@@ -6,7 +6,6 @@ import { withStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import Viewer from "components/CodeViewer";
 import { Card } from "@material-ui/core";
-import ReactModal from "react-modal";
 import { Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -16,12 +15,35 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import SecondaryNav from "../components/SecondaryNav";
 
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+
 const customStyles = () => ({
   Successful: {
     "& td": { backgroundColor: "#99ff99" },
   },
   WA: {
     "& td": { backgroundColor: "#ff6961" },
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: "#fff",
+    border: '2px solid #104e8b',
+    borderTop:"10px solid #104e8b",
+    borderBottom:"10px solid #104e8b",
+    outline:"none",
+    padding: "30px",
+    borderRadius:"20px",
+    minWidth:"70%",
+    minHeight:"90%",
+    color:"#104e8b",
+    overflow:"auto",
+    
   },
 });
 
@@ -33,7 +55,7 @@ class submissions extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     list: [],
-    showModal: false,
+    open: false,
     view: "",
     modallang: "",
     exec: [],
@@ -63,12 +85,12 @@ class submissions extends React.Component<IProps, {}> {
       view: data.source,
       modallang: data.lang,
       exec: data.testcases,
-      showModal: true,
+      open: true,
     });
   }
 
   handleCloseModal() {
-    this.setState({ showModal: false });
+    this.setState({ open: false });
   }
 
   componentDidMount() {
@@ -288,12 +310,14 @@ class submissions extends React.Component<IProps, {}> {
       },
     };
 
+
     const data = this.state.list;
 
     return (
       <Layout>
         <SecondaryNav />
-        <ReactModal
+
+        {/* <ReactModal
           style={{
             width: "50%",
             marginTop: "100px !important",
@@ -358,8 +382,77 @@ class submissions extends React.Component<IProps, {}> {
               </Card>
             </div>
           </div>
-        </ReactModal>
+        </ReactModal> */}
+<Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={this.props.classes.modal}
+        open={this.state.open}
+        onClose={this.handleCloseModal}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={this.state.open}>
+          <div className={this.props.classes.paper}>
+          <div
+            style={{
+              margin: "0px auto",
+              textAlign: "center",
+              height: "0px",
+              backgroundColor: "rgba(0,0,0,0)",
+            }}
+          >
+            <div
+              style={{
+                margin: "20px auto",
+                textAlign: "center",
+                maxWidth: "900px",
+              }}
+            >
+              <Button
+                style={{ marginTop: "0px" }}
+                onClick={this.handleCloseModal}
+              >
+                MINIMIZE
+              </Button>
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Memory&nbsp;(kb)</TableCell>
+                      <TableCell align="center">Time&nbsp;(s)</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {this.state.exec.map((row) => (
+                      <TableRow>
+                        <TableCell align="center">
+                          {row.status.run_status}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.status.memory_taken}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.status.cpu_time}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
 
+              <Card style={{ background: "black" }}>
+                <Viewer value={this.state.view} lang={this.state.modallang} />
+              </Card>
+            </div>
+          </div>
+          </div>
+        </Fade>
+      </Modal>
         <div
           className="contain"
           style={{
@@ -388,6 +481,9 @@ class submissions extends React.Component<IProps, {}> {
               color={"#104e8b"}
             />
           </Paper>
+        </div>
+        <div className="Footer">
+          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
       </Layout>
     );

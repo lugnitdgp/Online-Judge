@@ -35,6 +35,23 @@ hr {
 
 }
 
+.FooterFixed {
+  position: fixed;
+  bottom: 0;
+  height: 40px;
+  width: 100%;
+  border-top: 2px solid #104e8b;
+  background-color: #fff;
+  text-align: center;
+  color: #104e8b;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bolder;
+  padding-top: 10px;
+  z-index: 99;
+
+}
+
 .ContestGrid {
   align-items: center;
   display: flex;

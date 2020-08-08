@@ -134,7 +134,7 @@ class QuesDetail extends React.Component<IProps, IState> {
   submitcode = (code: any, lang: any) => {
     this.setState({
       isLoading: true,
-      res:[]
+      res: [],
     });
     var self = this;
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
@@ -154,15 +154,15 @@ class QuesDetail extends React.Component<IProps, IState> {
         return resp.json();
       })
       .then((res) => {
-        if(res.status === 302){
-          alert(res.message)
+        if (res.status === 302) {
+          alert(res.message);
           this.setState({
-            isLoading:false
-          })
+            isLoading: false,
+          });
+        } else {
+          localStorage.taskid = res["task_id"];
+          self.interval = setInterval(() => self.statuscode(), 2000);
         }
-        else{
-        localStorage.taskid = res["task_id"];
-        self.interval = setInterval(() => self.statuscode(), 2000);}
       })
       .catch((error) => console.log(error));
   };
@@ -222,7 +222,7 @@ class QuesDetail extends React.Component<IProps, IState> {
         if (response.status === 302) {
           alert(response.message);
         } else {
-          console.log(response)
+          console.log(response);
           self.setState({ res: response, isLoading: false });
           clearInterval(self.interval);
         }
@@ -528,7 +528,7 @@ class QuesDetail extends React.Component<IProps, IState> {
               )}
             </div>
 
-            {this.state.res.length>1? (
+            {this.state.res.length > 1 ? (
               <TableContainer component={Paper}>
                 <Table
                   style={{
@@ -560,7 +560,6 @@ class QuesDetail extends React.Component<IProps, IState> {
                           {resa.status.memory_taken}
                         </TableCell>
                       </TableRow>
-                      
                     ))}
                   </TableBody>
                 </Table>
@@ -569,49 +568,54 @@ class QuesDetail extends React.Component<IProps, IState> {
               <React.Fragment>
                 {this.state.res.map((resa, index) => (
                   <div>
-                    {resa.message?(
-                  <div key={index}>
-                    <p>Compilation Error</p>
-                    <p>{resa.message.split(',',2)[1]}</p>
-                    </div>):(<TableContainer component={Paper}>
-                <Table
-                  style={{
-                    minWidth: 650,
-                  }}
-                  aria-label="simple table"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>TestCase (Number)</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Run-Time</TableCell>
-                      <TableCell align="right">Memory Used</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                  
-                      <TableRow key={index}>
-                        <TableCell component="th" scope="row">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell align="right">
-                          <ResultStatus status={resa.status.run_status} />
-                        </TableCell>
-                        <TableCell align="right">
-                          {resa.status.cpu_time}
-                        </TableCell>
-                        <TableCell align="right">
-                          {resa.status.memory_taken}
-                        </TableCell>
-                      </TableRow>
-                    
-                  </TableBody>
-                </Table>
-              </TableContainer>)}</div>
+                    {resa.message ? (
+                      <div key={index}>
+                        <p>Compilation Error</p>
+                        <p>{resa.message.split(",", 2)[1]}</p>
+                      </div>
+                    ) : (
+                      <TableContainer component={Paper}>
+                        <Table
+                          style={{
+                            minWidth: 650,
+                          }}
+                          aria-label="simple table"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>TestCase (Number)</TableCell>
+                              <TableCell align="right">Status</TableCell>
+                              <TableCell align="right">Run-Time</TableCell>
+                              <TableCell align="right">Memory Used</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                {index + 1}
+                              </TableCell>
+                              <TableCell align="right">
+                                <ResultStatus status={resa.status.run_status} />
+                              </TableCell>
+                              <TableCell align="right">
+                                {resa.status.cpu_time}
+                              </TableCell>
+                              <TableCell align="right">
+                                {resa.status.memory_taken}
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    )}
+                  </div>
                 ))}
               </React.Fragment>
             )}
           </Paper>
+        </div>
+        <div className="Footer">
+          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
       </Layout>
     );

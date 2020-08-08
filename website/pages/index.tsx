@@ -53,7 +53,7 @@ class IndexPage extends React.Component<IProps, {}> {
             contest["timestamp"] = contest["start_time"] * 1000;
             upcoming.push(contest);
           } else {
-            contest["ended"]=true;
+            contest["ended"] = true;
             ended.push(contest);
           }
         });
@@ -160,6 +160,10 @@ class IndexPage extends React.Component<IProps, {}> {
                 )}
               </Grid>
             </Grid>
+            <div className="Footer">
+              &copy; Created and maintained by GNU/Linux Users' group, Nit
+              Durgapur
+            </div>
           </>
         ) : (
           <>
@@ -227,6 +231,10 @@ class IndexPage extends React.Component<IProps, {}> {
                 </div>
               </Grid>
             </Grid>
+            <div className="FooterFixed">
+              &copy; Created and maintained by GNU/Linux Users' group, Nit
+              Durgapur
+            </div>
           </>
         )}
       </Layout>

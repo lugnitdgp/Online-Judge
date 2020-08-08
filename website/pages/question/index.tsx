@@ -15,7 +15,7 @@ class questionlist extends React.Component {
     list: [],
     timestamp: "",
     message: "",
-    performance:[]
+    performance: [],
   };
 
   componentDidMount() {
@@ -57,11 +57,12 @@ class questionlist extends React.Component {
     )
       .then((response) => response.json())
       .then((resp) => {
-        console.log('start')
-        console.log(resp)
-        this.setState({performance:resp})
-        console.log('end')
-      }).then(()=>{
+        console.log("start");
+        console.log(resp);
+        this.setState({ performance: resp });
+        console.log("end");
+      })
+      .then(() => {
         fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
           {
@@ -73,18 +74,16 @@ class questionlist extends React.Component {
         )
           .then((respon) => respon.json())
           .then((res) => {
-            res.map((question)=>{
-              console.log(question)
-              question.icon= <div></div>
-              this.state.performance.map((ques)=>{
-                if(ques.ques_name === question.question_name){
-                  if(ques.correct >=1)
-                    question.icon = <CheckTwoToneIcon/>
-                  else
-                    question.icon = <CloseTwoToneIcon/>
+            res.map((question) => {
+              console.log(question);
+              question.icon = <div></div>;
+              this.state.performance.map((ques) => {
+                if (ques.ques_name === question.question_name) {
+                  if (ques.correct >= 1) question.icon = <CheckTwoToneIcon />;
+                  else question.icon = <CloseTwoToneIcon />;
                 }
-              })
-            })
+              });
+            });
             this.setState({ list: res });
             var today = Date.now();
             var start = localStorage.start * 1000;
@@ -110,10 +109,8 @@ class questionlist extends React.Component {
           .catch((error) => {
             error = JSON.stringify(error);
             console.log(error);
-          })
-        })
-
-    ;
+          });
+      });
   }
 
   render() {
@@ -134,13 +131,23 @@ class questionlist extends React.Component {
                   justifyContent: "center",
                   alignItems: "center",
                   padding: "0",
+                  margin: "0 auto",
                 }}
               >
                 {/* {localStorage.contest_name} */}
                 Contest Name
               </p>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Timer time={this.state.timestamp} message={this.state.message} />
             </Grid>
           </Grid>
@@ -185,7 +192,7 @@ class questionlist extends React.Component {
                   align="right"
                   style={{ color: "#fff", marginBottom: "20px" }}
                 >
-                  Status  
+                  Status
                 </TableCell>
                 <TableCell
                   align="right"
@@ -259,6 +266,9 @@ class questionlist extends React.Component {
             </TableBody>
           </Table>
         </TableContainer>
+        <div className="FooterFixed">
+          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
+        </div>
       </Layout>
     );
   }

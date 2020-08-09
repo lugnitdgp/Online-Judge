@@ -37,19 +37,23 @@ class Editorial extends React.Component<IProps, {}> {
                   <>
             <div key={i} style={{margin:"50px auto",width:"90%", maxWidth:"1000px", textAlign:"left", padding:"30px", borderRadius:"20px", border:"2px solid #104E8B", borderTop:"10px solid #104E8B", borderBottom:"10px solid #104E8B", color:"#104E8B"}}>
                 <h3>Contest Name(JCC)</h3>
+                <hr></hr>
                 <br/>
                 <h4>{item.ques_name}</h4>
                 <p>{item.question}</p>
+                <hr></hr>
                 <br/>
                 <h4>Solution</h4>
                 <p>{item.solution}</p>
+                <hr></hr>
+                <br/>
                 <h4>code</h4>
                 <div
-                style={{ fontSize: 15 }}
+                style={{ fontSize: 15, color:"#000" }}
                 dangerouslySetInnerHTML={{
                   __html: item.code,
                 }}
-              />
+                />
             </div>
             
             </>

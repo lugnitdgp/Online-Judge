@@ -37,6 +37,8 @@ class Contest(models.Model):
     def isOver(self):
         return (t.now() > self.end_time and t.now() > self.start_time)
 
+    class Meta:
+        ordering = ['end_time']
 
 class Question(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)

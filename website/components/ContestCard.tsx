@@ -135,7 +135,7 @@ export default function ContestCard(props) {
             color="primary"
             variant="outlined"
             style={{ outline: "none", border: "none" }}
-            onClick={() => {}
+            onClick={() => {Router.push("/Editorial");}
             }
           >
             View Editorial

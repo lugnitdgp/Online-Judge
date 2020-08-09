@@ -2,7 +2,6 @@ const styles = (theme) => ({
 	main: {
 		width: 'auto',
 		display: 'block',
-		fontFamily: "'Noto Sans TC', sans-serif",
 		marginLeft: theme.spacing.unit * 5,
 		marginRight: theme.spacing.unit * 5,
 		marginTop: theme.spacing.unit * 3,
@@ -13,7 +12,6 @@ const styles = (theme) => ({
 		}
 	},
 	carousel: {
-		fontFamily: "'Noto Sans TC', sans-serif",
 		maxWidth: '1200px',
 		margin: '0 auto',
 		fontSize: 12,

@@ -34,7 +34,7 @@ function Editor(props: IProps) {
 
   return (
     <Card>
-      <CardContent style={{ overflow: "scroll" }}>
+      <CardContent style={{ overflow: "hidden" }}>
         <AceEditor
           mode={dict[props.lang]}
           theme={the[props.theme]}

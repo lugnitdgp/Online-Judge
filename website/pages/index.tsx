@@ -1,10 +1,11 @@
 import React from "react";
-import { Typography, Card } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import styles from "../styles/IndexStyles";
 import Layout from "../components/Layout";
 import Grid from "@material-ui/core/Grid";
 import ContestCard from "../components/ContestCard";
+import Router from "next/router";
 
 interface IProps {
   classes: any;
@@ -14,6 +15,7 @@ class IndexPage extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     ongoing: [],
+    ended: [],
     upcoming: [],
   };
   componentDidMount() {
@@ -24,7 +26,9 @@ class IndexPage extends React.Component<IProps, {}> {
       .then((res) => {
         var ongoing = [];
         var upcoming = [];
+        var ended = [];
         res.map((contest) => {
+          console.log(contest);
           var dateObj = new Date(contest["start_time"] * 1000);
           contest["start"] = dateObj.toString();
           contest["start"] =
@@ -45,11 +49,15 @@ class IndexPage extends React.Component<IProps, {}> {
             contest["timestamp"] = contest["end_time"] * 1000;
             ongoing.push(contest);
           } else if (contest["start_time"] * 1000 > today) {
+            contest["upcoming"] = true;
             contest["timestamp"] = contest["start_time"] * 1000;
             upcoming.push(contest);
+          } else {
+            contest["ended"] = true;
+            ended.push(contest);
           }
         });
-        this.setState({ ongoing: ongoing, upcoming: upcoming });
+        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended });
       })
       .catch((error) => {
         console.log(error);
@@ -59,184 +67,176 @@ class IndexPage extends React.Component<IProps, {}> {
   render() {
     return (
       <Layout>
-        <Grid container spacing={3} style={{ height: "100vh" }}>
-          <Grid
-            item
-            xs={12}
-            md={9}
-            style={{ margin: "0 auto", height: "100%" }}
-          >
-            <div
-              style={{
-                margin: "0 auto",
-                width: "100%",
-                height: "100%",
-                backgroundColor: "#cbccff",
-              }}
-            >
-              <div
-                style={{
-                  margin: "0 auto",
-                  maxWidth: "1000px",
-
-                  backgroundColor: "#cbccff",
-                }}
-              >
-                <br />
-
-                <Card
-                  style={{
-                    backgroundColor: "#fff",
-                    width: "93%",
-                    margin: "0 auto",
-                  }}
-                  elevation={4}
-                >
+        {localStorage.onlinejudge_info ? (
+          <>
+            <Grid container spacing={0} className="contestMainrow">
+              <Grid item xs={12} md={3} className="ContestSectionHead">
+                Ongoing
+                <br /> Contests
+              </Grid>
+              <Grid item xs={12} md={9} className="ContestGrid2">
+                {this.state.ongoing.length > 0 ? (
+                  <>
+                    {this.state.ongoing.map((res) => (
+                      <div className="horizontalscroll">
+                        <ContestCard contestInfo={res} />
+                      </div>
+                    ))}
+                  </>
+                ) : (
                   <Typography
                     style={{
                       textAlign: "center",
-
+                      textTransform: "uppercase",
                       fontSize: "30px",
                       margin: "0px",
-                      fontFamily: "'Bree serif', sans-serif",
                       color: "#005",
                       backgroundColor: "#fff",
                     }}
                   >
-                    Ongoing Contests
+                    There are no ongoing contests right now.
                   </Typography>
-                  {this.state.ongoing.length > 0 ? (
-                    <Grid
-                      container
-                      spacing={3}
-                      style={{
-                        width: "100%",
-                        margin: "0 auto",
-                        backgroundColor: "#fff",
-                        paddingBottom: "50px",
-                      }}
-                    >
-                      {this.state.ongoing.map((res) => (
-                        <Grid item xs={12} style={{ margin: "0 auto" }}>
-                          <ContestCard contestInfo={res} />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  ) : (
-                    <Typography
-                      style={{
-                        textAlign: "center",
-                        textTransform: "uppercase",
-                        fontSize: "30px",
-                        margin: "0px",
-                        fontFamily: "'Bree serif', sans-serif",
-                        color: "#005",
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      There are no ongoing contests right now.
-                    </Typography>
-                  )}
-                </Card>
-                <br />
-                <Card
-                  style={{
-                    backgroundColor: "#fff",
-                    width: "93%",
-                    margin: "0 auto",
-                  }}
-                  elevation={4}
-                >
+                )}
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={0} className="contestMainrow">
+              <Grid item xs={12} md={3} className="ContestSectionHead">
+                Upcoming
+                <br /> Contests
+              </Grid>
+              <Grid item xs={12} md={9} className="ContestGrid2">
+                {this.state.upcoming.length > 0 ? (
+                  <>
+                    {this.state.upcoming.map((res) => (
+                      <div className="horizontalscroll">
+                        <ContestCard contestInfo={res} />
+                      </div>
+                    ))}
+                  </>
+                ) : (
                   <Typography
                     style={{
                       textAlign: "center",
-
+                      textTransform: "uppercase",
                       fontSize: "30px",
                       margin: "0px",
-                      fontFamily: "'Bree serif', sans-serif",
                       color: "#005",
                       backgroundColor: "#fff",
                     }}
                   >
-                    Upcoming Contests
+                    There are no ongoing contests right now.
                   </Typography>
-                  {this.state.upcoming.length > 0 ? (
-                    <Grid
-                      container
-                      spacing={3}
-                      style={{
-                        width: "100%",
-                        margin: "0 auto",
-                        backgroundColor: "#fff",
-                        paddingBottom: "50px",
-                      }}
-                    >
-                      {this.state.upcoming.map((res) => (
-                        <Grid item xs={12} style={{ margin: "0 auto" }}>
-                          <ContestCard contestInfo={res} />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  ) : (
-                    <Typography
-                      style={{
-                        textAlign: "center",
-                        textTransform: "uppercase",
-                        fontSize: "30px",
-                        margin: "0px",
-                        fontFamily: "'Bree serif', sans-serif",
-                        color: "#005",
-                        backgroundColor: "#fff",
-                      }}
-                    >
-                      Keep watching this space!
-                    </Typography>
-                  )}
-                </Card>
-                <br />
-              </div>
+                )}
+              </Grid>
+            </Grid>
+            <Grid container spacing={0} className="contestMainrow">
+              <Grid item xs={12} md={3} className="ContestSectionHead">
+                Previous
+                <br /> Contests
+              </Grid>
+              <Grid item xs={12} md={9} className="ContestGrid2">
+                {this.state.ended.length > 0 ? (
+                  <>
+                    {this.state.ended.map((res) => (
+                      <div className="horizontalscroll">
+                        <ContestCard contestInfo={res} />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <Typography
+                    style={{
+                      textAlign: "center",
+                      textTransform: "uppercase",
+                      fontSize: "30px",
+                      margin: "0px",
+                      color: "#005",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    There are no ongoing contests right now.
+                  </Typography>
+                )}
+              </Grid>
+            </Grid>
+            <div className="Footer">
+              &copy; Created and maintained by GNU/Linux Users' group, Nit
+              Durgapur
             </div>
-          </Grid>
-          <Grid item xs={12} md={3} style={{ margin: "0 auto" }}>
-            <h3
-              style={{
-                fontSize: "20px",
-                margin: "20px",
-                fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
-              }}
-            >
-              Announcement :
-            </h3>
-            <ul>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-            </ul>
-            <br />
-            <h3
-              style={{
-                fontSize: "20px",
-                margin: "20px",
-                fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
-              }}
-            >
-              Playing Rules (Honor code) :
-            </h3>
-            <ul>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-              <li>Anouncemment 1 (sample announcement)</li>
-            </ul>
-          </Grid>
-        </Grid>
+          </>
+        ) : (
+          <>
+            <Grid container spacing={0}>
+              <Grid item xs={12} md={7} style={{ textAlign: "center" }}>
+                <img
+                  src="/Coding-bro.png"
+                  alt="."
+                  style={{
+                    width: "100%",
+                    padding: "0",
+                    position: "relative",
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={5}
+                className="ContestGrid"
+                style={{ textAlign: "center" }}
+              >
+                <h3 className="welcometext">
+                  <i>
+                    "Hi there, welcome to Online Judge presented to you by
+                    Gnu/Linux Users' Group, Nit Durgapur"
+                  </i>
+                </h3>
+                <div className="buttonsparent">
+                  <Typography
+                    style={{
+                      textAlign: "center",
+                      fontSize: "37px",
+                      margin: "20px auto",
+
+                      color: "#104E8B",
+                      fontWeight: "bold",
+                      width: "100%",
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    Enter right into contests
+                  </Typography>
+                  <div className="buttonsWrapper">
+                    <Button
+                      variant="outlined"
+                      className="loginbtn"
+                      type="submit"
+                      color="primary"
+                      onClick={() => Router.push("/login")}
+                    >
+                      Login
+                    </Button>
+                    &nbsp;&nbsp;&nbsp;&nbsp; OR &nbsp;&nbsp;&nbsp;&nbsp;
+                    <Button
+                      variant="contained"
+                      className="loginbtn"
+                      type="submit"
+                      color="primary"
+                      onClick={() => Router.push("/login")}
+                    >
+                      Signup
+                    </Button>
+                  </div>
+                </div>
+              </Grid>
+            </Grid>
+            <div className="FooterFixed">
+              &copy; Created and maintained by GNU/Linux Users' group, Nit
+              Durgapur
+            </div>
+          </>
+        )}
       </Layout>
     );
   }

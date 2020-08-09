@@ -24,7 +24,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../components/Timer";
-
+import SecondaryNav from "../../components/SecondaryNav";
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -42,7 +42,11 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: theme.spacing(3),
     marginTop: theme.spacing(5),
     minHeight: "80%",
-    maxWidth: "1400px",
+    maxWidth: "1300px",
+    border: "2px solid #104e8b",
+    borderTop: "10px solid #104e8b",
+    borderBottom: "10px solid #104e8b",
+    borderRadius: "20px",
   },
   paper2: {
     flexDirection: "column",
@@ -50,7 +54,12 @@ const styles = createStyles((theme: Theme) => ({
     marginRight: "auto",
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(8),
-    maxWidth: "1400px",
+    maxWidth: "1300px",
+    overflow: "hidden",
+    border: "2px solid #104e8b",
+    borderTop: "10px solid #104e8b",
+    borderBottom: "10px solid #104e8b",
+    borderRadius: "20px",
   },
   details: {
     paddingTop: theme.spacing(2),
@@ -62,6 +71,7 @@ const styles = createStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     marginTop: theme.spacing(1.8),
     minWidth: 120,
+    overflow: "hidden",
   },
   button: {
     marginTop: theme.spacing(3),
@@ -76,7 +86,7 @@ interface IState {
   value: string;
   lang: string;
   theme: string;
-  res: Array<any>;
+  res: any;
   isLoading: boolean;
   showModal: boolean;
   data: any;
@@ -124,6 +134,7 @@ class QuesDetail extends React.Component<IProps, IState> {
   submitcode = (code: any, lang: any) => {
     this.setState({
       isLoading: true,
+      res: [],
     });
     var self = this;
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
@@ -143,47 +154,52 @@ class QuesDetail extends React.Component<IProps, IState> {
         return resp.json();
       })
       .then((res) => {
-        localStorage.taskid = res["task_id"];
-        self.interval = setInterval(() => self.statuscode(), 2000);
+        if (res.status === 302) {
+          alert(res.message);
+          this.setState({
+            isLoading: false,
+          });
+        } else {
+          localStorage.taskid = res["task_id"];
+          self.interval = setInterval(() => self.statuscode(), 2000);
+        }
       })
       .catch((error) => console.log(error));
   };
 
-  source =[]
+  source = [];
 
-  autosavecode = (code:any, lang:any)=>{
+  autosavecode = (code: any, lang: any) => {
     // var source2=[]
-    var source = this.source
-    var source2=[]
-  source.map((contest)=>{
-    if (contest.name === localStorage.code){
-      var sourcecode = {
-        lang: lang,
-        code: encodeURI(code),
-        qid: getParameterByName("id") 
-      }
-      if(!contest.questions){
-        contest.questions=[sourcecode]
-      }
-      else{
-        var flag=false
-        contest.questions.map((ques)=>{
-          if(ques.qid === sourcecode.qid){
-              ques.code= sourcecode.code
-              ques.lang =sourcecode.lang              
-              flag=true
+    var source = this.source;
+    var source2 = [];
+    source.map((contest) => {
+      if (contest.name === localStorage.code) {
+        var sourcecode = {
+          lang: lang,
+          code: encodeURI(code),
+          qid: getParameterByName("id"),
+        };
+        if (!contest.questions) {
+          contest.questions = [sourcecode];
+        } else {
+          var flag = false;
+          contest.questions.map((ques) => {
+            if (ques.qid === sourcecode.qid) {
+              ques.code = sourcecode.code;
+              ques.lang = sourcecode.lang;
+              flag = true;
             }
-        })
-        if(flag === false){
-        contest.questions.push(sourcecode)}
-        
+          });
+          if (flag === false) {
+            contest.questions.push(sourcecode);
+          }
+        }
       }
-
-      
-  }source2.push(contest)
-})
-this.source = source2
-  localStorage.setItem('source', JSON.stringify(this.source))
+      source2.push(contest);
+    });
+    this.source = source2;
+    localStorage.setItem("source", JSON.stringify(this.source));
   };
 
   statuscode = () => {
@@ -206,6 +222,7 @@ this.source = source2
         if (response.status === 302) {
           alert(response.message);
         } else {
+          console.log(response);
           self.setState({ res: response, isLoading: false });
           clearInterval(self.interval);
         }
@@ -217,24 +234,22 @@ this.source = source2
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
     const cookie = new Cookie();
     cookie.parse(document.cookie || "");
-    if(!localStorage.source)
-    window.location.href="/question"
-    else{
-        this.source = JSON.parse(localStorage.source)
-        var source = JSON.parse(localStorage.source)
-        source.map((contest)=>{
-          if(contest.name===localStorage.code){
-            if(contest.questions)
-              contest.questions.map((ques)=>{
-                if(ques.qid === getParameterByName("id"))
-                    this.setState({
-                      value: decodeURI(ques.code),
-                      lang: ques.lang
-                    })
-              })
-          }
-        })
-
+    if (!localStorage.source) window.location.href = "/question";
+    else {
+      this.source = JSON.parse(localStorage.source);
+      var source = JSON.parse(localStorage.source);
+      source.map((contest) => {
+        if (contest.name === localStorage.code) {
+          if (contest.questions)
+            contest.questions.map((ques) => {
+              if (ques.qid === getParameterByName("id"))
+                this.setState({
+                  value: decodeURI(ques.code),
+                  lang: ques.lang,
+                });
+            });
+        }
+      });
     }
 
     try {
@@ -256,13 +271,13 @@ this.source = source2
       });
 
       var today = Date.now();
-      var start = (localStorage.start) * 1000;
-      var end = (localStorage.end) * 1000;
+      var start = localStorage.start * 1000;
+      var end = localStorage.end * 1000;
 
       if (start < today && end > today) {
         this.setState({
           timestamp: end,
-          message: "The Contest ends in ...",
+          message: "The Contest ends in",
         });
       } else if (start < today && end < today) {
         this.setState({
@@ -272,10 +287,9 @@ this.source = source2
       } else if (start > today) {
         this.setState({
           timestamp: start,
-          message: "The Contest begins in ...",
+          message: "The Contest begins in",
         });
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -286,26 +300,17 @@ this.source = source2
     const { classes } = this.props;
     return (
       <Layout>
-        <div>
-          {/* <ReactModal
-            isOpen={this.state.showModal}
-            contentLabel="Minimal Modal Example"
-          >
-            <div
-              style={{
-                margin: "40px auto",
-                textAlign: "center",
-                height: "0px",
-                backgroundColor: "rgba(0,0,0,0)"
-              }}
-            >
-             
-            </div>
-          </ReactModal> */}
+        <SecondaryNav />
+        <div style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}>
+          <Timer
+            time={this.state.timestamp}
+            message={this.state.message}
+            style={{ fontSize: "12px" }}
+          />
         </div>
         <div style={{ margin: "20px" }}>
           <Paper
-            elevation={3}
+            elevation={0}
             className={classes.paper}
             style={{ margin: "20px auto" }}
           >
@@ -313,7 +318,7 @@ this.source = source2
               <Typography
                 className={classes.title}
                 style={{
-                  color: "#4455dd",
+                  color: "#104e8b",
                   fontSize: "18px",
                   textTransform: "capitalize",
                 }}
@@ -323,16 +328,19 @@ this.source = source2
                 {this.state.data.question_name}
               </Typography>
 
-             <div style={{fontSize:15}} dangerouslySetInnerHTML={{
-                          __html: this.state.data.question_text,
-                        }}/>
+              <div
+                style={{ fontSize: 15 }}
+                dangerouslySetInnerHTML={{
+                  __html: this.state.data.question_text,
+                }}
+              />
               <hr></hr>
               <CopyToClipboard
                 text={this.state.data.input_example}
                 onCopy={this.changeCopyState}
               >
                 <Typography
-                  style={{ fontSize: "18px", color: "#4455dd" }}
+                  style={{ fontSize: "18px", color: "#104e8b" }}
                   gutterBottom
                 >
                   <div>
@@ -374,22 +382,52 @@ this.source = source2
                 </Typography>
               </CopyToClipboard>
               <hr></hr>
-              <Typography
-                style={{ fontSize: "18px", color: "#4455dd" }}
-                gutterBottom
+              <CopyToClipboard
+                text={this.state.data.output_example}
+                onCopy={this.changeCopyState}
               >
-                OUTPUT EXAMPLE
-              </Typography>
-
-              <Typography variant="subtitle1" gutterBottom>
-                <div
-                  style={{ whiteSpace: "pre-wrap" }}
-                  dangerouslySetInnerHTML={{
-                    __html: this.state.data.output_example,
-                  }}
-                />
-              </Typography>
-              <hr></hr>
+                <Typography
+                  style={{ fontSize: "18px", color: "#104e8b" }}
+                  gutterBottom
+                >
+                  <div>
+                    <div className="row">
+                      <div
+                        className="column"
+                        style={{ marginLeft: 15, verticalAlign: "middle" }}
+                      >
+                        OUTPUT EXAMPLE
+                      </div>
+                      <div className="column">
+                        <Tooltip
+                          title={
+                            this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"
+                          }
+                        >
+                          <IconButton aria-label="upload picture">
+                            <FileCopySharpIcon
+                              style={{
+                                width: 20,
+                                height: 20,
+                                bottom: 10,
+                                position: "relative",
+                              }}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <Typography variant="subtitle1" gutterBottom>
+                      <div
+                        style={{ whiteSpace: "pre-wrap" }}
+                        dangerouslySetInnerHTML={{
+                          __html: this.state.data.output_example,
+                        }}
+                      />
+                    </Typography>
+                  </div>
+                </Typography>
+              </CopyToClipboard>
               {/* 
               <div>
                 <Button
@@ -407,12 +445,6 @@ this.source = source2
                   CODE
                 </Button>
               </div> */}
-              <div style={{ maxWidth: "700px", margin: "0px auto" }}>
-                <Timer
-                  time={this.state.timestamp}
-                  message={this.state.message}
-                />
-              </div>
             </div>
           </Paper>
 
@@ -458,11 +490,15 @@ this.source = source2
                 value={this.state.value}
                 lang={this.state.lang}
                 theme={this.state.theme}
-                setValue={(d) =>{
-                  this.setState({
-                    value: d,
-                  },()=>{
-                    this.autosavecode(this.state.value, this.state.lang)})              
+                setValue={(d) => {
+                  this.setState(
+                    {
+                      value: d,
+                    },
+                    () => {
+                      this.autosavecode(this.state.value, this.state.lang);
+                    }
+                  );
                 }}
               />
 
@@ -475,7 +511,7 @@ this.source = source2
                   variant="outlined"
                   style={{
                     border: "None",
-                    backgroundColor: "#7788ff",
+                    backgroundColor: "#104e8b",
                     height: "30px",
                     width: "100px",
                     borderRadius: "5px",
@@ -509,19 +545,19 @@ this.source = source2
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {this.state.res.map((res, index) => (
+                    {this.state.res.map((resa, index) => (
                       <TableRow key={index}>
                         <TableCell component="th" scope="row">
                           {index + 1}
                         </TableCell>
                         <TableCell align="right">
-                          <ResultStatus status={res.status.run_status} />
+                          <ResultStatus status={resa.status.run_status} />
                         </TableCell>
                         <TableCell align="right">
-                          {res.status.cpu_time}
+                          {resa.status.cpu_time}
                         </TableCell>
                         <TableCell align="right">
-                          {res.status.memory_taken}
+                          {resa.status.memory_taken}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -530,15 +566,56 @@ this.source = source2
               </TableContainer>
             ) : (
               <React.Fragment>
-                {this.state.res.map((res, index) => (
-                  <div key={index}>
-                    <p>Compilation Error</p>
-                    <p>{res.message}</p>
+                {this.state.res.map((resa, index) => (
+                  <div>
+                    {resa.message ? (
+                      <div key={index}>
+                        <p>Compilation Error</p>
+                        <p>{resa.message.split(",", 2)[1]}</p>
+                      </div>
+                    ) : (
+                      <TableContainer component={Paper}>
+                        <Table
+                          style={{
+                            minWidth: 650,
+                          }}
+                          aria-label="simple table"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>TestCase (Number)</TableCell>
+                              <TableCell align="right">Status</TableCell>
+                              <TableCell align="right">Run-Time</TableCell>
+                              <TableCell align="right">Memory Used</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                {index + 1}
+                              </TableCell>
+                              <TableCell align="right">
+                                <ResultStatus status={resa.status.run_status} />
+                              </TableCell>
+                              <TableCell align="right">
+                                {resa.status.cpu_time}
+                              </TableCell>
+                              <TableCell align="right">
+                                {resa.status.memory_taken}
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    )}
                   </div>
                 ))}
               </React.Fragment>
             )}
           </Paper>
+        </div>
+        <div className="Footer">
+          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
       </Layout>
     );

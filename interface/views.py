@@ -18,7 +18,7 @@ from django.utils import timezone as t
 @permission_classes([AllowAny])
 def GetContestList(request):
     query_set = Contest.objects.all()
-    serializer = ContestSerializer(query_set, many=True)
+    serializer = ContestSerializer(query_set, many=True, context={'request':request})
     return Response(serializer.data)
 
 

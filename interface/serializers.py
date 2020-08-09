@@ -26,6 +26,7 @@ class ContestSerializer(serializers.ModelSerializer):
         data = super(ContestSerializer, self).to_representation(instance)
         data['start_time'] = instance.start_time.timestamp()
         data['end_time'] = instance.end_time.timestamp()
+        data['contest_image'] = self.context['request'].build_absolute_uri(instance.contest_image.url)
         return data
 
 

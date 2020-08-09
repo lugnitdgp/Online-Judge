@@ -171,19 +171,6 @@ def GetPersonalSubmissions(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnswer(request):
-    coder_ans = []
-    contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-    coder = Coder.objects.get(user=request.user)
-    query_set = Answer.objects.filter(contest=contest, user=coder)
-    serializer = AnswerSerializer(query_set, many=True)
-    if contest.isStarted() or contest.isOver():
-        return Response(serializer.data)
-    return Response({'status': 301, 'message': 'Contest has not started yet'})
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def GetAnswer(request):
-    coder_ans = []
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
     coder = Coder.objects.get(user=request.user)
     query_set = Answer.objects.filter(contest=contest, user=coder)

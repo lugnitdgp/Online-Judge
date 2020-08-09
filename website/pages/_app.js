@@ -10,6 +10,7 @@ import UserContextProvider from "../components/UserContextProvider";
 import "../styles/main.css";
 import Loader from "../components/loading";
 
+
 class MyApp extends App {
   constructor(props) {
     super(props);
@@ -47,7 +48,7 @@ class MyApp extends App {
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             {this.state.loaded ? <Component {...pageProps} /> : <Loader />}
-            <style jsx global>{`
+            {/* <style jsx global>{`
               html,
               body {
                 padding: 0;
@@ -58,7 +59,7 @@ class MyApp extends App {
               * {
                 box-sizing: border-box;
               }
-            `}</style>
+            `}</style> */}
           </ThemeProvider>
         </UserContextProvider>
       </React.Fragment>

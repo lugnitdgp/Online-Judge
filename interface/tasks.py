@@ -38,9 +38,9 @@ def execute(question, coder, code, lang, contest):
     except:
         print("Exception")
     f = os.path.join(OUTPATH_DIR, filename)
-    question = Question.objects.get(question_name=question['question_name'])
-    user = Coder.objects.get(name=coder['name'])
-    contest = Contest.objects.get(contest_name=contest['contest_name'])
+    question = Question.objects.get(question_code=question['question_code'])
+    user = Coder.objects.get(email=coder['email'])
+    contest = Contest.objects.get(contest_code=contest['contest_code'])
     testcases = Testcases.objects.filter(question=question)
     temp_output_file = os.path.join(OUTPATH_DIR, execute.request.id.__str__() + ".txt")
     ac, wa = 0, 0

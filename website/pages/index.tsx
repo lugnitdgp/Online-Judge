@@ -223,7 +223,7 @@ class IndexPage extends React.Component<IProps, {}> {
                       className="loginbtn"
                       type="submit"
                       color="primary"
-                      onClick={() => Router.push("/login")}
+                      onClick={() => Router.push("/signup")}
                     >
                       Signup
                     </Button>

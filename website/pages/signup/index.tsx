@@ -44,9 +44,6 @@ const styles = createStyles((theme: Theme) => ({
   },
   submit: {
     marginTop: theme.spacing(3),
-    width:"200px",
-    borderRadius:"20px",
-    margin:"0 auto",
   },
   signInIcon: {
     color: "white",
@@ -60,6 +57,7 @@ const styles = createStyles((theme: Theme) => ({
     width:"63px",
     height:"63px",
     textAlign:"center"
+    
   },
   facebookButton: {
     color: "white",
@@ -84,6 +82,11 @@ const styles = createStyles((theme: Theme) => ({
   linkedInIcon: {
     marginRight: theme.spacing(1),
   },
+  btn:{
+    width:"200px",
+    borderRadius:"20px",
+    margin:"0 auto"
+  }
 }));
 
 const googleLogin = () => {
@@ -177,56 +180,55 @@ function LoginPage(props: Props) {
     event.preventDefault();
   };
 
-  
-    
-  const logIn = (event: React.MouseEvent<HTMLButtonElement>) =>{
+  const signUp = (event: React.MouseEvent<HTMLButtonElement>) => {
 
     event.preventDefault();
-    var payload = JSON.stringify({
-      email: values['email1'],
-      password: values[`password1`]
-    })
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/custom_login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-    },
-      body: payload
-    }).then((resp) => resp.json())
-      .then((response) => {
-        if(response.status === 401)
-        {
-          alert(response.message)
-          window.location.href= "/login"
-        }
-        else if(response.status === 404){
-          alert("Please enter your details properly.")
-          window.location.href= "/login"
-        }
-        else if(response.status === 200){
-        localStorage.token = response.token;
-        document.cookie = `token=${response.token}; path=/; max-age=${
-            60 * 60 * 24 * 100
-            }`;
-        localStorage.onlinejudge_info = JSON.stringify({
-            name: response.user.name,
-            email: response.user.email,
-            image_link: response.user.image_link
-        })
+      var payload = JSON.stringify({
+        email: values['email2'],
+        username: values['username'],
+        first_name: values['first_name'],
+        password: values[`password2`]
+      })
+    
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+      },
+        body: payload
+      }).then((resp) => resp.json())
+        .then((response) => {
+          if(response.status === 401)
+          {
+            alert(response.message)
+            window.location.href= "/login"
+          }
+          else if(response.status === 400){
+            alert("Please enter your details properly.")
+            window.location.href= "/login"
+          }
+          else if(response.status === 200){
+          localStorage.token = response.token;
+          document.cookie = `token=${response.token}; path=/; max-age=${
+              60 * 60 * 24 * 100
+              }`;
+          localStorage.onlinejudge_info = JSON.stringify({
+              name: response.user.name,
+              email: response.user.email,
+              image_link: response.user.image_link
+          })
 
-        window.location.href = "/"
-        
-    }})
-        
-      .catch((error) => { console.log(error) });
-
-
-
-
-
-  }
-
+          window.location.href = "/"
+          
+      }})
+          
+        .catch((error) => { console.log(error) });
+    
+    
+    }
+    
+ 
   // const toggleisLogin = () => {
   //   toggleLogin(!isLogin);
   // };
@@ -241,16 +243,19 @@ function LoginPage(props: Props) {
 
   return (
     <main className={classes.main}>
-      {/* {isLogin ? ( */}
+      {/* {isLogin ? (
         <Paper className={classes.paper}>
-          
-          <Typography variant="h3" gutterBottom style={{color:"#104E8B"}}>
+          <Avatar
+            className={classes.avatar}
+            src="https://img.icons8.com/officel/80/000000/court-judge.png"
+          />
+          <Typography variant="h3" gutterBottom>
             Login
         </Typography>
         <Button
             variant="outlined"
             color="secondary"
-            onClick={() => Router.push("/signup")}
+            onClick={() => toggleisLogin()}
             style={{ border: "None", outline: "none" }}
           >
             Didn't Sign Up? Register here.
@@ -289,10 +294,7 @@ function LoginPage(props: Props) {
                 }
               />
             </FormControl>
-            <br/>
-              <br/>
-              <br/>
-            <div style={{textAlign:"center"}}>
+
             <Button
               variant="contained"
               type="submit"
@@ -303,13 +305,6 @@ function LoginPage(props: Props) {
             >
               LogIn
           </Button>
-          <br/>
-              <br/>
-              OR
-          </div>
-          <br/>
-          
-              <div style={{textAlign:"center"}}>
             <Button
               variant="outlined"
               className={classes.googleButton}
@@ -321,7 +316,7 @@ function LoginPage(props: Props) {
                 src="https://img.icons8.com/color/24/000000/google-logo.png"
                 className={classes.signInIcon}
               />
-            {/* Login with Google */}
+            Login with Google
           </Button>
             <Button
               variant="outlined"
@@ -332,25 +327,21 @@ function LoginPage(props: Props) {
               className={classes.facebookButton}
             >
               <Facebook className={classes.signInIcon} />
-            {/* Login with Facebook */}
+            Login with Facebook
           </Button>
-          </div>
           </form>
           
         </Paper>
-      {/* ) : (
+      ) : ( */}
           <Paper className={classes.paper}>
-            <Avatar
-              className={classes.avatar}
-              src="https://img.icons8.com/officel/80/000000/court-judge.png"
-            />
-            <Typography variant="h3" gutterBottom>
+            
+            <Typography variant="h3" gutterBottom style={{color:"#104E8B"}}> 
               Register
-        </Typography>
+            </Typography>
         <Button
               variant="outlined"
               color="secondary"
-              onClick={() => toggleisLogin()}
+              onClick={() => Router.push("/login")}
               style={{ border: "None", outline: "none" }}
             >
               Already Registered? Login here.
@@ -403,16 +394,28 @@ function LoginPage(props: Props) {
                   }
                 />
               </FormControl>
+              <br/>
+              <br/>
+              <br/>
+              <div style={{textAlign:"center"}}>
               <Button
                 variant="contained"
                 type="submit"
                 fullWidth
                 color="primary"
                 onClick={signUp}
+                className={classes.btn}
               >
                 SignUp
-          </Button>
+              </Button>
+              <br/>
+              <br/>
+              OR
+              
+              </div>
               <Typography color="error"></Typography>
+              <br/>
+              <div style={{textAlign:"center"}}>
               <Button
                 variant="outlined"
                 className={classes.googleButton}
@@ -424,7 +427,7 @@ function LoginPage(props: Props) {
                   src="https://img.icons8.com/color/24/000000/google-logo.png"
                   className={classes.signInIcon}
                 />
-            Sign Up with Google
+            {/* Sign Up with Google */}
           </Button>
               <Button
                 variant="outlined"
@@ -435,11 +438,12 @@ function LoginPage(props: Props) {
                 className={classes.facebookButton}
               >
                 <Facebook className={classes.signInIcon} />
-            Sign Up with Facebook
+            {/* Sign Up with Facebook */}
           </Button>
+          </div>
             </form>
           </Paper>
-        )} */}
+        {/* )} */}
     </main>
   );
 }

@@ -8,20 +8,28 @@ export default function Timer(props) {
     return (
       <span>
         <Card style={{ padding: "0px", margin: "0 auto" }} elevation={0}>
-          <CardContent>
+          <CardContent style={{ padding: "0px", margin: "0 auto" }}>
             <div
               style={{
                 textAlign: "center",
                 margin: "0 auto",
                 padding: "0",
-                textTransform: "uppercase",
                 fontFamily: "'Bree serif', sans-serif",
-                color: "#005",
+                color: "#104e8b",
                 fontOpticalSizing: "auto",
               }}
             >
-              <h4>
-                This contest ends in : {zeroPad(days)}:{zeroPad(hours)}:
+              <h4 style={{ margin: "0 auto", padding: "0" }}>
+                {/* {props.message}{" "}
+                {days + hours + minutes + seconds > 0 ? (
+                  <div>
+                    {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:
+                    {zeroPad(seconds)}
+                  </div>
+                ) : (
+                  <p> </p>
+                )} */}
+                {props.message} {zeroPad(days)}:{zeroPad(hours)}:
                 {zeroPad(minutes)}:{zeroPad(seconds)}
               </h4>
             </div>

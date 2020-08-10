@@ -13,6 +13,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import SecondaryNav from "../components/SecondaryNav";
+import Loader from "../components/loading";
+
 interface IProps {
   classes: any;
 }
@@ -21,6 +23,7 @@ class Leaderboard extends React.Component<IProps, {}> {
     gotData: false,
     leaderBoard: [],
     columns: [],
+    loaded:false,
   };
 
   componentDidMount() {
@@ -151,7 +154,7 @@ class Leaderboard extends React.Component<IProps, {}> {
                 entry[`${answer.ques_name}`] = "- " + answer.wrong;
               });
             });
-            this.setState({ gotData: true, leaderBoard: data.data });
+            this.setState({ gotData: true, leaderBoard: data.data, loaded: true });
           })
           .catch(function (error) {
             if (error.response) {
@@ -184,6 +187,8 @@ class Leaderboard extends React.Component<IProps, {}> {
     return (
       <div>
         <Layout>
+      {this.state.loaded ? 
+      <>
           <SecondaryNav />
           <link
             rel="stylesheet"
@@ -307,6 +312,8 @@ class Leaderboard extends React.Component<IProps, {}> {
             &copy; Created and maintained by GNU/Linux Users' group, Nit
             Durgapur
           </div>
+          </>
+        : <Loader />}
         </Layout>
       </div>
     );

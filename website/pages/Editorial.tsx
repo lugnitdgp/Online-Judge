@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "../components/Layout";
+import Loader from "../components/loading";
 
 interface IProps {
   classes: any;
@@ -8,6 +9,7 @@ class Editorial extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     list: [],
+    loaded:false,
   };
   componentDidMount() {
     fetch(
@@ -21,7 +23,7 @@ class Editorial extends React.Component<IProps, {}> {
     )
       .then((resp) => resp.json())
       .then((res) => {
-        this.setState({ list: res });
+        this.setState({ list: res, loaded: true });
         console.log(res);
         
       })
@@ -32,6 +34,8 @@ class Editorial extends React.Component<IProps, {}> {
     render() {
       return (
         <Layout>
+           {this.state.loaded ? 
+      <>
           {this.state.list.length > 0
                 ? this.state.list.map((item, i) => (
                   <>
@@ -49,7 +53,8 @@ class Editorial extends React.Component<IProps, {}> {
                 <br/>
                 <h4>code</h4>
                 <div
-                style={{ fontSize: 15, color:"#000" }}
+                className="code"
+                style={{ fontSize: 15, color:"#000", backgroundColor:"#eee", padding:"10px", margin:"0px" }}
                 dangerouslySetInnerHTML={{
                   __html: item.code,
                 }}
@@ -63,6 +68,8 @@ class Editorial extends React.Component<IProps, {}> {
               &copy; Created and maintained by GNU/Linux Users' group, Nit
               Durgapur
             </div>
+            </>
+        : <Loader />}
         </Layout>
           
         

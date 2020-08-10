@@ -18,6 +18,12 @@ hr {
   border: 1px solid #104e8b;
 }
 
+.code p{
+  margin:0;
+  font-family: 'Courier New', Courier;
+  font-weight: 600;
+  letter-spacing: -0em;
+}
 .Footer {
   position: relative;
   bottom: 0;

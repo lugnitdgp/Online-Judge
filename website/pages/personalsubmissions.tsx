@@ -14,10 +14,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import SecondaryNav from "../components/SecondaryNav";
-
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import Loader from "../components/loading";
 
 const customStyles = () => ({
   Successful: {
@@ -59,6 +59,7 @@ class submissions extends React.Component<IProps, {}> {
     view: "",
     modallang: "",
     exec: [],
+    loaded: false,
   };
   constructor(props: Readonly<IProps>) {
     super(props);
@@ -149,7 +150,7 @@ class submissions extends React.Component<IProps, {}> {
 
           arr.push(payload);
         });
-        this.setState({ list: arr });
+        this.setState({ list: arr, loaded: true });
       })
       .catch((error) => {
         console.log(error);
@@ -315,6 +316,9 @@ class submissions extends React.Component<IProps, {}> {
 
     return (
       <Layout>
+        
+      {this.state.loaded ? 
+      <>
         <SecondaryNav />
 
         {/* <ReactModal
@@ -383,7 +387,7 @@ class submissions extends React.Component<IProps, {}> {
             </div>
           </div>
         </ReactModal> */}
-<Modal
+      <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={this.props.classes.modal}
@@ -485,6 +489,8 @@ class submissions extends React.Component<IProps, {}> {
         <div className="Footer">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
+        </>
+        : <Loader />}
       </Layout>
     );
   }

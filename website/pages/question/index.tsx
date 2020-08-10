@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import SecondaryNav from "../../components/SecondaryNav";
 import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
 import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
+import Loader from "../../components/loading";
 
 class questionlist extends React.Component {
   state = {
@@ -16,6 +17,7 @@ class questionlist extends React.Component {
     timestamp: "",
     message: "",
     performance: [],
+    loaded: false,
   };
 
   componentDidMount() {
@@ -84,7 +86,7 @@ class questionlist extends React.Component {
                 }
               });
             });
-            this.setState({ list: res });
+            this.setState({ list: res, loaded:true });
             var today = Date.now();
             var start = localStorage.start * 1000;
             var end = localStorage.end * 1000;
@@ -115,7 +117,11 @@ class questionlist extends React.Component {
 
   render() {
     return (
+      
       <Layout>
+        
+      {this.state.loaded ? 
+      <>
         <SecondaryNav />
         <div style={{ maxWidth: "1000px", margin: "10px auto" }}>
           <Grid container spacing={0}>
@@ -269,6 +275,9 @@ class questionlist extends React.Component {
         <div className="FooterFixed">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
+        </>
+        : <Loader />}
+          
       </Layout>
     );
   }

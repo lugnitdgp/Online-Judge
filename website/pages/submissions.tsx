@@ -6,6 +6,7 @@ import classnames from "classnames";
 import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
 import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
 import SecondaryNav from "../components/SecondaryNav";
+import Loader from "../components/loading";
 
 const customStyles = () => ({
   Successful: {
@@ -24,6 +25,7 @@ class submissions extends React.Component<IProps, {}> {
   state = {
     gotData: false,
     list: [],
+    loaded:false,
   };
   componentDidMount() {
     fetch(
@@ -82,7 +84,7 @@ class submissions extends React.Component<IProps, {}> {
 
           arr.push(payload);
         });
-        this.setState({ list: arr });
+        this.setState({ list: arr, loaded:true });
       })
       .catch((error) => {
         console.log(error);
@@ -246,6 +248,8 @@ class submissions extends React.Component<IProps, {}> {
     const data = this.state.list;
     return (
       <Layout>
+        {this.state.loaded ? 
+      <>
         <SecondaryNav />
         <div
           className="contain"
@@ -269,6 +273,8 @@ class submissions extends React.Component<IProps, {}> {
         <div className="Footer">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
+        </>
+        : <Loader />}
       </Layout>
     );
   }

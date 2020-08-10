@@ -25,6 +25,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../components/Timer";
 import SecondaryNav from "../../components/SecondaryNav";
+import Loader from "../../components/loading";
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -94,6 +95,7 @@ interface IState {
   copied: boolean;
   timestamp: any;
   message: string;
+  loaded:boolean;
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -113,6 +115,7 @@ class QuesDetail extends React.Component<IProps, IState> {
       copied: false,
       timestamp: "",
       message: "",
+      loaded: false,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -268,6 +271,7 @@ class QuesDetail extends React.Component<IProps, IState> {
       console.log(response);
       this.setState({
         data: response,
+        loaded: true,
       });
 
       var today = Date.now();
@@ -300,6 +304,8 @@ class QuesDetail extends React.Component<IProps, IState> {
     const { classes } = this.props;
     return (
       <Layout>
+        {this.state.loaded ? 
+      <>
         <SecondaryNav />
         <div style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}>
           <Timer
@@ -617,6 +623,8 @@ class QuesDetail extends React.Component<IProps, IState> {
         <div className="Footer">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
+        </>
+        : <Loader />}
       </Layout>
     );
   }

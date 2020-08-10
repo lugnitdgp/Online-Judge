@@ -6,6 +6,7 @@ import Layout from "../components/Layout";
 import Grid from "@material-ui/core/Grid";
 import ContestCard from "../components/ContestCard";
 import Router from "next/router";
+import Loader from "../components/loading";
 
 interface IProps {
   classes: any;
@@ -17,6 +18,7 @@ class IndexPage extends React.Component<IProps, {}> {
     ongoing: [],
     ended: [],
     upcoming: [],
+    loaded: false,
   };
   componentDidMount() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
@@ -57,7 +59,7 @@ class IndexPage extends React.Component<IProps, {}> {
             ended.push(contest);
           }
         });
-        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended });
+        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended, loaded:true });
       })
       .catch((error) => {
         console.log(error);
@@ -68,6 +70,8 @@ class IndexPage extends React.Component<IProps, {}> {
     return (
       <Layout>
         {localStorage.onlinejudge_info ? (
+          <>
+          {this.state.loaded ?  
           <>
             <Grid container spacing={0} className="contestMainrow">
               <Grid item xs={12} md={3} className="ContestSectionHead">
@@ -164,6 +168,8 @@ class IndexPage extends React.Component<IProps, {}> {
               &copy; Created and maintained by GNU/Linux Users' group, Nit
               Durgapur
             </div>
+          </>
+          : <Loader />}
           </>
         ) : (
           <>

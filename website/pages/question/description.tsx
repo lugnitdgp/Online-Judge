@@ -26,6 +26,7 @@ import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../components/Timer";
 import SecondaryNav from "../../components/SecondaryNav";
 import Loader from "../../components/loading";
+import Disqus from "disqus-react"
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -96,6 +97,7 @@ interface IState {
   timestamp: any;
   message: string;
   loaded:boolean;
+  ended:boolean;
 }
 
 class QuesDetail extends React.Component<IProps, IState> {
@@ -116,6 +118,7 @@ class QuesDetail extends React.Component<IProps, IState> {
       timestamp: "",
       message: "",
       loaded: false,
+      ended: false,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -287,6 +290,7 @@ class QuesDetail extends React.Component<IProps, IState> {
         this.setState({
           timestamp: 0,
           message: "The Contest has ended",
+          ended: true,
         });
       } else if (start > today) {
         this.setState({
@@ -302,6 +306,12 @@ class QuesDetail extends React.Component<IProps, IState> {
 
   render() {
     const { classes } = this.props;
+    const disqusShortname = "onlinejudge-1"
+    const disqusConfig = {
+      url: "http://localhost:3000",
+      identifier: "article-id",
+      title: "Title of Your Article"
+    }
     return (
       <Layout>
         {this.state.loaded ? 
@@ -620,11 +630,26 @@ class QuesDetail extends React.Component<IProps, IState> {
             )}
           </Paper>
         </div>
+        
+        {this.state.ended ? 
+        <div></div>
+          :
+        <Paper elevation={0} className={classes.paper2}>
+            <div style={{ margin: "20px", textAlign: "center" }}>
+        <Disqus.DiscussionEmbed
+          shortname={disqusShortname}
+          config={disqusConfig}
+        />
+        </div>
+        </Paper>
+        }
+
         <div className="Footer">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
         </>
         : <Loader />}
+        
       </Layout>
     );
   }

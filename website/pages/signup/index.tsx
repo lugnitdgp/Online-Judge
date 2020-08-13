@@ -148,28 +148,33 @@ interface Props {
 interface State {
   email1: string;
   email2: string;
-  password1: string;
   password2: string;
   username: string;
   first_name: string;
   showPassword: boolean;
+  view:boolean;
 }
 function LoginPage(props: Props) {
   const { classes } = props;
   
+  
+
 
   const [values, setValues] = React.useState<State>({
     email1: '',
     email2: '',
-    password1: '',
     password2: '',
     username: '',
     first_name: '',
     showPassword: false,
+    view: false
   });
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    var pass = event.target.value;
     setValues({ ...values, [prop]: event.target.value });
+    if(prop === 'password2')
+     checkPasswordComplexity(pass)
   };
 
   const handleClickShowPassword = () => {
@@ -179,6 +184,19 @@ function LoginPage(props: Props) {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+
+    async function checkPasswordComplexity(pwd){
+     console.log('text is : ', pwd)
+    var lowerCase = /[a-z]/;
+    var upperCase= /[A-Z]/; 
+    var number = /[0-9]/;
+    const valid = number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length >=6; 
+    console.log(valid)
+    if(valid) 
+    setValues({ ...values, view: valid})
+
+
+  }
 
   const signUp = (event: React.MouseEvent<HTMLButtonElement>) => {
 
@@ -398,7 +416,7 @@ function LoginPage(props: Props) {
               <br/>
               <br/>
               <div style={{textAlign:"center"}}>
-              <Button
+                {values.view?(<Button
                 variant="contained"
                 type="submit"
                 fullWidth
@@ -407,7 +425,18 @@ function LoginPage(props: Props) {
                 className={classes.btn}
               >
                 SignUp
-              </Button>
+              </Button>):(
+              <Button
+                variant="contained"
+                type="submit"
+                fullWidth
+                disabled
+                color="primary"
+                onClick={signUp}
+                className={classes.btn}
+              >
+                SignUp
+              </Button>)}
               <br/>
               <br/>
               OR
@@ -457,5 +486,7 @@ function getParameterByName(name, url = window.location.href) {
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+
 
 export default withStyles(styles)(LoginPage);

@@ -160,7 +160,7 @@ class Editorial(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     ques_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
     solution = models.TextField(blank=True, help_text="Hint and Explanation Goes Here")
-    code = HTMLField()
+    code = models.FileField(upload_to="editorial/", help_text="Editorial file")
 
     def __str__(self):
         return self.contest.contest_name

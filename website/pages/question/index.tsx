@@ -18,6 +18,7 @@ class questionlist extends React.Component {
     message: "",
     performance: [],
     loaded: false,
+    ended:false
   };
 
   componentDidMount() {
@@ -98,6 +99,7 @@ class questionlist extends React.Component {
               });
             } else if (start < today && end < today) {
               this.setState({
+                ended:true,
                 timestamp: 0,
                 message: "The Contest has ended",
               });
@@ -195,7 +197,7 @@ class questionlist extends React.Component {
                   Question
                 </TableCell>
                 <TableCell
-                  align="right"
+                  align="left"
                   style={{ color: "#fff", marginBottom: "20px" }}
                 >
                   Status
@@ -206,6 +208,13 @@ class questionlist extends React.Component {
                 >
                   Score
                 </TableCell>
+                {this.state.ended==false?(null):(
+                <TableCell
+                  align="right"
+                  style={{ color: "#fff", marginBottom: "20px" }}
+                >
+                  Editorial
+                </TableCell>)}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -254,7 +263,7 @@ class questionlist extends React.Component {
                           </a>
                         </TableCell>
                         <TableCell
-                          align="right"
+                          align="left"
                           style={{ textDecoration: "None", color: "#104e8b" }}
                         >
                           {item.icon}
@@ -265,6 +274,21 @@ class questionlist extends React.Component {
                         >
                           {item.question_score}
                         </TableCell>
+                        {this.state.ended==false?(null):(
+                        <TableCell
+                          align="right"
+                          style={{
+                            textDecoration: "None",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          <a
+                            href={`/question/editorial?id=${item.question_code}`}
+                            style={{  textDecoration: "None", color: "#104e8b" }}
+                          >
+                            View Editorial
+                          </a>
+                        </TableCell>)}
                       </TableRow>
                     </>
                   ))

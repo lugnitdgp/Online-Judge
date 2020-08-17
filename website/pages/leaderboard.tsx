@@ -80,7 +80,25 @@ class Leaderboard extends React.Component<IProps, {}> {
             style: { fontWeight: "900", textAlign: "center" },
           }),
         },
-      },
+      },{
+        name: "score",
+        label: "SCORE",
+        options: {
+          filter: true,
+          sort: false,
+          setCellHeaderProps: () => ({
+            style: {
+              textAlign: "center",
+              background: "#000",
+              color: "#fff",
+              textDecoration: "bold",
+            },
+          }),
+          setCellProps: () => ({
+            style: { fontWeight: "900", textAlign: "center" },
+          }),
+        },
+      }
     ];
 
     fetch(
@@ -118,26 +136,6 @@ class Leaderboard extends React.Component<IProps, {}> {
 
           columns.push(newCol);
         });
-        var scoreCol = {
-          name: "score",
-          label: "SCORE",
-          options: {
-            filter: true,
-            sort: false,
-            setCellHeaderProps: () => ({
-              style: {
-                textAlign: "center",
-                background: "#000",
-                color: "#fff",
-                textDecoration: "bold",
-              },
-            }),
-            setCellProps: () => ({
-              style: { fontWeight: "900", textAlign: "center" },
-            }),
-          },
-        };
-        columns.push(scoreCol);
         this.setState({ columns: columns });
       })
       .then(() => {
@@ -151,8 +149,15 @@ class Leaderboard extends React.Component<IProps, {}> {
               entry[`image`] = <Avatar src={entry[`image`]} />;
               var answers = entry.answer;
               answers.map((answer) => {
-                entry[`${answer.ques_name}`] = "- " + answer.wrong;
-              });
+                console.log(answer)
+                entry[`${answer.ques_name}`] = [answer.correct, answer.wrong, answer.score];
+              })
+              
+              this.state.columns.map((column)=>{
+                  if(!entry.hasOwnProperty(column.name))
+                      entry[column.name] = " "
+              })
+
             });
             this.setState({ gotData: true, leaderBoard: data.data, loaded: true });
           })
@@ -269,8 +274,39 @@ class Leaderboard extends React.Component<IProps, {}> {
                             >
                               {columns.map((columns) => {
                                 const value = row[columns.name];
-                                return (
-                                  <TableCell
+                                
+                                  if(Array.isArray(value)){if(value[0]==0){return(<TableCell
+                                    key={columns.name}
+                                    style={{
+                                      minWidth: "20px",
+                                      backgroundColor: "#f25",
+                                      color: "#000000",
+                                      fontSize: "15px",
+                                      borderBottom: "0px solid #006",
+                                      paddingTop: "7px",
+                                      paddingBottom: "7px",
+                                    }}
+                                  >
+                                    -{value[1]}
+                                  </TableCell>)}else if(value[0]==1){
+                                    
+                                    return(
+                                      <TableCell
+                                    key={columns.name}
+                                    style={{
+                                      minWidth: "20px",
+                                      backgroundColor: "#98ff98",
+                                      color: "#000000",
+                                      fontSize: "15px",
+                                      borderBottom: "0px solid #006",
+                                      paddingTop: "7px",
+                                      paddingBottom: "7px",
+                                    }}
+                                  >
+                                    {value[2]}
+                                  </TableCell>
+                                    )
+                                  }}else{return(<TableCell
                                     key={columns.name}
                                     style={{
                                       minWidth: "20px",
@@ -283,8 +319,9 @@ class Leaderboard extends React.Component<IProps, {}> {
                                     }}
                                   >
                                     {value}
-                                  </TableCell>
-                                );
+                                  </TableCell>)}
+                                  
+                                
                               })}
                             </TableRow>
                           );

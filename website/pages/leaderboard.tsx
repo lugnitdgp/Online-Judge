@@ -80,7 +80,25 @@ class Leaderboard extends React.Component<IProps, {}> {
             style: { fontWeight: "900", textAlign: "center" },
           }),
         },
-      },
+      },{
+        name: "score",
+        label: "SCORE",
+        options: {
+          filter: true,
+          sort: false,
+          setCellHeaderProps: () => ({
+            style: {
+              textAlign: "center",
+              background: "#000",
+              color: "#fff",
+              textDecoration: "bold",
+            },
+          }),
+          setCellProps: () => ({
+            style: { fontWeight: "900", textAlign: "center" },
+          }),
+        },
+      }
     ];
 
     fetch(
@@ -118,26 +136,6 @@ class Leaderboard extends React.Component<IProps, {}> {
 
           columns.push(newCol);
         });
-        var scoreCol = {
-          name: "score",
-          label: "SCORE",
-          options: {
-            filter: true,
-            sort: false,
-            setCellHeaderProps: () => ({
-              style: {
-                textAlign: "center",
-                background: "#000",
-                color: "#fff",
-                textDecoration: "bold",
-              },
-            }),
-            setCellProps: () => ({
-              style: { fontWeight: "900", textAlign: "center" },
-            }),
-          },
-        };
-        columns.push(scoreCol);
         this.setState({ columns: columns });
       })
       .then(() => {

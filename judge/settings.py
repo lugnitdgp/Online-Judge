@@ -26,8 +26,6 @@ DEBUG = config('DEBUG', cast=bool, default=True)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 INSTALLED_APPS = [
-    'jet.dashboard',
-    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -172,5 +170,3 @@ DJRICHTEXTFIELD_CONFIG = {
         'width': 700
     }
 }
-
-X_FRAME_OPTIONS = 'SAMEORIGIN'

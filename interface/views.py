@@ -11,7 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from urllib.parse import unquote
 from django.utils import timezone as t
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from urllib.parse import quote
 # Create your views here.
 
@@ -51,6 +51,10 @@ def GetQuestion(request):
         return Response(serializer.data)
     except ObjectDoesNotExist:
         return Response({'status': 404, "message": "Question Code is Invalid"})
+    except MultipleObjectsReturned:
+        question = Question.objects.filter(question_code=request.GET['q_id'], contest=contest)[0]
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
@@ -63,7 +67,10 @@ def submitCode(request):
     contest_code = request.data.get('contest_id')
     try:
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
-        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        try:
+            question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        except MultipleObjectsReturned:
+            question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
         coder = Coder.objects.get(user=request.user)
         coder_time = coder.time_stamp
         time_dif = (t.now() - coder_time).total_seconds()
@@ -90,7 +97,10 @@ def status(request):
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         penalty = contest.penalty
         penalty_total = penalty * (((t.now() - contest.start_time).total_seconds()) / 60)
-        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        try:
+            question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        except MultipleObjectsReturned:
+            question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
         coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
         answer = Answer.objects.get_or_create(question=question, user=coder, contest=contest)[0]
         job = Job.objects.get(coder=coder, question=question, job_id=request.data.get('task_id'))
@@ -200,7 +210,10 @@ def GetEditorialList(request):
 @permission_classes([IsAuthenticated])
 def GetEditorial(request):
     contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
-    question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+    try:
+        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+    except MultipleObjectsReturned:
+        question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
     try:
         editorial = Editorial.objects.get(question=question, contest=contest)
         editorial.code.open(mode="rb")

@@ -107,39 +107,7 @@ export default function ContestCard(props) {
               >
                 Enter Contest
               </Button>
-            ) : (<div>{props.contestInfo.ended?(<div>
-              <Button
-              size="large"
-              color="primary"
-              variant="outlined"
-              style={{ outline: "none", border: "none" }}
-              onClick={() => {
-                if (!localStorage.token) {
-                  Router.push("/login");
-                } else {
-                  localStorage.setItem(
-                    "code",
-                    props.contestInfo.contest_code
-                  );
-                  localStorage.setItem("start", props.contestInfo.start_time);
-                  localStorage.setItem("end", props.contestInfo.end_time);
-                  Router.push("/question");
-                }
-              }}
-            >
-              Enter Contest
-            </Button>
-            <br/>
-            <Button
-            size="large"
-            color="primary"
-            variant="outlined"
-            style={{ outline: "none", border: "none" }}
-            onClick={() => {Router.push("/Editorial");}
-            }
-          >
-            View Editorial
-          </Button></div>):(
+            ) : (
               <Button
                 size="large"
                 color="primary"
@@ -161,7 +129,7 @@ export default function ContestCard(props) {
               >
                 Enter Contest
               </Button>
-            )}</div>)}
+            )}
             <br />
             {props.contestInfo.timestamp ? (
               <Countdown

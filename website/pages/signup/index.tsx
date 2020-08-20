@@ -186,16 +186,14 @@ function LoginPage(props: Props) {
   };
 
     async function checkPasswordComplexity(pwd){
-     console.log('text is : ', pwd)
+    console.log('text is : ', pwd)
     var lowerCase = /[a-z]/;
     var upperCase= /[A-Z]/; 
     var number = /[0-9]/;
-    const valid = number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length >=6; 
+    const valid = (number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length) >=6; 
     console.log(valid)
     if(valid) 
     setValues({ ...values, view: valid})
-
-
   }
 
   const signUp = (event: React.MouseEvent<HTMLButtonElement>) => {

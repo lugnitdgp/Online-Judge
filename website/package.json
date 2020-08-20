@@ -33,6 +33,7 @@
     "react-live-clock": "^4.0.5",
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.0",
+    "react-responsive": "^8.1.0",
     "react-swipeable-views": "^0.13.9",
     "react-virtualized": "^9.21.2",
     "redux": "^4.0.5",

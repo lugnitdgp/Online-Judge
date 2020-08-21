@@ -45,7 +45,7 @@ export default class SecondaryNav extends React.Component {
         {localStorage.onlinejudge_info ? (
           <Button
             color="inherit"
-            onClick={() => Router.push("/personalsubmissions")}
+            onClick={() => Router.push("/personalSubmissions")}
           >
             My Submissions
           </Button>

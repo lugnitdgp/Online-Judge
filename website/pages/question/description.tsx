@@ -7,7 +7,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import Select from "@material-ui/core/Select";
-import Editor from "components/Editor";
+import Editor from "components/editor";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -15,7 +15,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Layout from "components/Layout";
+import Layout from "components/layout";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CheckCircleOutline, Error } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
@@ -24,7 +24,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../components/Timer";
-import SecondaryNav from "../../components/SecondaryNav";
+import SecondaryNav from "../../components/secondaryNav";
 import Loader from "../../components/loading";
 import Disqus from "disqus-react"
 //import zIndex from "@material-ui/core/styles/zIndex";

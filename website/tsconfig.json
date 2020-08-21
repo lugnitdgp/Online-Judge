@@ -20,5 +20,5 @@
     "target": "esnext"
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", "components/Newappbar.js"]
+  "include": ["**/*.ts", "**/*.tsx", "components/newAppbar.tsx"]
 }

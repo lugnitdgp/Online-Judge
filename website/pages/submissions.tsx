@@ -1,11 +1,11 @@
 import React from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import MUIDataTable from "mui-datatables";
 import { withStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
 import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
-import SecondaryNav from "../components/SecondaryNav";
+import SecondaryNav from "../components/secondaryNav";
 import Loader from "../components/loading";
 
 const customStyles = () => ({

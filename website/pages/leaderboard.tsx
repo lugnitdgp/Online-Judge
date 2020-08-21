@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import {} from "@material-ui/icons";
 //import MUIDataTable from 'mui-datatables';
 import { Avatar, Card } from "@material-ui/core";
@@ -12,7 +12,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import SecondaryNav from "../components/SecondaryNav";
+import SecondaryNav from "../components/secondaryNav";
 import Loader from "../components/loading";
 
 interface IProps {

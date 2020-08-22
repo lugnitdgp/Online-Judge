@@ -9,28 +9,48 @@ import Router from "next/router";
 import Loader from "../components/loading";
 import { useMediaQuery } from "react-responsive";
 
+
+//Redux imports
+import { connect } from "react-redux";
+import { getContest } from "../store/actions/contestAction"
+import store from "../store";
+import withRedux from "next-redux-wrapper";
+
 interface IProps {
   classes: any;
+  props:any;
 }
 
-class IndexPage extends React.Component<IProps, {}> {
+
+
+class IndexPage extends React.Component<any, {}>  {
   state = {
-    gotData: false,
+    // gotData: true,
     ongoing: [],
     ended: [],
     upcoming: [],
-    loaded: false,
+    // loaded: false,
+    
   };
+  
+
   componentDidMount() {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((res) => {
+    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
+    //   method: "GET",
+    // })
+    //   .then((resp) => resp.json())
+    //   .then((res) => {
+
+        // const {contests} = this.props;
+
+        this.props.getContest();
+
+        console.log(this.props)
+
         var ongoing = [];
-        var upcoming = [];
+        var upcoming = []
         var ended = [];
-        res.map((contest) => {
+        this.props.contests.map((contest) => {
           console.log(contest);
           var dateObj = new Date(contest["start_time"] * 1000);
           contest["start"] = dateObj.toString();
@@ -60,11 +80,11 @@ class IndexPage extends React.Component<IProps, {}> {
             ended.push(contest);
           }
         });
-        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended, loaded:true });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended });
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
   }
 
   render() {
@@ -260,7 +280,7 @@ class IndexPage extends React.Component<IProps, {}> {
       <Layout>
         {localStorage.onlinejudge_info ? (
           <>
-          {this.state.loaded ?  
+          {this.props.loaded ?  
           <>
             <Grid container spacing={0} className="contestMainrow">
               <Grid item xs={12} md={3} className="ContestSectionHead">
@@ -439,4 +459,14 @@ class IndexPage extends React.Component<IProps, {}> {
   }
 }
 
-export default withStyles(styles)(IndexPage);
+function mapStateToProps(state) {
+  return {
+    contests: state.contestReducer.contests,
+    loaded: state.contestReducer.loaded,
+    serverError: state.contestReducer.error,
+  };
+}
+
+export default connect(mapStateToProps, {
+  getContest,
+}) (IndexPage);

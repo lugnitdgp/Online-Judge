@@ -5,17 +5,17 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage';
 import { composeWithDevTools } from "redux-devtools-extension";
 
-// const persistConfig = {
-//     key: 'authType',
-//     storage: storage,
-//     // whitelist: // which reducer want to store
-// };
+const persistConfig = {
+    key: 'authType',
+    storage: storage,
+    // whitelist: // which reducer want to store
+};
 
 const initialState = {};
 const middleware = [thunk];
 const rootReducer = combineReducers({ contestReducer });
 
-// const pReducer = persistReducer(persistConfig, rootReducer);
+const pReducer = persistReducer(persistConfig, rootReducer);
 
 const store = createStore(
     rootReducer,
@@ -23,4 +23,3 @@ const store = createStore(
 );
 
 export default store;
-

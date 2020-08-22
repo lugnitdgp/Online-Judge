@@ -29,28 +29,21 @@ class IndexPage extends React.Component<any, {}>  {
     ongoing: [],
     ended: [],
     upcoming: [],
-    // loaded: false,
+    loaded: false,
+    contests: [],
     
   };
   
-
-  componentDidMount() {
-    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
-    //   method: "GET",
-    // })
-    //   .then((resp) => resp.json())
-    //   .then((res) => {
-
-        // const {contests} = this.props;
-
-        this.props.getContest();
-
-        console.log(this.props)
-
+  componentWillReceiveProps(preProps){
+    
+    if(preProps.contests.length !== this.state.contests.length) {
+        // console.log(this.props)
+        console.log(preProps.contests);
+        console.log(this.props.contests);
         var ongoing = [];
         var upcoming = []
         var ended = [];
-        this.props.contests.map((contest) => {
+        preProps.contests.map((contest) => {
           console.log(contest);
           var dateObj = new Date(contest["start_time"] * 1000);
           contest["start"] = dateObj.toString();
@@ -80,7 +73,24 @@ class IndexPage extends React.Component<any, {}>  {
             ended.push(contest);
           }
         });
-        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended });
+        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended, loaded: true, contests: preProps.contests });
+        
+      }
+  }
+
+  componentDidMount() {
+    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
+    //   method: "GET",
+    // })
+    //   .then((resp) => resp.json())
+    //   .then((res) => {
+
+        // const {contests} = this.props;
+
+        this.props.getContest();
+        
+
+        // console.log(ongoing)
       // })
       // .catch((error) => {
       //   console.log(error);
@@ -93,194 +103,13 @@ class IndexPage extends React.Component<any, {}>  {
 
     return (
       <>
-      {/* {isTabletOrMobile && (
-        <>
-        <Layout>
-        {localStorage.onlinejudge_info ? (
-          <>
-          {this.state.loaded ?  
-          <>
-            <Grid container spacing={0} className="contestMainrow">
-              <Grid item xs={12} md={3} className="ContestSectionHead">
-                Ongoing
-                <br /> Contests
-              </Grid>
-              <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.ongoing.length > 0 ? (
-                  <>
-                    {this.state.ongoing.map((res) => (
-                      <div className="horizontalscroll">
-                        <ContestCard contestInfo={res} />
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      textTransform: "uppercase",
-                      fontSize: "30px",
-                      margin: "0px",
-                      color: "#005",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    There are no ongoing contests right now.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={0} className="contestMainrow">
-              <Grid item xs={12} md={3} className="ContestSectionHead">
-                Upcoming
-                <br /> Contests
-              </Grid>
-              <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.upcoming.length > 0 ? (
-                  <>
-                    {this.state.upcoming.map((res) => (
-                      <div className="horizontalscroll">
-                        <ContestCard contestInfo={res} />
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      textTransform: "uppercase",
-                      fontSize: "30px",
-                      margin: "0px",
-                      color: "#005",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    There are no ongoing contests right now.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid container spacing={0} className="contestMainrow">
-              <Grid item xs={12} md={3} className="ContestSectionHead">
-                Previous
-                <br /> Contests
-              </Grid>
-              <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.ended.length > 0 ? (
-                  <>
-                    {this.state.ended.map((res) => (
-                      <div className="horizontalscroll">
-                        <ContestCard contestInfo={res} />
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      textTransform: "uppercase",
-                      fontSize: "30px",
-                      margin: "0px",
-                      color: "#005",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    There are no ongoing contests right now.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-            <div className="Footer">
-              &copy; Created and maintained by GNU/Linux Users' group, Nit
-              Durgapur
-            </div>
-          </>
-          : <Loader />}
-          </>
-        ) : (
-          <>
-            <Grid container spacing={0}>
-              <Grid item xs={12} md={7} style={{ textAlign: "center" }}>
-                <img
-                  src="/Coding-bro.png"
-                  alt="."
-                  style={{
-                    width: "100%",
-                    padding: "0",
-                    position: "relative",
-                  }}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={5}
-                className="ContestGrid"
-                style={{ textAlign: "center" }}
-              >
-                <h3 className="welcometext" style={{fontSize:"14px", margin:"20px auto", width:"70%"}}>
-                  <i>
-                    "Hi there, welcome to Online Judge presented to you by
-                    Gnu/Linux Users' Group, Nit Durgapur"
-                  </i>
-                </h3>
-                <div className="buttonsparent">
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      fontSize: "37px",
-                      margin: "20px auto",
-
-                      color: "#104E8B",
-                      fontWeight: "bold",
-                      width: "100%",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    Enter right into contests
-                  </Typography>
-                  <div className="buttonsWrapper">
-                    <Button
-                      variant="outlined"
-                      className="loginbtn"
-                      type="submit"
-                      color="primary"
-                      onClick={() => Router.push("/login")}
-                    >
-                      Login
-                    </Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp; OR &nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button
-                      variant="contained"
-                      className="loginbtn"
-                      type="submit"
-                      color="primary"
-                      onClick={() => Router.push("/signup")}
-                    >
-                      Signup
-                    </Button>
-                  </div>
-                </div>
-              </Grid>
-            </Grid>
-            <div className="FooterFixed">
-              &copy; Created and maintained by GNU/Linux Users' group, Nit
-              Durgapur
-            </div>
-          </>
-        )}
-      </Layout>
-
-        </>
-      )} */}
       
       {isDesktopOrLaptop && (
       
       <Layout>
         {localStorage.onlinejudge_info ? (
           <>
-          {this.props.loaded ?  
+          {this.state.loaded ?  
           <>
             <Grid container spacing={0} className="contestMainrow">
               <Grid item xs={12} md={3} className="ContestSectionHead">

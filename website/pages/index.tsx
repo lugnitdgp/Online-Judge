@@ -1,115 +1,55 @@
-import React from "react";
+// 
+
+import React, { useState } from 'react';
 import { Typography, Button } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "../styles/IndexStyles";
 import Layout from "../components/layout";
 import Grid from "@material-ui/core/Grid";
 import ContestCard from "../components/contestCard";
 import Router from "next/router";
 import Loader from "../components/loading";
 import { useMediaQuery } from "react-responsive";
+import {useEffect} from 'react';
 
 
 //Redux imports
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getContest } from "../store/actions/contestAction"
-import store from "../store";
-import withRedux from "next-redux-wrapper";
-
-interface IProps {
-  classes: any;
-  props:any;
-}
 
 
 
-class IndexPage extends React.Component<any, {}>  {
-  state = {
-    // gotData: true,
-    ongoing: [],
-    ended: [],
-    upcoming: [],
-    loaded: false,
-    contests: [],
-    
-  };
+export default function IndexPage(){
+
+    const dispatch = useDispatch()
+    const {contests} = useSelector(state=>state.contestReducer);
+    const {loaded} = useSelector(state=>state.contestReducer);
+    useEffect(() => {
+        dispatch(getContest());
+    },[])
+
+
+    const [loadedState, setLoaded] = useState(false);
+    const [contestsTotal, setContests] = useState([]);
+    if(JSON.stringify(contests)!==JSON.stringify(contestsTotal)){
+    setContests(contests);
+    setLoaded(loaded);
+    }
   
-  componentWillReceiveProps(preProps){
+        
     
-    if(preProps.contests.length !== this.state.contests.length) {
-        // console.log(this.props)
-        console.log(preProps.contests);
-        console.log(this.props.contests);
-        var ongoing = [];
-        var upcoming = []
-        var ended = [];
-        preProps.contests.map((contest) => {
-          console.log(contest);
-          var dateObj = new Date(contest["start_time"] * 1000);
-          contest["start"] = dateObj.toString();
-          contest["start"] =
-            contest["start"].substring(0, 10) +
-            contest["start"].substring(15, 24);
-          var today = Date.now();
-          var dateo = new Date(today);
-          console.log(dateObj.toString(), "   ", dateo.toString(), "  ");
-          dateObj = new Date(contest["end_time"] * 1000);
-          contest["end"] = dateObj.toString();
-          contest["end"] =
-            contest["end"].substring(0, 10) + contest["end"].substring(15, 24);
-          console.log(contest["end"]);
-          if (
-            contest["start_time"] * 1000 < today &&
-            contest["end_time"] * 1000 > today
-          ) {
-            contest["timestamp"] = contest["end_time"] * 1000;
-            ongoing.push(contest);
-          } else if (contest["start_time"] * 1000 > today) {
-            contest["upcoming"] = true;
-            contest["timestamp"] = contest["start_time"] * 1000;
-            upcoming.push(contest);
-          } else {
-            contest["ended"] = true;
-            ended.push(contest);
-          }
-        });
-        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended, loaded: true, contests: preProps.contests });
-        
-      }
-  }
+  
 
-  componentDidMount() {
-    // fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
-    //   method: "GET",
-    // })
-    //   .then((resp) => resp.json())
-    //   .then((res) => {
 
-        // const {contests} = this.props;
-
-        this.props.getContest();
-        
-
-        // console.log(ongoing)
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
-  }
-
-  render() {
     const isTabletOrMobile = () => useMediaQuery({ query: "(max-width: 800px)" });
     const isDesktopOrLaptop = () => useMediaQuery({ query: "(min-width: 801px)" });
 
     return (
       <>
-      
       {isDesktopOrLaptop && (
       
       <Layout>
         {localStorage.onlinejudge_info ? (
           <>
-          {this.state.loaded ?  
+          {loadedState ?  
           <>
             <Grid container spacing={0} className="contestMainrow">
               <Grid item xs={12} md={3} className="ContestSectionHead">
@@ -117,9 +57,9 @@ class IndexPage extends React.Component<any, {}>  {
                 <br /> Contests
               </Grid>
               <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.ongoing.length > 0 ? (
+                {contestsTotal[0].length > 0 ? (
                   <>
-                    {this.state.ongoing.map((res) => (
+                    {contestsTotal[0].map((res) => (
                       <div className="horizontalscroll">
                         <ContestCard contestInfo={res} />
                       </div>
@@ -148,9 +88,9 @@ class IndexPage extends React.Component<any, {}>  {
                 <br /> Contests
               </Grid>
               <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.upcoming.length > 0 ? (
+                {contestsTotal[1].length > 0 ? (
                   <>
-                    {this.state.upcoming.map((res) => (
+                    {contestsTotal[1].map((res) => (
                       <div className="horizontalscroll">
                         <ContestCard contestInfo={res} />
                       </div>
@@ -167,7 +107,7 @@ class IndexPage extends React.Component<any, {}>  {
                       backgroundColor: "#fff",
                     }}
                   >
-                    There are no ongoing contests right now.
+                    There are no upcoming contests as of now.
                   </Typography>
                 )}
               </Grid>
@@ -178,9 +118,9 @@ class IndexPage extends React.Component<any, {}>  {
                 <br /> Contests
               </Grid>
               <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.ended.length > 0 ? (
+                {contestsTotal[2].length > 0 ? (
                   <>
-                    {this.state.ended.map((res) => (
+                    {contestsTotal[2].map((res) => (
                       <div className="horizontalscroll">
                         <ContestCard contestInfo={res} />
                       </div>
@@ -197,7 +137,7 @@ class IndexPage extends React.Component<any, {}>  {
                       backgroundColor: "#fff",
                     }}
                   >
-                    There are no ongoing contests right now.
+                    Nothing here yet!
                   </Typography>
                 )}
               </Grid>
@@ -285,17 +225,4 @@ class IndexPage extends React.Component<any, {}>  {
       )}
       </>
     );
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    contests: state.contestReducer.contests,
-    loaded: state.contestReducer.loaded,
-    serverError: state.contestReducer.error,
-  };
-}
-
-export default connect(mapStateToProps, {
-  getContest,
-}) (IndexPage);
+                }

@@ -66,7 +66,7 @@ export default function ContestCard(props) {
               <img
                 className={classes.media}
                 // image={props.contestInfo.contest_image}
-                src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
+                src={props.contestInfo.contest_image}
                 title={props.contestInfo.contest_name}
               />
             </div>

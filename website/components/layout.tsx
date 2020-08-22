@@ -1,7 +1,7 @@
 import React from "react";
 import {} from "@material-ui/icons";
 //import Navbar from "./Navbar";
-import Newappbar from "./Newappbar";
+import Newappbar from "./newAppbar";
 
 class Layout extends React.Component {
   render() {

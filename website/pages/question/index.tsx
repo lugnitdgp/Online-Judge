@@ -1,12 +1,12 @@
 import React from "react";
-import Layout from "components/Layout";
+import Layout from "components/layout";
 import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import Timer from "../../components/Timer";
 import Grid from "@material-ui/core/Grid";
-import SecondaryNav from "../../components/SecondaryNav";
+import SecondaryNav from "../../components/secondaryNav";
 import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
 import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
 import Loader from "../../components/loading";

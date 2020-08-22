@@ -1,10 +1,10 @@
 import React from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import MUIDataTable from "mui-datatables";
 import Paper from "@material-ui/core/Paper";
 import { withStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
-import Viewer from "components/CodeViewer";
+import Viewer from "components/codeViewer";
 import { Card } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -13,7 +13,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import SecondaryNav from "../components/SecondaryNav";
+import SecondaryNav from "../components/secondaryNav";
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
@@ -94,6 +94,7 @@ class submissions extends React.Component<IProps, {}> {
     this.setState({ open: false });
   }
 
+  
   componentDidMount() {
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personalsubmissions?contest_id=${localStorage.code}`,

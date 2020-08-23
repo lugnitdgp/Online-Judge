@@ -1,5 +1,3 @@
-// 
-
 import React, { useState } from 'react';
 import { Typography, Button } from "@material-ui/core";
 import Layout from "../components/layout";
@@ -10,12 +8,9 @@ import Loader from "../components/loading";
 import { useMediaQuery } from "react-responsive";
 import {useEffect} from 'react';
 
-
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getContest } from "../store/actions/contestAction"
-
-
 
 export default function IndexPage(){
 
@@ -26,17 +21,13 @@ export default function IndexPage(){
         dispatch(getContest());
     },[])
 
-
     const [loadedState, setLoaded] = useState(false);
     const [contestsTotal, setContests] = useState([]);
+
     if(JSON.stringify(contests)!==JSON.stringify(contestsTotal)){
     setContests(contests);
     setLoaded(loaded);
     }
-  
-        
-    
-  
 
 
     const isTabletOrMobile = () => useMediaQuery({ query: "(max-width: 800px)" });
@@ -224,5 +215,4 @@ export default function IndexPage(){
       </Layout>
       )}
       </>
-    );
-                }
+    );}

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="#">
-    <img alt="logo" src="website/public/oj.png" width="140" />
+    <img alt="logo" src=".github/image/oj.png" width="140" />
   </a>
 </p>
 
@@ -11,7 +11,7 @@ Port of the Online Judge in Python
 
 ## Architecture
 <p align="center">
-    <img alt="logo" src="website/public/ojarch.png" style="max-width:1200px;" />
+    <img alt="logo" src=".github/image/ojarch.png" style="max-width:1200px;" />
 </p>
 
 ## Working

@@ -61,13 +61,14 @@ export default function ContestCard(props) {
             paddingBottom: "0px",
           }}
         >
-          <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
+          <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center",  }}>
             <div>
               <img
                 className={classes.media}
                 // image={props.contestInfo.contest_image}
-                src="https://mdbootstrap.com/img/Photos/Slides/img%20(68).jpg"
+                src={props.contestInfo.contest_image}
                 title={props.contestInfo.contest_name}
+                style={{borderRadius:"10px"}}
               />
             </div>
           </Grid>

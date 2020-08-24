@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import contestReducer from './reducers/contestReducers'
 import leaderboardReducer from './reducers/leaderboardReducers'
+import personalSubmissionsReducer from './reducers/personalSubmissionsReducer'
 // import { persistReducer } from 'redux-persist'
 // import storage from 'redux-persist/lib/storage';
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -14,7 +15,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 
 // const initialState = {};
 const middleware = [thunk];
-const rootReducer = combineReducers({ contestReducer, leaderboardReducer });
+const rootReducer = combineReducers({ contestReducer, leaderboardReducer, personalSubmissionsReducer });
 
 // const pReducer = persistReducer(persistConfig, rootReducer);
 

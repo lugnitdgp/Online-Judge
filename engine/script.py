@@ -1,7 +1,4 @@
-import argparse
-import subprocess
 import os
-import filecmp
 from judge.settings import ENGINE_PATH
 
 

@@ -1,15 +1,12 @@
 from __future__ import absolute_import, unicode_literals
-
-from celery import shared_task
-from interface.models import *
-from interface.models import Contest
+from interface.models import Question, Contest, Testcases, Job
 from accounts.models import Coder
 from judge.celery import app
 from engine import script
 import os
 import json
 from django.utils import timezone as t
-from judge.settings import OUTPATH_DIR, ENGINE_PATH
+from judge.settings import OUTPATH_DIR
 
 
 def db_store(question, user, result, ac, wa, job_id, contest, code, lang):

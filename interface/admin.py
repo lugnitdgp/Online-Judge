@@ -8,9 +8,16 @@ class ContestAdmin(admin.ModelAdmin):
 
 admin.site.register(Contest, ContestAdmin)
 
+class TestCaseInline(admin.TabularInline):
+    model = Testcases
+    extra = 1
+
 class QuestionAdmin(admin.ModelAdmin): 
     list_display = ('question_code', 'question_name', 'question_score')
     list_filter = ('contest',)
+    inlines = [
+        TestCaseInline,
+    ]
 
 admin.site.register(Question, QuestionAdmin)
 

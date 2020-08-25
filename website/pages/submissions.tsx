@@ -1,97 +1,56 @@
-import React from "react";
+import React, {useState} from "react";
 import Layout from "../components/layout";
 import MUIDataTable from "mui-datatables";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
-import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
-import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
+import { useEffect } from "react";
 import SecondaryNav from "../components/secondaryNav";
 import Loader from "../components/loading";
 
-const customStyles = () => ({
+//Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { getSubmissionsData } from "../store/actions/submissionsAction";
+
+const customStyles = makeStyles(() => ({
   Successful: {
     "& td": { backgroundColor: "#99ff99" },
   },
   WA: {
     "& td": { backgroundColor: "#ff6961" },
   },
-});
+}));
 
-interface IProps {
-  classes: any;
-}
 
-class submissions extends React.Component<IProps, {}> {
-  state = {
-    gotData: false,
-    list: [],
-    loaded:false,
-  };
-  componentDidMount() {
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submissions?contest_id=${localStorage.code}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${localStorage.token}`,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((res) => {
-        var arr = [];
-        console.log(res);
-        res.map((r) => {
-          var stat = "";
-          var time = "";
-          var mem = "";
-          var isFail = false;
-          var sign;
-          const cases = JSON.parse(r.status);
-          cases.map((testcase) => {
-            if (testcase.code == 1) {
-              stat = "Compilation Error";
-              isFail = true;
-              time = "NA";
-              mem = "NA";
-            } else {
-              if (testcase.status.run_status == "AC") {
-                if (stat == "") {
-                  stat = "AC";
-                  isFail = false;
-                  time = testcase.status.cpu_time + " sec";
-                  mem = testcase.status.memory_taken;
-                }
-              } else {
-                stat = testcase.status.run_status;
-                isFail = true;
-                time = testcase.status.cpu_time + " sec";
-                mem = testcase.status.memory_taken;
-              }
-            }
-            if (isFail == true) sign = <CloseTwoToneIcon />;
-            else sign = <CheckTwoToneIcon />;
-          });
 
-          var payload = {
-            user: r["name"],
-            problem: r.question,
-            status: stat,
-            time: time,
-            memory: mem,
-            isFail: sign,
-          };
+export default function submissions(){
 
-          arr.push(payload);
-        });
-        this.setState({ list: arr, loaded:true });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const classes = customStyles();
+  const dispatch = useDispatch();
+  const {submissions} = useSelector(
+    (state) => state.submissionsReducer
+  );
+  const { loaded } = useSelector((state) => state.submissionsReducer);
+  useEffect(() => {
+    dispatch(getSubmissionsData());
+  }, []);
+  
+  const [loadedState, setLoaded] = useState(false);
+  const [data, setData] = useState([]);
+
+  if (submissions.length !== data.length || loadedState!=loaded ) {
+    setLoaded(false);
+    setData(submissions);
+    setLoaded(loaded);
+  } else if (
+    submissions.length === 0 &&
+    loaded === true &&
+    loadedState === false
+  ) {
+    setData(submissions);
+    setLoaded(loaded);
   }
 
-  render() {
+
     const columns = [
       {
         name: "isFail",
@@ -239,16 +198,15 @@ class submissions extends React.Component<IProps, {}> {
       setRowProps: (row) => {
         return {
           className: classnames({
-            [this.props.classes.Successful]: row[3] === "AC",
-            [this.props.classes.WA]: row[3] === "WA",
+            [classes.Successful]: row[3] === "AC",
+            [classes.WA]: row[3] === "WA",
           }),
         };
       },
     };
-    const data = this.state.list;
     return (
       <Layout>
-        {this.state.loaded ? 
+        {loadedState ? 
       <>
         <SecondaryNav />
         <div
@@ -278,6 +236,4 @@ class submissions extends React.Component<IProps, {}> {
       </Layout>
     );
   }
-}
 
-export default withStyles(customStyles)(submissions);

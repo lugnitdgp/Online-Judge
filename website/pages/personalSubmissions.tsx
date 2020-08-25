@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function submissions() {
+export default function personalSubmissions() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { personal_submissions } = useSelector(
@@ -69,7 +69,7 @@ export default function submissions() {
   const [view, setView] = useState("");
   const [exec, setExec] = useState([]);
 
-  if (personal_submissions.length !== Psubmissions.length) {
+  if (personal_submissions.length !== Psubmissions.length || loadedState!=loaded ) {
     setLoaded(false);
     setPsubmissions(personal_submissions);
     setLoaded(loaded);

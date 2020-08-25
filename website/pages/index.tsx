@@ -24,7 +24,7 @@ export default function IndexPage(){
     const [loadedState, setLoaded] = useState(false);
     const [contestsTotal, setContests] = useState([]);
 
-    if(JSON.stringify(contests)!==JSON.stringify(contestsTotal)){
+    if(JSON.stringify(contests)!==JSON.stringify(contestsTotal)|| loadedState!=loaded ){
     setContests(contests);
     setLoaded(loaded);
     }

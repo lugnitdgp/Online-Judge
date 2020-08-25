@@ -37,7 +37,7 @@ export default function Leaderboard() {
   const [Leaderboard, setLeaderboard] = useState([]);
   const [Data, setData] = useState([]);
 
-  if (JSON.stringify(Leaderboard) !== JSON.stringify(leaderboard)) {
+  if (JSON.stringify(Leaderboard) !== JSON.stringify(leaderboard) || loadedState!=loaded ) {
     setLeaderboard(leaderboard);
     setLoaded(loaded);
   }

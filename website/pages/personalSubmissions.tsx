@@ -69,7 +69,10 @@ export default function personalSubmissions() {
   const [view, setView] = useState("");
   const [exec, setExec] = useState([]);
 
-  if (personal_submissions.length !== Psubmissions.length || loadedState!=loaded ) {
+  if (
+    personal_submissions.length !== Psubmissions.length ||
+    loadedState != loaded
+  ) {
     setLoaded(false);
     setPsubmissions(personal_submissions);
     setLoaded(loaded);
@@ -280,23 +283,10 @@ export default function personalSubmissions() {
           >
             <Fade in={open}>
               <div className={classes.paper}>
-                <div
-                  style={{
-                    margin: "0px auto",
-                    textAlign: "center",
-                    height: "0px",
-                    backgroundColor: "rgba(0,0,0,0)",
-                  }}
-                >
-                  <div
-                    style={{
-                      margin: "20px auto",
-                      textAlign: "center",
-                      maxWidth: "900px",
-                    }}
-                  >
+                <div className="PSmodelPaper">
+                  <div className="PSmodelPaperInner">
                     <Button
-                      style={{ marginTop: "0px" }}
+                      className="PSmodalMinimizebtn"
                       onClick={handleCloseModal}
                     >
                       MINIMIZE
@@ -338,24 +328,8 @@ export default function personalSubmissions() {
               </div>
             </Fade>
           </Modal>
-          <div
-            className="contain"
-            style={{
-              maxWidth: "1000px",
-              width: "100%",
-              color: "#104e8b",
-              position: "relative",
-              marginBottom: "100px",
-            }}
-          >
-            <Paper
-              elevation={0}
-              style={{
-                backgroundColor: "#eeeeff",
-                position: "relative",
-                color: "#104e8b",
-              }}
-            >
+          <div className="PSpageWrapper">
+            <Paper elevation={0} className="PStablePaper">
               {" "}
               <MUIDataTable
                 title={"Your Submissions"}

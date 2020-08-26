@@ -37,7 +37,10 @@ export default function Leaderboard() {
   const [Leaderboard, setLeaderboard] = useState([]);
   const [Data, setData] = useState([]);
 
-  if (JSON.stringify(Leaderboard) !== JSON.stringify(leaderboard) || loadedState!=loaded ) {
+  if (
+    JSON.stringify(Leaderboard) !== JSON.stringify(leaderboard) ||
+    loadedState != loaded
+  ) {
     setLeaderboard(leaderboard);
     setLoaded(loaded);
   }
@@ -94,44 +97,13 @@ export default function Leaderboard() {
               rel="stylesheet"
               href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
             />
-            <div
-              style={{
-                maxWidth: "700px",
-                height: "30px",
-                textAlign: "center",
-                margin: "20px auto",
-                padding: "0px",
-              }}
-            >
-              <h1
-                style={{
-                  margin: "0px auto",
-                  textTransform: "uppercase",
-                  color: "#001144",
-                }}
-              >
-                Leaderboard
-              </h1>
+            <div className="leaderboardHeadWrapper">
+              <h1 className="leaderboardHead">Leaderboard</h1>
             </div>
-            <div
-              className="contain"
-              style={{
-                padding: "1px",
-                maxWidth: "900px",
-                width: "100%",
-                position: "relative",
-              }}
-            >
-              <Card
-                elevation={0}
-                style={{
-                  msOverflowX: "scroll",
-                  border: "2px solid #104e8b",
-                  marginBottom: "30px",
-                }}
-              >
+            <div className="leaderboardTableWrapper">
+              <Card elevation={0} className="leaderboardCard">
                 <Paper>
-                  <TableContainer style={{ position: "relative" }}>
+                  <TableContainer className="leaderboardTableContainer">
                     {}
                     <Table stickyHeader aria-label="sticky table">
                       <TableHead>
@@ -140,11 +112,7 @@ export default function Leaderboard() {
                             <TableCell
                               key={columns.name}
                               align="left"
-                              style={{
-                                backgroundColor: "#fff",
-                                color: "#104e8b",
-                                fontSize: "15px",
-                              }}
+                              className="leaderboardTableCell"
                             >
                               {columns.label}
                             </TableCell>
@@ -172,15 +140,7 @@ export default function Leaderboard() {
                                     return (
                                       <TableCell
                                         key={columns.name}
-                                        style={{
-                                          minWidth: "20px",
-                                          backgroundColor: "#f25",
-                                          color: "#000000",
-                                          fontSize: "15px",
-                                          borderBottom: "0px solid #006",
-                                          paddingTop: "7px",
-                                          paddingBottom: "7px",
-                                        }}
+                                        className="leaderboardTableCellRed"
                                       >
                                         -{value[1]}
                                       </TableCell>
@@ -189,15 +149,7 @@ export default function Leaderboard() {
                                     return (
                                       <TableCell
                                         key={columns.name}
-                                        style={{
-                                          minWidth: "20px",
-                                          backgroundColor: "#98ff98",
-                                          color: "#000000",
-                                          fontSize: "15px",
-                                          borderBottom: "0px solid #006",
-                                          paddingTop: "7px",
-                                          paddingBottom: "7px",
-                                        }}
+                                        className="leaderboardTableCellGreen"
                                       >
                                         {value[2]}
                                       </TableCell>
@@ -207,15 +159,7 @@ export default function Leaderboard() {
                                   return (
                                     <TableCell
                                       key={columns.name}
-                                      style={{
-                                        minWidth: "20px",
-                                        backgroundColor: "#fff",
-                                        color: "#104e8b",
-                                        fontSize: "13px",
-                                        borderBottom: "0px solid #006",
-                                        paddingTop: "7px",
-                                        paddingBottom: "7px",
-                                      }}
+                                      className="leaderboardTableCellWhite"
                                     >
                                       {value}
                                     </TableCell>
@@ -236,10 +180,7 @@ export default function Leaderboard() {
                     page={options.page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
-                    style={{
-                      backgroundColor: "#fff",
-                      borderTop: "1px solid #ddd",
-                    }}
+                    className="leaderboardPagination"
                   />
                 </Paper>
               </Card>

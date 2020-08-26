@@ -1,62 +1,57 @@
-import React from "react";
+import React, {useState} from "react";
 import Layout from "../../components/layout";
 import Loader from "../../components/loading";
 import Viewer from "components/codeViewer";
+import {useEffect} from 'react';
 
-interface IProps {
-  classes: any;
-}
-class Editorial extends React.Component<IProps, {}> {
-  state = {
-    gotData: false,
-    list: [],
-    loaded:false,
-  };
-  componentDidMount() {
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/geteditorial`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${localStorage.token}`,
-        },body: JSON.stringify({
-          contest_id: localStorage.code,
-          q_id: getParameterByName("id"),
-        })
-      }
-    )
-      .then((resp) => resp.json())
-      .then((res) => {
-        this.setState({ list: res, loaded: true });
-        console.log(res);
-        
-      })
-      .catch((error) => {        console.log(error);
-      });
-  }
-    render() {
+//Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { getEditorial } from "store/actions/editorialAction";
+
+function Editorial(){
+  const dispatch = useDispatch()
+    const {editorial} = useSelector(state=>state.editorialReducer);
+    const {loaded} = useSelector(state=>state.editorialReducer);
+    useEffect(() => {
+        dispatch(getEditorial());
+    },[])
+
+    console.log(editorial);
+    const [loadedState, setLoaded] = useState(false);
+    const [Editorial, setEditorial] = useState([]);
+    
+    if (editorial.length !== Editorial.length || loadedState!=loaded ) {
+      setLoaded(false);
+      setEditorial(editorial);
+      setLoaded(loaded);
+    } else if (
+      editorial.length === 0 &&
+      loaded === true &&
+      loadedState === false
+    ) {
+      setEditorial(editorial);
+      setLoaded(loaded);
+    }
       return (
         <Layout>
-           {this.state.loaded ? 
+           {loadedState? 
       <>
-          {this.state.list? (
+          {Editorial? (
                   <>
             <div style={{margin:"50px auto",width:"90%", maxWidth:"1000px", textAlign:"left", padding:"30px", borderRadius:"20px", border:"2px solid #104E8B", borderTop:"10px solid #104E8B", borderBottom:"10px solid #104E8B", color:"#104E8B"}}>
                 <h3>Contest Name - {localStorage.code}</h3>
                 <hr></hr>
                 <br/>
-                <h4>{this.state.list['ques_name']}</h4>
-                <p>{this.state.list['question']}</p>
+                <h4>{Editorial['ques_name']}</h4>
+                <p>{Editorial['ques_text']}</p>
                 <hr></hr>
                 <br/>
                 <h4>Solution</h4>
-                <p>{this.state.list['solution']}</p>
+                <p>{Editorial['solution']}</p>
                 <hr></hr>
                 <br/>
                 <h4>code</h4>
-                
-                  <Viewer value={this.state.list['code']} lang="c++" />
+                <Viewer value={Editorial['code']} lang="c++" />
             </div>
             
             </>
@@ -69,21 +64,6 @@ class Editorial extends React.Component<IProps, {}> {
             </>
         : <Loader />}
         </Layout>
-          
-        
       );
-    }
-    
   }
-
-  function getParameterByName(name, url = window.location.href) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return "";
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  }
-  
   export default Editorial;

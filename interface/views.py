@@ -12,7 +12,6 @@ import json
 from urllib.parse import unquote
 from django.utils import timezone as t
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from urllib.parse import quote
 # Create your views here.
 
 
@@ -217,7 +216,7 @@ def GetEditorial(request):
     try:
         editorial = Editorial.objects.get(question=question, contest=contest)
         editorial.code.open(mode="rb")
-        encoded_editorial_content = quote(editorial.code.read())
+        encoded_editorial_content = editorial.code.read()
         editorial.code.close()
         data = {
             'ques_name': question.question_name,

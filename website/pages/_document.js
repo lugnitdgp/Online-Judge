@@ -18,6 +18,7 @@ export default class MyDocument extends Document {
 					<meta name="robots" content="all" />
 					<meta name="theme-color" content={theme.palette.primary.main} />
 					<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet"></link>
+
 					
 				</Head>
 				<body >

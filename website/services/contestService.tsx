@@ -73,6 +73,33 @@ const getQuestions = () => {
     .then((respon) => respon.json())
 //
 }
+const getEditorialData = () => {
+ return fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/geteditorial`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.token}`,
+      },body: JSON.stringify({
+        contest_id: localStorage.code,
+        q_id: getParameterByName("id"),
+      })
+    }
+  )
+    .then((resp) => resp.json())
+}
+
+function getParameterByName(name, url = window.location.href) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return "";
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 export const contestService = {
   getContestData,
   getQuestions,
@@ -80,5 +107,6 @@ export const contestService = {
   getLeaderboardDataQues,
   getSubmissions,
   getLeaderboardData,
-  getPersonalSubmissions
+  getPersonalSubmissions,
+  getEditorialData
 };

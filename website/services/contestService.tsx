@@ -90,6 +90,20 @@ const getEditorialData = () => {
     .then((resp) => resp.json())
 }
 
+const getQuestionData = () => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${
+      localStorage.code
+    }&q_id=${getParameterByName("id")}`,
+    {
+      headers: {
+        Authorization: `Token ${localStorage.token}`,
+      },
+    }
+  ).then((resp)=> resp.json())
+
+ }
+
 function getParameterByName(name, url = window.location.href) {
   if (!url) url = window.location.href;
   name = name.replace(/[\[\]]/g, "\\$&");
@@ -103,6 +117,7 @@ function getParameterByName(name, url = window.location.href) {
 export const contestService = {
   getContestData,
   getQuestions,
+  getQuestionData,
   getQuestionsStatus,
   getLeaderboardDataQues,
   getSubmissions,

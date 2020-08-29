@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React from "react";
 import Cookie from "lib/models/Cookie";
 import {
   Button,
@@ -17,9 +17,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Layout from "components/layout";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { CheckCircleOutline, Error, SettingsBackupRestore } from "@material-ui/icons";
+import { CheckCircleOutline, Error } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
-import { createStyles, Theme } from "@material-ui/core/styles";
+import { withStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
@@ -27,8 +27,6 @@ import Timer from "../../components/Timer";
 import SecondaryNav from "../../components/secondaryNav";
 import Loader from "../../components/loading";
 import Disqus from "disqus-react"
-import { useDispatch, useSelector } from "react-redux";
-import {getIndividualQuestionData} from "../../store/actions/individualQuestionActions"
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
@@ -82,200 +80,247 @@ const styles = createStyles((theme: Theme) => ({
   },
 }));
 
-
-export default function QuesDetail(){
-
-
-  var interval;
-
-  function changeCopyState() {
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500);
+interface IProps {
+  classes: any;
 }
 
-function submitcode(code: any, lang: any){
-    setLoading(true);
-    setRes([])
-  fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Token ${localStorage.token}`,
-    },
-    body: JSON.stringify({
-      code: encodeURI(code),
-      lang: lang,
-      q_id: data[`question_code`],
-      contest_id: localStorage.code,
-    }),
-  })
-    .then((resp) => {
-      return resp.json();
-    })
-    .then((res) => {
-      if (res.status === 302) {
-        alert(res.message);
-          setLoading(false)
-      } else {
-        localStorage.taskid = res["task_id"];
-        interval = setInterval(() => statuscode(), 2000);
-      }
-    })
-    .catch((error) => console.log(error));
-};
+interface IState {
+  value: string;
+  lang: string;
+  theme: string;
+  res: any;
+  isLoading: boolean;
+  showModal: boolean;
+  data: any;
+  question: string;
+  copied: boolean;
+  timestamp: any;
+  message: string;
+  loaded:boolean;
+  ended:boolean;
+}
 
+class QuesDetail extends React.Component<IProps, IState> {
+  interval: any;
+  autosave: any;
+  constructor(props: Readonly<IProps>) {
+    super(props);
+    this.state = {
+      value: "",
+      lang: "c++",
+      theme: "theme-terminal",
+      res: [],
+      isLoading: false,
+      showModal: false,
+      data: {},
+      question: "",
+      copied: false,
+      timestamp: "",
+      message: "",
+      loaded: false,
+      ended: false,
+    };
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.changeCopyState = this.changeCopyState.bind(this);
+  }
+  handleOpenModal() {
+    this.setState({ showModal: true });
+  }
 
-async function autosavecode(code: any, lang: any){
-  var source2 = [];
-  //setValues(code)
-source.map((contest) => {
-    if (contest.name === localStorage.code) {
-      var sourcecode = {
-        lang: lang,
+  handleCloseModal() {
+    this.setState({ showModal: false });
+  }
+
+  changeCopyState() {
+    this.setState({ copied: true }, () => {
+      setTimeout(() => this.setState({ copied: false }), 1500);
+    });
+  }
+  submitcode = (code: any, lang: any) => {
+    this.setState({
+      isLoading: true,
+      res: [],
+    });
+    var self = this;
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.token}`,
+      },
+      body: JSON.stringify({
         code: encodeURI(code),
-        qid: getParameterByName("id"),
-      };
-      if (!contest.questions) {
-        contest.questions = [sourcecode];
-      } else {
-        var flag = false;
-        contest.questions.map((ques) => {
-          if (ques.qid == sourcecode.qid) {
-            ques.code = sourcecode.code;
-            ques.lang = sourcecode.lang;
-            flag = true;
+        lang: lang,
+        q_id: this.state.data.question_code,
+        contest_id: localStorage.code,
+      }),
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((res) => {
+        if (res.status === 302) {
+          alert(res.message);
+          this.setState({
+            isLoading: false,
+          });
+        } else {
+          localStorage.taskid = res["task_id"];
+          self.interval = setInterval(() => self.statuscode(), 2000);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  source = [];
+
+  autosavecode = (code: any, lang: any) => {
+    // var source2=[]
+    var source = this.source;
+    var source2 = [];
+    source.map((contest) => {
+      if (contest.name === localStorage.code) {
+        var sourcecode = {
+          lang: lang,
+          code: encodeURI(code),
+          qid: getParameterByName("id"),
+        };
+        if (!contest.questions) {
+          contest.questions = [sourcecode];
+        } else {
+          var flag = false;
+          contest.questions.map((ques) => {
+            if (ques.qid === sourcecode.qid) {
+              ques.code = sourcecode.code;
+              ques.lang = sourcecode.lang;
+              flag = true;
+            }
+          });
+          if (flag === false) {
+            contest.questions.push(sourcecode);
           }
-        });
-        if (flag === false) {
-          contest.questions.push(sourcecode);
         }
       }
-    }
-    source2.push(contest);
-  });
-  setValues(code);
-  setSource(source2);
-  localStorage.setItem("source", JSON.stringify(source2));
-};
+      source2.push(contest);
+    });
+    this.source = source2;
+    localStorage.setItem("source", JSON.stringify(this.source));
+  };
 
-function statuscode(){
-  fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Token ${localStorage.token}`,
-    },
-    body: JSON.stringify({
-      q_id: data[`question_code`],
-      task_id: localStorage.taskid,
-      contest_id: localStorage.code,
-    }),
-  })
-    .then((resp) => resp.json())
-    .then((response) => {
-      console.log(response);
-      if (response.status === 302) {
-        alert(response.message);
-      } else {
-        console.log(response);
-        setRes(response);
-        setLoading(false);
-        clearInterval(interval);
-      }
+  statuscode = () => {
+    var self = this;
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${localStorage.token}`,
+      },
+      body: JSON.stringify({
+        q_id: this.state.data.question_code,
+        task_id: localStorage.taskid,
+        contest_id: localStorage.code,
+      }),
     })
-    .then(() => console.log(res))
-    .catch((err) => console.log(err));
-};
-
-
-const classes  = styles;
-const disqusShortname = "onlinejudge-1"
-const disqusConfig = {
-  url: "http://localhost:3000",
-  identifier: "article-id",
-  title: "Title of Your Article"
-}
-
-///////////////////////
-
-const [loadedState, setLoaded] = useState(false);
-const [source, setSource] = useState([])
-const [data, setData]= useState([])
-const [timestamp, setTime] = useState(0)
-const [message, setMsg]= useState("")
-const [ended, setEnded] = useState(false)
-const [copied, setCopied] = useState(false)
-const [lang, setLang] =useState("c++")
-const [value, setValues] =useState("")
-const [theme, setTheme] =useState("theme-terminal")
-const [isLoading, setLoading] =useState(false)
-const [res, setRes] =useState([])
-
-
-
-const dispatch = useDispatch()
-    const {qdata} = useSelector(state=>state.individualQuestionReducer);
-    const {loaded} = useSelector(state=>state.individualQuestionReducer);
-    useEffect(() => {
-        dispatch(getIndividualQuestionData());
-    },[])
-
-
-    if(JSON.stringify(qdata)!== JSON.stringify(data) || loadedState != loaded)
-    {
-        setData(qdata)
-        setLoaded(loaded)
-    }
-
-function setCodeFromAutoSave(source2:any){
-  source2.map((contest) => {
-    console.log(contest)
-    if (contest.name === localStorage.code) {
-      if (contest.questions)
-        contest.questions.map((ques) => {
-          if (ques.qid === getParameterByName("id"))
-              setValues(decodeURI(ques.code))
-              setLang(ques.lang)
+      .then((resp) => resp.json())
+      .then((response) => {
+        console.log(response);
+        if (response.status === 302) {
+          alert(response.message);
+        } else {
+          console.log(response);
+          self.setState({ res: response, isLoading: false });
+          clearInterval(self.interval);
+        }
+      })
+      .then(() => console.log(this.state.res))
+      .catch((err) => console.log(err));
+  };
+  async componentDidMount() {
+    if (!localStorage.token || !localStorage.code) window.location.href = "/";
+    const cookie = new Cookie();
+    cookie.parse(document.cookie || "");
+    if (!localStorage.source) window.location.href = "/question";
+    else {
+      this.source = JSON.parse(localStorage.source);
+      var source = JSON.parse(localStorage.source);
+      source.map((contest) => {
+        if (contest.name === localStorage.code) {
+          if (contest.questions)
+            contest.questions.map((ques) => {
+              if (ques.qid === getParameterByName("id"))
+                this.setState({
+                  value: decodeURI(ques.code),
+                  lang: ques.lang,
+                });
             });
+        }
+      });
     }
-  })
-  if(JSON.stringify(source) != JSON.stringify(source2))
-  setSource(source2)
-}
 
-useEffect(() => {  
-  if (!localStorage.token || !localStorage.code) window.location.href = "/";
-  const cookie = new Cookie();
-  cookie.parse(document.cookie || "");
-  if (!localStorage.source) window.location.href = "/question";
-    var source2 = JSON.parse(localStorage.source);
-      setCodeFromAutoSave(source2)
+    try {
+      let resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${
+          localStorage.code
+        }&q_id=${getParameterByName("id")}`,
+        {
+          headers: {
+            Authorization: `Token ${cookie.cookies.get("token")}`,
+          },
+        }
+      );
 
-  var today = Date.now();
-  var start = localStorage.start * 1000;
-  var end = localStorage.end * 1000;
-  
-  if (start < today && end > today) {
-    setTime(end)
-    setMsg("The Contest ends in")
-  } else if (start < today && end < today) {
-      setMsg("The Contest has ended")
-      setEnded(true)
-  } else if (start > today) {
-      setTime(start)
-      setMsg("The Contest begins in")
+      let response = await resp.json();
+      console.log(response);
+      this.setState({
+        data: response,
+        loaded: true,
+      });
+
+      var today = Date.now();
+      var start = localStorage.start * 1000;
+      var end = localStorage.end * 1000;
+
+      if (start < today && end > today) {
+        this.setState({
+          timestamp: end,
+          message: "The Contest ends in",
+        });
+      } else if (start < today && end < today) {
+        this.setState({
+          timestamp: 0,
+          message: "The Contest has ended",
+          ended: true,
+        });
+      } else if (start > today) {
+        this.setState({
+          timestamp: start,
+          message: "The Contest begins in",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    //this.autosave = setInterval(() => this.autosavecode(this.state.value, this.state.lang) ,1000 )
   }
-})
 
+  render() {
+    const { classes } = this.props;
+    const disqusShortname = "onlinejudge-1"
+    const disqusConfig = {
+      url: "http://localhost:3000",
+      identifier: "article-id",
+      title: "Title of Your Article"
+    }
     return (
       <Layout>
-        {loadedState ? 
-          <>
+        {this.state.loaded ? 
+      <>
         <SecondaryNav />
         <div style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}>
           <Timer
-            time={timestamp}
-            message={message}
+            time={this.state.timestamp}
+            message={this.state.message}
             style={{ fontSize: "12px" }}
           />
         </div>
@@ -295,20 +340,20 @@ useEffect(() => {
                 }}
                 gutterBottom
               >
-                {data[`question_code`]}&nbsp;|&nbsp;
-                {data[`question_name`]}
+                {this.state.data.question_code}&nbsp;|&nbsp;
+                {this.state.data.question_name}
               </Typography>
 
               <div
                 style={{ fontSize: 15 }}
                 dangerouslySetInnerHTML={{
-                  __html: data[`question_text`],
+                  __html: this.state.data.question_text,
                 }}
               />
               <hr></hr>
               <CopyToClipboard
-                text={data[`input_example`]}
-                onCopy={changeCopyState}
+                text={this.state.data.input_example}
+                onCopy={this.changeCopyState}
               >
                 <Typography
                   style={{ fontSize: "18px", color: "#104e8b" }}
@@ -325,7 +370,7 @@ useEffect(() => {
                       <div className="column">
                         <Tooltip
                           title={
-                            copied ? "COPIED !" : "COPY TO CLIPBOARD"
+                            this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"
                           }
                         >
                           <IconButton aria-label="upload picture">
@@ -345,7 +390,7 @@ useEffect(() => {
                       <div
                         style={{ whiteSpace: "pre-wrap" }}
                         dangerouslySetInnerHTML={{
-                          __html: data[`input_example`],
+                          __html: this.state.data.input_example,
                         }}
                       />
                     </Typography>
@@ -354,8 +399,8 @@ useEffect(() => {
               </CopyToClipboard>
               <hr></hr>
               <CopyToClipboard
-                text={data[`output_example`]}
-                onCopy={changeCopyState}
+                text={this.state.data.output_example}
+                onCopy={this.changeCopyState}
               >
                 <Typography
                   style={{ fontSize: "18px", color: "#104e8b" }}
@@ -372,7 +417,7 @@ useEffect(() => {
                       <div className="column">
                         <Tooltip
                           title={
-                            copied ? "COPIED !" : "COPY TO CLIPBOARD"
+                            this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"
                           }
                         >
                           <IconButton aria-label="upload picture">
@@ -392,7 +437,7 @@ useEffect(() => {
                       <div
                         style={{ whiteSpace: "pre-wrap" }}
                         dangerouslySetInnerHTML={{
-                          __html: data[`output_example`]
+                          __html: this.state.data.output_example,
                         }}
                       />
                     </Typography>
@@ -408,9 +453,9 @@ useEffect(() => {
                 <Select
                   labelId="demo-controlled-open-select-label"
                   id="demo-controlled-open-select"
-                  value={lang}
+                  value={this.state.lang}
                   onChange={(e) =>
-                      setLang(e.target.value as string)
+                    this.setState({ lang: e.target.value as string })
                   }
                 >
                   <MenuItem value="c">C</MenuItem>
@@ -424,9 +469,9 @@ useEffect(() => {
                 <Select
                   labelId="demo-controlled-open-select-label"
                   id="demo-controlled-open-select"
-                  value={theme}
+                  value={this.state.theme}
                   onChange={(e) =>
-                    setTheme(e.target.value as string )
+                    this.setState({ theme: e.target.value as string })
                   }
                 >
                   <MenuItem value="theme-terminal">terminal</MenuItem>
@@ -435,15 +480,22 @@ useEffect(() => {
                 </Select>
               </FormControl>
               <Editor
-                value={value}
-                lang={lang}
-                theme={theme}
+                value={this.state.value}
+                lang={this.state.lang}
+                theme={this.state.theme}
                 setValue={(d) => {
-                autosavecode(d,lang)
+                  this.setState(
+                    {
+                      value: d,
+                    },
+                    () => {
+                      this.autosavecode(this.state.value, this.state.lang);
+                    }
+                  );
                 }}
               />
 
-              {isLoading ? (
+              {this.state.isLoading ? (
                 <CircularProgress size={24} />
               ) : (
                 <Button
@@ -461,7 +513,7 @@ useEffect(() => {
                     marginBottom: "20px",
                   }}
                   onClick={() =>
-                    submitcode(value, lang)
+                    this.submitcode(this.state.value, this.state.lang)
                   }
                 >
                   Submit
@@ -469,7 +521,7 @@ useEffect(() => {
               )}
             </div>
 
-            {res.length > 1 ? (
+            {this.state.res.length > 1 ? (
               <TableContainer component={Paper}>
                 <Table
                   style={{
@@ -486,7 +538,7 @@ useEffect(() => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {res.map((resa, index) => (
+                    {this.state.res.map((resa, index) => (
                       <TableRow key={index}>
                         <TableCell component="th" scope="row">
                           {index + 1}
@@ -507,7 +559,7 @@ useEffect(() => {
               </TableContainer>
             ) : (
               <React.Fragment>
-                {res.map((resa, index) => (
+                {this.state.res.map((resa, index) => (
                   <div>
                     {resa.message ? (
                       <div key={index}>
@@ -556,18 +608,18 @@ useEffect(() => {
           </Paper>
         </div>
         
-        {ended? 
-          null
-          :(
+        {this.state.ended ? 
+        <div></div>
+          :
         <Paper elevation={0} className={classes.paper2}>
             <div style={{ margin: "20px", textAlign: "center" }}>
         <Disqus.DiscussionEmbed
-          shortname= {disqusShortname}
-          config= {disqusConfig}
+          shortname={disqusShortname}
+          config={disqusConfig}
         />
         </div>
         </Paper>
-          )}
+        }
 
         <div className="Footer">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
@@ -577,7 +629,7 @@ useEffect(() => {
         
       </Layout>
     );
-  
+  }
 }
 
 function ResultStatus({ status }) {
@@ -598,4 +650,5 @@ function getParameterByName(name, url = window.location.href) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+export default withStyles(styles)(QuesDetail);
 //////////

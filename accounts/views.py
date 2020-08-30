@@ -57,7 +57,7 @@ def verifyGoogleToken(token):
 def google_oauth(request):
     url = "https://oauth2.googleapis.com/token"
     headers = {'Content-Type': 'application/json'}
-    data = json.dumps({ 
+    data = json.dumps({
         'code': request.data.get('code'),
         'client_id': config('GOOGLE_CLIENT_ID', cast=str),
         'client_secret': config('GOOGLE_CLIENT_SECRET', cast=str),
@@ -103,6 +103,8 @@ class Register(generics.GenericAPIView):
                                      first_name=res['first_name'],
                                      email=res['email'],
                                      image_link=res['image'])
+                self.serializer_class = CoderSerializer
+                self.serializer = self.get_serializer(Coder.objects.get(user=self.user))
             else:
                 return Response({"status": 401, "message": "User has already registered under this email."})
 

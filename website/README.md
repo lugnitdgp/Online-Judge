@@ -6,6 +6,12 @@
 ```bash
 yarn
 ```
+- Setup environment variables
+```bash
+export NEXT_PUBLIC_BACKEND_URL=<value>
+export NEXT_PUBLIC_FACEBOOK_CLIENT_ID=<value>
+export NEXT_PUBLIC_GOOGLE_CLIENT_ID=<value>
+```
 - Run the development server
 ```bash
 yarn dev

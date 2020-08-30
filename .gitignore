@@ -17,3 +17,7 @@ temp_file
 usage.txt
 interface/migrations/
 accounts/migrations
+media
+contest_images/
+static
+env:Zone.Identifier

@@ -1,5 +1,4 @@
 import React,{useEffect, useState} from "react";
-import Cookie from "lib/models/Cookie";
 import {
   Button,
   FormControl,
@@ -19,7 +18,7 @@ import Layout from "components/layout";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CheckCircleOutline, Error, SettingsBackupRestore } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
-import { createStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
@@ -32,7 +31,7 @@ import {getIndividualQuestionData} from "../../store/actions/individualQuestionA
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 
-const styles = createStyles((theme: Theme) => ({
+const styles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     marginBottom: 0,
@@ -125,7 +124,7 @@ function submitcode(code: any, lang: any){
 };
 
 
-async function autosavecode(code: any, lang: any){
+async function autosavecode(code:any, lang:any){
   var source2 = [];
   //setValues(code)
 source.map((contest) => {
@@ -153,7 +152,7 @@ source.map((contest) => {
     }
     source2.push(contest);
   });
-  setValues(code);
+  //setValues(code);
   setSource(source2);
   localStorage.setItem("source", JSON.stringify(source2));
 };
@@ -188,7 +187,7 @@ function statuscode(){
 };
 
 
-const classes  = styles;
+const classes  = styles();
 const disqusShortname = "onlinejudge-1"
 const disqusConfig = {
   url: "http://localhost:3000",
@@ -205,11 +204,12 @@ const [timestamp, setTime] = useState(0)
 const [message, setMsg]= useState("")
 const [ended, setEnded] = useState(false)
 const [copied, setCopied] = useState(false)
-const [lang, setLang] =useState("c++")
+const [language, setLang] =useState("c++")
 const [value, setValues] =useState("")
 const [theme, setTheme] =useState("theme-terminal")
 const [isLoading, setLoading] =useState(false)
 const [res, setRes] =useState([])
+const [num, setNum]= useState(0)
 
 
 
@@ -218,6 +218,25 @@ const dispatch = useDispatch()
     const {loaded} = useSelector(state=>state.individualQuestionReducer);
     useEffect(() => {
         dispatch(getIndividualQuestionData());
+        if (!localStorage.token || !localStorage.code) window.location.href = "/";
+        if (!localStorage.source) window.location.href = "/question";
+          var source2 = JSON.parse(localStorage.source);
+            setCodeFromAutoSave(source2)
+      
+        var today = Date.now();
+        var start = localStorage.start * 1000;
+        var end = localStorage.end * 1000;
+        
+        if (start < today && end > today) {
+          setTime(end)
+          setMsg("The Contest ends in")
+        } else if (start < today && end < today) {
+            setMsg("The Contest has ended")
+            setEnded(true)
+        } else if (start > today) {
+            setTime(start)
+            setMsg("The Contest begins in")
+        }
     },[])
 
 
@@ -228,6 +247,7 @@ const dispatch = useDispatch()
     }
 
 function setCodeFromAutoSave(source2:any){
+  console.log(source2)
   source2.map((contest) => {
     console.log(contest)
     if (contest.name === localStorage.code) {
@@ -243,31 +263,16 @@ function setCodeFromAutoSave(source2:any){
   setSource(source2)
 }
 
-useEffect(() => {  
-  if (!localStorage.token || !localStorage.code) window.location.href = "/";
-  const cookie = new Cookie();
-  cookie.parse(document.cookie || "");
-  if (!localStorage.source) window.location.href = "/question";
-    var source2 = JSON.parse(localStorage.source);
-      setCodeFromAutoSave(source2)
 
-  var today = Date.now();
-  var start = localStorage.start * 1000;
-  var end = localStorage.end * 1000;
-  
-  if (start < today && end > today) {
-    setTime(end)
-    setMsg("The Contest ends in")
-  } else if (start < today && end < today) {
-      setMsg("The Contest has ended")
-      setEnded(true)
-  } else if (start > today) {
-      setTime(start)
-      setMsg("The Contest begins in")
-  }
-})
+useEffect(() => {
+  if(num==1)
+  autosavecode(value,language);
+  else if(num ==0)
+    setNum(1)
+}, [value]);
 
     return (
+      <div>
       <Layout>
         {loadedState ? 
           <>
@@ -287,7 +292,6 @@ useEffect(() => {
           >
             <div className={classes.details}>
               <Typography
-                className={classes.title}
                 style={{
                   color: "#104e8b",
                   fontSize: "18px",
@@ -408,7 +412,7 @@ useEffect(() => {
                 <Select
                   labelId="demo-controlled-open-select-label"
                   id="demo-controlled-open-select"
-                  value={lang}
+                  value={language}
                   onChange={(e) =>
                       setLang(e.target.value as string)
                   }
@@ -436,10 +440,10 @@ useEffect(() => {
               </FormControl>
               <Editor
                 value={value}
-                lang={lang}
+                lang={language}
                 theme={theme}
                 setValue={(d) => {
-                autosavecode(d,lang)
+                setValues(d)
                 }}
               />
 
@@ -461,7 +465,7 @@ useEffect(() => {
                     marginBottom: "20px",
                   }}
                   onClick={() =>
-                    submitcode(value, lang)
+                    submitcode(value, language)
                   }
                 >
                   Submit
@@ -556,7 +560,7 @@ useEffect(() => {
           </Paper>
         </div>
         
-        {ended? 
+        {ended?
           null
           :(
         <Paper elevation={0} className={classes.paper2}>
@@ -576,6 +580,7 @@ useEffect(() => {
         : <Loader />}
         
       </Layout>
+      </div>
     );
   
 }

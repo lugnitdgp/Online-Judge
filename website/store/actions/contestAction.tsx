@@ -1,6 +1,5 @@
 import {
     CONTEST_REQUEST_PENDING,
-    CONTEST_DATA_PENDING,
     CONTEST_DATA_SUCCESS,
     CONTEST_DATA_FAILURE,
 } from "../actionTypes/contestActionType";
@@ -18,7 +17,7 @@ export function getContest() {
                     dispatch({ type: CONTEST_DATA_SUCCESS, payload: result.data })
                 }
             })
-            .catch((err) => {
+            .catch(() => {
                 dispatch({
                     type: CONTEST_DATA_FAILURE,
                     payload: { detail: "Something wrong while fetching contests" },

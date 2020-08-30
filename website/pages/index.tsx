@@ -33,7 +33,7 @@ export default function IndexPage() {
     setLoaded(loaded);
   }
 
-  const isTabletOrMobile = () => useMediaQuery({ query: "(max-width: 800px)" });
+  //const isTabletOrMobile = () => useMediaQuery({ query: "(max-width: 800px)" });
   const isDesktopOrLaptop = () =>
     useMediaQuery({ query: "(min-width: 801px)" });
 

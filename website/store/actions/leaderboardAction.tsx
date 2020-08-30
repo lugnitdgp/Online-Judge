@@ -20,7 +20,7 @@ export function getLearderboardDataQues() {
                     dispatch({ type: LEADERBOARD_QUES_DATA_SUCCESS, payload: result })
                 // }
             })
-            .catch((err) => {
+            .catch(() => {
                 // console.log(err)
                 dispatch({
                     type: LEADERBOARD_QUES_DATA_FAILURE,
@@ -41,7 +41,7 @@ export function getLearderboardData() {
                     dispatch({ type: LEADERBOARD_DATA_SUCCESS, payload: result.data })
                 // }
             })
-            .catch((err) => {
+            .catch(() => {
                 // console.log(err)
                 dispatch({
                     type: LEADERBOARD_DATA_FAILURE,

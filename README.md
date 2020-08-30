@@ -12,11 +12,7 @@ Port of the Online Judge in Python
 
 ## Architecture
 <p align="center">
-<<<<<<< HEAD
-    <img alt="logo" src="website/public/ojarch.png" style="max-width:1200px;" />
-=======
     <img alt="logo" src=".github/images/ojarch.png" style="max-width:1200px;" />
->>>>>>> d08d83b4a09c8040d3aa7cc4456f32c1b3283edf
 </p>
 
 ## Working

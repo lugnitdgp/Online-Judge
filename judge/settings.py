@@ -26,8 +26,6 @@ DEBUG = config('DEBUG', cast=bool, default=True)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 INSTALLED_APPS = [
-    'jet.dashboard',
-    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -142,7 +140,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-TEST_CASE_DIR = os.path.join(MEDIA_ROOT, "testcases")
+TEST_CASE_DIR = os.path.join(MEDIA_ROOT, "testcases") #TODO: move testaces outside of project folder
 
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = 'django-db'
@@ -172,5 +170,3 @@ DJRICHTEXTFIELD_CONFIG = {
         'width': 700
     }
 }
-
-X_FRAME_OPTIONS = 'SAMEORIGIN'

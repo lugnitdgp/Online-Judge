@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import json
 from urllib.parse import unquote
 from django.utils import timezone as t
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 # Create your views here.
 
 
@@ -18,7 +19,7 @@ from django.utils import timezone as t
 @permission_classes([AllowAny])
 def GetContestList(request):
     query_set = Contest.objects.all()
-    serializer = ContestSerializer(query_set, many=True, context={'request':request})
+    serializer = ContestSerializer(query_set, many=True, context={'request': request})
     return Response(serializer.data)
 
 
@@ -49,6 +50,10 @@ def GetQuestion(request):
         return Response(serializer.data)
     except ObjectDoesNotExist:
         return Response({'status': 404, "message": "Question Code is Invalid"})
+    except MultipleObjectsReturned:
+        question = Question.objects.filter(question_code=request.GET['q_id'], contest=contest)[0]
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
@@ -61,7 +66,10 @@ def submitCode(request):
     contest_code = request.data.get('contest_id')
     try:
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
-        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        try:
+            question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        except MultipleObjectsReturned:
+            question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
         coder = Coder.objects.get(user=request.user)
         coder_time = coder.time_stamp
         time_dif = (t.now() - coder_time).total_seconds()
@@ -72,7 +80,9 @@ def submitCode(request):
         task = execute.delay(
             QuestionSerializer(question).data,
             CoderSerializer(coder).data, code, lang,
-            ContestSerializer(contest, context={"request": request}).data)
+            ContestSerializer(contest, context={
+                "request": request
+            }).data)
         return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
@@ -86,7 +96,10 @@ def status(request):
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         penalty = contest.penalty
         penalty_total = penalty * (((t.now() - contest.start_time).total_seconds()) / 60)
-        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        try:
+            question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        except MultipleObjectsReturned:
+            question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
         coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
         answer = Answer.objects.get_or_create(question=question, user=coder, contest=contest)[0]
         job = Job.objects.get(coder=coder, question=question, job_id=request.data.get('task_id'))
@@ -98,11 +111,11 @@ def status(request):
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
                 coder.correct_answers += 1
-                answer.correct +=1
+                answer.correct += 1
                 if contest.isOver() == False and contest.isStarted():
-                    try :
+                    try:
                         mn_score = (int)(question.question_score / (contest.min_score))
-                    except :
+                    except:
                         mn_score = question.question_score
                     score = question.question_score - penalty_total - (coder_contest_score.wa * contest.wa_penalty)
                     ques_score = max(mn_score, score)
@@ -114,7 +127,7 @@ def status(request):
                 coder_contest_score.timestamp = t.now()
             coder_contest_score.wa += 1
             coder.wrong_answers += 1
-            answer.wrong +=1
+            answer.wrong += 1
         coder.save()
         answer.save()
         coder_contest_score.save()
@@ -168,6 +181,7 @@ def GetPersonalSubmissions(request):
         return Response(serializer.data)
     return Response({'status': 301, 'message': 'Contest has not started yet'})
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def GetAnswer(request):
@@ -179,12 +193,37 @@ def GetAnswer(request):
         return Response(serializer.data)
     return Response({'status': 301, 'message': 'Contest has not started yet'})
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def GetEditorial(request):
+def GetEditorialList(request):
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-    query_set = Editorial.objects.filter(contest=contest)
-    serializer = EditorialSerializer(query_set, many=True)
+    query_set = Question.objects.filter(contest=contest)
+    serializer = QuestionListSerializer(query_set, many=True)
     if contest.isOver():
         return Response(serializer.data)
     return Response({'status': 301, 'message': 'Contest has not Ended yet'})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def GetEditorial(request):
+    contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
+    try:
+        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+    except MultipleObjectsReturned:
+        question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
+    try:
+        editorial = Editorial.objects.get(question=question, contest=contest)
+        editorial.code.open(mode="rb")
+        encoded_editorial_content = editorial.code.read()
+        editorial.code.close()
+        data = {
+            'ques_name': question.question_name,
+            'ques_text' : question.question_text,
+            'solution' : editorial.solution,
+            'code': encoded_editorial_content
+        }
+        return Response(data)
+    except:
+        return Response({'status': 301, 'message': 'Editorial not found, please contact the Admin!'})

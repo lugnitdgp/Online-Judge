@@ -1,6 +1,6 @@
 <p align="center">
   <a href="#">
-    <img alt="logo" src="website/public/oj.png" width="140" />
+    <img alt="logo" src=".github/images/oj.png" width="140" />
   </a>
 </p>
 
@@ -9,6 +9,11 @@
 
 # Online-Judge
 Port of the Online Judge in Python
+
+## Architecture
+<p align="center">
+    <img alt="logo" src=".github/images/ojarch.png" style="max-width:1200px;" />
+</p>
 
 ## Working
 
@@ -29,6 +34,9 @@ To work with submodules:
 ```
 1. git submodule init
 2. git submodule update
+3. cd safeexec
+4. cmake .
+5. make
 
 ```
 From next time onwards, we need to check if the submodules have been updated, to do that:
@@ -51,7 +59,12 @@ For the code execution part to function properly, you need to install redis. Ste
 
 1. `sudo apt install redis-server`
 2. `sudo nano /etc/redis/redis.conf`
-3. Inside the file find the `supervised` directive and change it to `systemd`. It should be set to `no` by     default.
+3. Inside the file find the `supervised` directive and change it to `systemd`. It should be set to `no` by default.
+  ```
+    ...
+    supervised systemd
+    ...
+  ```
 4. `sudo systemctl restart redis.service`
 5. Add `redis://localhost:6379` in the `CELERY_BROKER_URL` part of the `.env` file you have in your locally cloned repository.
 

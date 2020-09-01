@@ -20,3 +20,4 @@ accounts/migrations
 media
 contest_images/
 static
+env:Zone.Identifier

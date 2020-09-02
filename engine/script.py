@@ -19,11 +19,27 @@ def status():
 
 
 def compare(path1, path2):
-    with open(path1) as f1, open(path2) as f2:
-        if f1.read() == f2.read():
-            return True
-        else:
-            return False
+    # Removes whitespace and tab characters from right side of each line
+    # And creates a new file to hold the file data
+    trim_cmnd = "sed --quiet 's/[ \\t]*$//;w"
+    os.system(trim_cmnd+" file1.txt' "+path1)
+    os.system(trim_cmnd+" file2.txt' "+path2)
+    # Adds \n at eof
+    os.system("echo '' >> file1.txt") 
+    os.system("echo '' >> file2.txt")
+    # Removes multiple \n at eof 
+    rem_multi_nl = "sed -i -e :a -e '/^\\n*$/{$d;N;};/\\n$/ba' file"
+    os.system(rem_multi_nl+"1.txt")
+    os.system(rem_multi_nl+"2.txt")
+    # Compares generated files
+    compare_code = os.system("diff -q file1.txt file2.txt")
+    # Removes the generated files 
+    os.remove("file1.txt")
+    os.remove("file2.txt")
+    if compare_code == 0:
+        return True
+    else:
+        return False
 
 
 def run_c(f, time, mem, input_file, temp_output_file, output_file):

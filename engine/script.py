@@ -19,11 +19,12 @@ def status():
 
 
 def compare(path1, path2):
-    with open(path1) as f1, open(path2) as f2:
-        if f1.read() == f2.read():
-            return True
-        else:
-            return False
+    # Compares generated files
+    compare_code = os.system("diff -q "+path1+" "+path2)
+    if compare_code == 0:
+        return True
+    else:
+        return False
 
 
 def run_c(f, time, mem, input_file, temp_output_file, output_file):

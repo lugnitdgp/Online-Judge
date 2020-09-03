@@ -19,22 +19,8 @@ def status():
 
 
 def compare(path1, path2):
-    os.system("cp "+path1+" file1.txt")
-    os.system("cp "+path1+" file2.txt")
-    # Adds \n at eof
-    os.system("echo '' >> file1.txt")
-    os.system("echo '' >> file2.txt")
-    # Removes whitespace and tab characters from right side of each line
-    # Creates a new file to hold the file data
-    # Removes multiple \n at eof 
-    trim_cmmnd = "sed -i -e :a -e \'/^\\n*$/{$d;N;};/\\n$/ba;s/[ \\t]*$//\' file"
-    os.system(trim_cmmnd+"1.txt ")
-    os.system(trim_cmmnd+"2.txt ")
     # Compares generated files
-    compare_code = os.system("diff -q file1.txt file2.txt")
-    # Removes the generated files 
-    os.remove("file1.txt")
-    os.remove("file2.txt")
+    compare_code = os.system("diff -q "+path1+" "+path2)
     if compare_code == 0:
         return True
     else:

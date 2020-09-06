@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import contestReducer from './reducers/contestReducers'
-import leaderboardReducer from './reducers/leaderboardReducers'
+import contestReducer from './reducers/contestReducer'
+import leaderboardReducer from './reducers/leaderboardReducer'
 import personalSubmissionsReducer from './reducers/personalSubmissionsReducer'
 import submissionsReducer from './reducers/submissionsReducer'
 import questionsReducer from './reducers/questionsReducer'

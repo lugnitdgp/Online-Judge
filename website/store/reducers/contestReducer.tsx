@@ -1,21 +1,21 @@
 import {
-    QUESTIONS_REQUEST_PENDING,
-    QUESTIONS_DATA_SUCCESS,
-    QUESTIONS_DATA_FAILURE,
+    CONTEST_REQUEST_PENDING,
+    CONTEST_DATA_SUCCESS,
+    CONTEST_DATA_FAILURE,
 } from "../actionTypes/contestActionType";
-import {middleware} from "../../helper/middleware";
+
+import {middleware} from "../../helper/middleware"
+
 const initialState = {
-    questions: [],
+    contests: [],
     loaded: false,
-    ended: false,
-    timestamp: 0,
     message: "",
     error: "",
-  };
+};
 
-  function questionsReducer(state = initialState, action) {
+function contestReducer(state = initialState, action) {
     switch (action.type) {
-        case QUESTIONS_REQUEST_PENDING:
+        case CONTEST_REQUEST_PENDING:
             {
                 return Object.assign({}, state, {
                     loaded: false,
@@ -24,12 +24,15 @@ const initialState = {
                 });
             }
 
-        case QUESTIONS_DATA_SUCCESS:
-            {   
-                return middleware.processQuestions(action.payload, state);
+        case CONTEST_DATA_SUCCESS:
+            {
+                return Object.assign({}, state, {
+                    contests: middleware.processContests(action.payload),
+                    loaded: true,
+                })
             }
 
-        case QUESTIONS_DATA_FAILURE:
+        case CONTEST_DATA_FAILURE:
             {
                 return Object.assign({}, state, {
                     error: action.payload.detail,
@@ -42,4 +45,4 @@ const initialState = {
     }
 }
 
-export default questionsReducer;
+export default contestReducer;

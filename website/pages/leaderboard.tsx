@@ -18,7 +18,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getLearderboardDataQues,
-  getLearderboardData,
 } from "../store/actions/leaderboardAction";
 
 export default function Leaderboard() {
@@ -27,11 +26,9 @@ export default function Leaderboard() {
   const { loaded } = useSelector((state) => state.leaderboardReducer);
   const { data } = useSelector((state) => state.leaderboardReducer);
   useEffect(() => {
-    dispatch(getLearderboardDataQues());
+    dispatch(getLearderboardDataQues())    
   }, []);
-  useEffect(() => {
-    dispatch(getLearderboardData());
-  }, []);
+
 
   const [loadedState, setLoaded] = useState(false);
   const [Leaderboard, setLeaderboard] = useState([]);

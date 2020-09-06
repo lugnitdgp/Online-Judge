@@ -27,7 +27,7 @@ import SecondaryNav from "../../components/secondaryNav";
 import Loader from "../../components/loading";
 import Disqus from "disqus-react"
 import { useDispatch, useSelector } from "react-redux";
-import {getIndividualQuestionData} from "../../store/actions/individualQuestionActions"
+import {getIndividualQuestionData} from "../../store/actions/individualQuestionAction"
 //import zIndex from "@material-ui/core/styles/zIndex";
 //import ModalButton from "./modal-button";
 

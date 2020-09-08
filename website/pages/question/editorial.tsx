@@ -37,12 +37,12 @@ function Editorial(){
       <>
           {Editorial? (
                   <>
-            <div style={{margin:"50px auto",width:"90%", maxWidth:"1000px", textAlign:"left", padding:"30px", borderRadius:"20px", border:"2px solid #104E8B", borderTop:"10px solid #104E8B", borderBottom:"10px solid #104E8B", color:"#104E8B"}}>
+            <div className="editorialBody">
                 <h3>Contest Name - {localStorage.code}</h3>
                 <hr></hr>
                 <br/>
                 <h4>{Editorial['ques_name']}</h4>
-                <p>{Editorial['ques_text']}</p>
+                <div dangerouslySetInnerHTML={{ __html : Editorial['ques_text']}} />
                 <hr></hr>
                 <br/>
                 <h4>Solution</h4>

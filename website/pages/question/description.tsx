@@ -18,7 +18,6 @@ import Layout from "components/layout";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { CheckCircleOutline, Error } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
-import { Theme, makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
@@ -28,59 +27,6 @@ import Loader from "../../components/loading";
 import Disqus from "disqus-react"
 import { useDispatch, useSelector } from "react-redux";
 import {getIndividualQuestionData} from "../../store/actions/individualQuestionAction"
-//import zIndex from "@material-ui/core/styles/zIndex";
-//import ModalButton from "./modal-button";
-
-const styles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    marginBottom: 0,
-    marginRight: "auto",
-    marginLeft: "auto",
-    textAlign: "center",
-  },
-  paper: {
-    flexDirection: "column",
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
-    marginTop: theme.spacing(5),
-    minHeight: "80%",
-    maxWidth: "1300px",
-    border: "2px solid #104e8b",
-    borderTop: "10px solid #104e8b",
-    borderBottom: "10px solid #104e8b",
-    borderRadius: "20px",
-  },
-  paper2: {
-    flexDirection: "column",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: theme.spacing(0),
-    marginBottom: theme.spacing(8),
-    maxWidth: "1300px",
-    overflow: "hidden",
-    border: "2px solid #104e8b",
-    borderTop: "10px solid #104e8b",
-    borderBottom: "10px solid #104e8b",
-    borderRadius: "20px",
-  },
-  details: {
-    paddingTop: theme.spacing(2),
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    marginTop: theme.spacing(1.8),
-    minWidth: 120,
-    overflow: "hidden",
-  },
-  button: {
-    marginTop: theme.spacing(3),
-  },
-}));
-
 
 export default function QuesDetail(){
 
@@ -187,7 +133,6 @@ function statuscode(){
 };
 
 
-const classes  = styles();
 const disqusShortname = "onlinejudge-1"
 const disqusConfig = {
   url: "http://localhost:3000",
@@ -287,10 +232,10 @@ useEffect(() => {
         <div style={{ margin: "20px" }}>
           <Paper
             elevation={0}
-            className={classes.paper}
+            className="descriptionPaper"
             style={{ margin: "20px auto" }}
           >
-            <div className={classes.details}>
+            <div className="descriptionDetails">
               <Typography
                 style={{
                   color: "#104e8b",
@@ -406,9 +351,9 @@ useEffect(() => {
             </div>
           </Paper>
 
-          <Paper elevation={0} className={classes.paper2}>
+          <Paper elevation={0} className="descriptionPaper2">
             <div style={{ margin: "0 auto", textAlign: "center" }}>
-              <FormControl className={classes.formControl}>
+              <FormControl className="formControl">
                 <Select
                   labelId="demo-controlled-open-select-label"
                   id="demo-controlled-open-select"
@@ -424,7 +369,7 @@ useEffect(() => {
                 </Select>
               </FormControl>
 
-              <FormControl className={classes.formControl}>
+              <FormControl className="formControl">
                 <Select
                   labelId="demo-controlled-open-select-label"
                   id="demo-controlled-open-select"
@@ -451,7 +396,7 @@ useEffect(() => {
                 <CircularProgress size={24} />
               ) : (
                 <Button
-                  className={classes.button}
+                  className="descriptionButton"
                   color="primary"
                   variant="outlined"
                   style={{
@@ -563,7 +508,7 @@ useEffect(() => {
         {ended?
           null
           :(
-        <Paper elevation={0} className={classes.paper2}>
+        <Paper elevation={0} className="descriptionPaper2">
             <div style={{ margin: "20px", textAlign: "center" }}>
         <Disqus.DiscussionEmbed
           shortname= {disqusShortname}

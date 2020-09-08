@@ -1,0 +1,16 @@
+.socialRoot {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.socialTitle {
+    margin-top: 16px,
+}
+
+.socialError{
+    text-align: center;
+}

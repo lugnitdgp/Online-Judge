@@ -106,7 +106,6 @@ export default function questionlist(){
                   margin: "0 auto",
                 }}
               >
-                {/* {localStorage.contest_name} */}
                 Contest Name
               </p>
             </Grid>

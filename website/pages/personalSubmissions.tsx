@@ -30,25 +30,7 @@ const useStyles = makeStyles(() => ({
   },
   WA: {
     "& td": { backgroundColor: "#ff6961" },
-  },
-  modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  paper: {
-    backgroundColor: "#fff",
-    border: "2px solid #104e8b",
-    borderTop: "10px solid #104e8b",
-    borderBottom: "10px solid #104e8b",
-    outline: "none",
-    padding: "30px",
-    borderRadius: "20px",
-    minWidth: "70%",
-    minHeight: "90%",
-    color: "#104e8b",
-    overflow: "auto",
-  },
+  }
 }));
 
 export default function personalSubmissions() {
@@ -272,7 +254,7 @@ export default function personalSubmissions() {
           <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
-            className={classes.modal}
+            className="PSmodal"
             open={open}
             onClose={handleCloseModal}
             closeAfterTransition
@@ -282,7 +264,7 @@ export default function personalSubmissions() {
             }}
           >
             <Fade in={open}>
-              <div className={classes.paper}>
+              <div className="PSpaper">
                 <div className="PSmodelPaper">
                   <div className="PSmodelPaperInner">
                     <Button

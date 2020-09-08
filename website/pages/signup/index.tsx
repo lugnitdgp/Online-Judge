@@ -123,25 +123,6 @@ const facebookLogin = () => {
   window.location.href = url.toString();
 };
 
-
-// const linkedInLogin = () => {
-//   // let url = new URL("https://www.linkedin.com");
-//   // url.pathname = "/oauth/v2/authorization";
-//   // url.searchParams.set(
-//   //   "redirect_uri",
-//   //   `${window.location.protocol}//${window.location.host}/api/authentication/linkedin`
-//   // );
-//   // url.searchParams.set("client_id", process.env.LINKEDIN_CLIENT_ID);
-//   // url.searchParams.set("response_type", "code");
-//   // url.searchParams.set(
-//   //   "scope",
-//   //   ["r_liteprofile", "r_emailaddress", "w_member_social"].join(" ")
-//   // );
-
-//   // window.location.href = url.toString();
-//   window.location.href = `https://sosrgstudios.auth.ap-south-1.amazoncognito.com/login?client_id=d0nncoo9vge8bhqlbjr11tnnb&response_type=code&scope=email+openid+profile&redirect_uri=${window.location.protocol}//${window.location.host}/api/authentication/linkedin`;
-// };
-
 interface Props {
   classes: any;
 }
@@ -243,12 +224,7 @@ function LoginPage(props: Props) {
     
     
     }
-    
  
-  // const toggleisLogin = () => {
-  //   toggleLogin(!isLogin);
-  // };
-
   React.useEffect(() => {
     let status = getParameterByName("status")
     if (status == "success") {
@@ -259,96 +235,7 @@ function LoginPage(props: Props) {
 
   return (
     <main className={classes.main}>
-      {/* {isLogin ? (
-        <Paper className={classes.paper}>
-          <Avatar
-            className={classes.avatar}
-            src="https://img.icons8.com/officel/80/000000/court-judge.png"
-          />
-          <Typography variant="h3" gutterBottom>
-            Login
-        </Typography>
-        <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => toggleisLogin()}
-            style={{ border: "None", outline: "none" }}
-          >
-            Didn't Sign Up? Register here.
-        </Button>
-          <form
-            className={classes.form}
-
-
-          >
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email</InputLabel>
-              <Input
-                value={values.email1}
-                onChange={handleChange('email1')}
-                name="email"
-                autoFocus
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                id="standard-adornment-password"
-                type={values.showPassword ? 'text' : 'password'}
-                value={values.password1}
-                onChange={handleChange('password1')}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-
-            <Button
-              variant="contained"
-              type="submit"
-              fullWidth
-              color="primary"
-              className={classes.submit}
-              onClick={logIn}
-            >
-              LogIn
-          </Button>
-            <Button
-              variant="outlined"
-              className={classes.googleButton}
-              size="large"
-              fullWidth
-              onClick={() => googleLogin()}
-            >
-              <img
-                src="https://img.icons8.com/color/24/000000/google-logo.png"
-                className={classes.signInIcon}
-              />
-            Login with Google
-          </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="large"
-              fullWidth
-              onClick={() => facebookLogin()}
-              className={classes.facebookButton}
-            >
-              <Facebook className={classes.signInIcon} />
-            Login with Facebook
-          </Button>
-          </form>
-          
-        </Paper>
-      ) : ( */}
+     
           <Paper className={classes.paper}>
             
             <Typography variant="h3" gutterBottom style={{color:"#104E8B"}}> 

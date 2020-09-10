@@ -18,6 +18,16 @@ class Config(models.Model):
         return "Server wide config for start and end time"
 
 
+class Programming_Language(models.Model):
+    name = models.CharField(max_length=16)
+    ext = models.CharField(max_length=16)
+    compile_command = models.CharField(max_length=255)
+    run_command = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name 
+
+
 class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
@@ -27,6 +37,7 @@ class Contest(models.Model):
     min_score = models.IntegerField(default=1, help_text="Add the fraction multiplier to question score Eg. 3 for 1/3")
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
+    contest_langs = models.ManyToManyField(Programming_Language)
 
     def __str__(self):
         return self.contest_name + " " + self.contest_code

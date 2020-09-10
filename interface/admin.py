@@ -3,6 +3,8 @@ from interface.models import *
 
 admin.site.site_header = 'Online Judge GLUG'
 
+admin.site.register(Programming_Language)
+
 class ContestAdmin(admin.ModelAdmin): 
     list_display = ('contest_name', 'start_time', 'end_time') 
 

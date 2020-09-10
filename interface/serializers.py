@@ -18,9 +18,17 @@ class QuestionListSerializer(serializers.BaseSerializer):
 
 
 class ContestSerializer(serializers.ModelSerializer):
+    languages = serializers.SerializerMethodField('get_langs')
+    
+    def get_langs(self, obj):
+        langs = []
+        for each in obj.contest_langs.all():
+            langs.append(each.name)
+        return langs
+            
     class Meta:
         model = Contest
-        fields = ('contest_name', 'contest_code', 'start_time', 'end_time', 'contest_image')
+        fields = ('contest_name', 'contest_code', 'start_time', 'end_time', 'contest_image', 'languages')
 
     def to_representation(self, instance):
         data = super(ContestSerializer, self).to_representation(instance)

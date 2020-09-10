@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from celery import shared_task
 from interface.models import *
-from interface.models import Contest
+from interface.models import Contest, Programming_Language
 from accounts.models import Coder
 from judge.celery import app
 from engine import script
@@ -28,28 +28,40 @@ def db_store(question, user, result, ac, wa, job_id, contest, code, lang):
 
 @app.task
 def execute(question, coder, code, lang, contest):
-    language = {"c": "c", "c++": "cpp", "java": "java", "python2": "py", "python3": "py"}
-    ext = language[lang]
-    filename = execute.request.id.__str__() + "." + ext
     try:
-        with open(os.path.join(OUTPATH_DIR, filename), "w+") as file:
-            file.write(code)
-            file.close()
-    except:
-        print("Exception")
-    f = os.path.join(OUTPATH_DIR, filename)
-    question = Question.objects.get(question_code=question['question_code'])
-    user = Coder.objects.get(email=coder['email'])
-    contest = Contest.objects.get(contest_code=contest['contest_code'])
-    testcases = Testcases.objects.filter(question=question)
-    temp_output_file = os.path.join(OUTPATH_DIR, execute.request.id.__str__() + ".txt")
-    ac, wa = 0, 0
-    if (ext == "c"):
+        question = Question.objects.get(question_code=question['question_code'])
+        user = Coder.objects.get(email=coder['email'])
+        testcases = Testcases.objects.filter(question=question)
+        contest = Contest.objects.get(contest_code=contest['contest_code'])
+        ac, wa = 0, 0
+        language = contest.contest_langs.get(name=lang)
+        ext = language.ext
+        filename = execute.request.id.__str__() + "." + ext
+        try:
+            with open(os.path.join(OUTPATH_DIR, filename), "w+") as file:
+                file.write(code)
+                file.close()
+        except:
+            print("Exception")
+        f = os.path.join(OUTPATH_DIR, filename)
+        temp_output_file = os.path.join(OUTPATH_DIR, execute.request.id.__str__() + ".txt")
+        time, mem = 0, 0
         net_res = []
+        if (ext == "c" or ext == "cpp"):
+            time = question.c_cpp_lim()[0]
+            mem = question.c_cpp_lim()[1]
+        elif (ext == "py"):
+            time = question.python_lim()[0]
+            mem = question.python_lim()[1]
+        elif (ext == "java"):
+            time = question.java_lim()[0]
+            mem = question.java_lim()[1]
         for tests in testcases:
-            result = script.run_c(f,
-                                  question.c_cpp_lim()[0],
-                                  question.c_cpp_lim()[1], tests.input_path(), temp_output_file, tests.output_path())
+            result = script.run(
+                f, time, mem, tests.input_path(),
+                temp_output_file, tests.output_path(), lang
+            )
+            os.remove(f)
             net_res.append(result)
             if (result['code'] == 1):
                 break
@@ -58,65 +70,7 @@ def execute(question, coder, code, lang, contest):
             elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
                 wa += 1
         db_store(question, user, net_res, ac, wa, execute.request.id.__str__(), contest, code, lang)
-    elif (ext == "cpp"):
-        net_res = []
-        for tests in testcases:
-            result = script.run_cpp(f,
-                                    question.c_cpp_lim()[0],
-                                    question.c_cpp_lim()[1], tests.input_path(), temp_output_file, tests.output_path())
-            net_res.append(result)
-            if (result['code'] == 1):
-                break
-            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
-                ac += 1
-            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
-                wa += 1
-        db_store(question, user, net_res, ac, wa, execute.request.id.__str__(), contest, code, lang)
-    elif (ext == "py" and lang == "python3"):
-        net_res = []
-        for tests in testcases:
-            result = script.run_python3(f,
-                                        question.python_lim()[0],
-                                        question.python_lim()[1], tests.input_path(), temp_output_file,
-                                        tests.output_path())
-            net_res.append(result)
-            if (result['code'] == 1):
-                break
-            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
-                ac += 1
-            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
-                wa += 1
-        db_store(question, user, net_res, ac, wa, execute.request.id.__str__(), contest, code, lang)
-    elif (ext == "py" and lang == "python2"):
-        net_res = []
-        for tests in testcases:
-            result = script.run_python2(f,
-                                        question.python_lim()[0],
-                                        question.python_lim()[1], tests.input_path(), temp_output_file,
-                                        tests.output_path())
-            net_res.append(result)
-            if (result['code'] == 1):
-                break
-            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
-                ac += 1
-            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
-                wa += 1
-        db_store(question, user, net_res, ac, wa, execute.request.id.__str__(), contest, code, lang)
-    elif (ext == "java"):
-        net_res = []
-        for tests in testcases:
-            result = script.run_java(f,
-                                     question.java_lim()[0],
-                                     question.java_lim()[1], tests.input_path(), temp_output_file, tests.output_path())
-            net_res.append(result)
-            if (result['code'] == 1):
-                break
-            elif (result['code'] == 0 and result['status']['run_status'] == "AC"):
-                ac += 1
-            elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
-                wa += 1
-        db_store(question, user, net_res, ac, wa, execute.request.id.__str__(), contest, code, lang)
-    else:
+    except Programming_Language.DoesNotExist:
         result = {"code": 3, "message": "Language not supported"}
         db_store(question, user, result, ac, wa, execute.request.id.__str__(), contest, code, lang)
-    os.remove(f)
+

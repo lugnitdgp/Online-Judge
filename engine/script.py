@@ -28,10 +28,8 @@ def compare(path1, path2):
         return False
 
 
-def run(f, time, mem, input_file, temp_output_file, output_file, lang):
-    language = Programming_Language.objects.get(name=lang)
-    compilation = language.compile_command.format(f)
-    os.system(compilation)
+def compiler(compile_command):
+    os.system(compile_command)
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
             return {  # Compilation Error
@@ -39,35 +37,85 @@ def run(f, time, mem, input_file, temp_output_file, output_file, lang):
                 "message": temp_file.read()
             }
     else:
-        if (language.name == "c" or language.name == "c++"):
-            runner = language.run_command.format(
-                ENGINE_PATH, time, mem, input_file, temp_output_file
-            )
-        elif (language.ext == "py"):
-            runner = language.run_command.format(
-                ENGINE_PATH, time, mem, f, input_file, temp_output_file
-            )
-        elif (language.name == "java"):
-            runner = language.run_command.format(
-                ENGINE_PATH, time, mem, os.path.abspath(OUTPATH_DIR), input_file, temp_output_file
-            )
-        os.system(runner)
-        stat = status()
-        res = None
-        if (stat['run_status'] == "OK"):
-            if (compare(output_file, temp_output_file)):
-                stat['run_status'] = "AC"
-                res = {  # Passed
-                    "code": 0,
-                    "status": stat
-                }
-            else:
-                stat['run_status'] = "WA"
-                res = {  # Failed
-                    "code": 0,
-                    "status": stat
-                }
+        return True
+
+
+def coderunner(runner, output_file, temp_output_file):
+    print(os.system(runner))
+    stat = status()
+    print(stat)
+    res = None
+    if (stat['run_status'] == "OK"):
+        if (compare(output_file, temp_output_file)):
+            stat['run_status'] = "AC"
+            res = {  # Passed
+                "code": 0,
+                "status": stat
+            }
         else:
-            res = {"code": 2, "status": stat}
-        os.remove(temp_output_file)
+            stat['run_status'] = "WA"
+            res = {  # Failed
+                "code": 0,
+                "status": stat
+            }
+    else:
+        res = {"code": 2, "status": stat}
+    os.remove(temp_output_file)
     return res
+
+
+def run_c(f, time, mem, input_file, temp_output_file, output_file):
+    language = Programming_Language.objects.get(name="c")
+    compile_stat = compiler(language.compile_command.format(f))
+    if compile_stat == True:
+        runner = language.run_command.format(
+            ENGINE_PATH, time, mem, input_file, temp_output_file
+        )
+        return coderunner(runner, output_file, temp_output_file)
+    else:
+        return compile_stat
+
+
+def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
+    language = Programming_Language.objects.get(name="c++")
+    compile_stat = compiler(language.compile_command.format(f))
+    if compile_stat == True:
+        runner = language.run_command.format(
+            ENGINE_PATH, time, mem, input_file, temp_output_file
+        )
+        return coderunner(runner, output_file, temp_output_file)
+    else:
+        return compile_stat
+
+def run_python3(f, time, mem, input_file, temp_output_file, output_file):
+    language = Programming_Language.objects.get(name="python3")
+    compile_stat = compiler(language.compile_command.format(f))
+    if compile_stat == True:
+        runner = language.run_command.format(
+            ENGINE_PATH, time, mem, f, input_file, temp_output_file
+        )
+        return coderunner(runner, output_file, temp_output_file)
+    else:
+        return compile_stat
+
+def run_python2(f, time, mem, input_file, temp_output_file, output_file):
+    language = Programming_Language.objects.get(name="python2")
+    compile_stat = compiler(language.compile_command.format(f))
+    if compile_stat == True:
+        runner = language.run_command.format(
+            ENGINE_PATH, time, mem, f, input_file, temp_output_file
+        )
+        return coderunner(runner, output_file, temp_output_file)
+    else:
+        return compile_stat
+
+def run_java(f, time, mem, input_file, temp_output_file, output_file):
+    language = Programming_Language.objects.get(name="java")
+    compile_stat = compiler(language.compile_command.format(f))
+    if compile_stat == True:
+        runner = language.run_command.format(
+            ENGINE_PATH, time, mem, os.path.abspath(OUTPATH_DIR), input_file, temp_output_file
+        )
+        return coderunner(runner, output_file, temp_output_file)
+    else:
+        return compile_stat

@@ -1,0 +1,52 @@
+[
+    {
+        "model": "interface.programming_language", 
+        "pk": 1, 
+        "fields": {
+            "name": "c", 
+            "ext": "c", 
+            "compile_command": "gcc -Wno-deprecated {} -o compiled_code 2> compile_log", 
+            "run_command": "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}"
+        }
+    }, 
+    {
+        "model": "interface.programming_language", 
+        "pk": 2, 
+        "fields": {
+            "name": "c++", 
+            "ext": "cpp", 
+            "compile_command": "g++ -o compiled_code {} 2> compile_log", 
+            "run_command": "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}"
+        }
+    }, 
+    {
+        "model": "interface.programming_language", 
+        "pk": 3, 
+        "fields": {
+            "name": "java", 
+            "ext": "java", 
+            "compile_command": "javac {} 2> compile_log", 
+            "run_command": "sudo {} --cpu {} --mem {} --nproc 20 --usage usage.txt --exec /usr/bin/java -cp {} test < {} > {}"
+        }
+    }, 
+    {
+        "model": "interface.programming_language", 
+        "pk": 4, 
+        "fields": {
+            "name": "python2", 
+            "ext": "py", 
+            "compile_command": "python2 -m py_compile {} 2> compile_log", 
+            "run_command": "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}"
+        }
+    }, 
+    {
+        "model": "interface.programming_language", 
+        "pk": 5, 
+        "fields": {
+            "name": "python3", 
+            "ext": "py", 
+            "compile_command": "python3 -m py_compile {} 2> compile_log", 
+            "run_command": "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}"
+        }
+    }
+]

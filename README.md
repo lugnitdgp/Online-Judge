@@ -74,3 +74,8 @@ To check if redis is working or not:
 2. Type `ping`
 3. If it returns `PONG`, then your redis-broker server is running fine.
 
+
+To add Language models after running SQL migrations run 
+```bash
+python manage.py loaddata --app interface language_model.json
+```

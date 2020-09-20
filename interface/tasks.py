@@ -122,9 +122,11 @@ def execute(question, coder, code, lang, contest):
                 elif (result['code'] == 0 and result['status']['run_status'] == "WA"):
                     wa += 1
             db_store(question, user, net_res, ac, wa, execute.request.id.__str__(), contest, code, lang)
+        
+        os.remove(f)
     
     except Programming_Language.DoesNotExist:
         result = {"code": 3, "message": "Language not supported"}
         db_store(question, user, result, ac, wa, execute.request.id.__str__(), contest, code, lang)
     
-    os.remove(f)
+    

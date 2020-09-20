@@ -41,9 +41,7 @@ def compiler(compile_command):
 
 
 def coderunner(runner, output_file, temp_output_file):
-    print(os.system(runner))
     stat = status()
-    print(stat)
     res = None
     if (stat['run_status'] == "OK"):
         if (compare(output_file, temp_output_file)):

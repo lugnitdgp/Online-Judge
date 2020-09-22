@@ -47,7 +47,7 @@ def run(f, time, mem, input_file, temp_output_file, output_file, lang):
             "in_file": input_file, "temp_out_file": temp_output_file
         }
         runner = language.run_command.format(**params)
-
+        os.system(runner)
         stat = status()
         res = None
 

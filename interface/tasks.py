@@ -48,7 +48,7 @@ def execute(question, coder, code, lang, contest):
         time, mem = 0, 0
         net_res = []
         
-        if (ext == "c" or ext == "c++"):
+        if (ext == "c" or ext == "cpp"):
             time, mem = question.c_cpp_lim()
         elif (ext == "py"):
             time, mem = question.python_lim()

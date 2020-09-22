@@ -4,6 +4,7 @@ import os
 import filecmp
 from judge.settings import ENGINE_PATH, OUTPATH_DIR
 from interface.models import Programming_Language
+import json
 
 
 def status():
@@ -28,92 +29,42 @@ def compare(path1, path2):
         return False
 
 
-def compiler(compile_command):
-    os.system(compile_command)
+def run(f, time, mem, input_file, temp_output_file, output_file, lang):
+    language = Programming_Language.objects.get(name=lang)
+    os.system(language.compile_command.format(f))
+
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
             return {  # Compilation Error
                 "code": 1,
                 "message": temp_file.read()
             }
+
     else:
-        return True
+        params = {
+            "engine_path": ENGINE_PATH, "time": time, "mem": mem, "f": f,
+            "outpath": os.path.abspath(OUTPATH_DIR),
+            "in_file": input_file, "temp_out_file": temp_output_file
+        }
+        runner = language.run_command.format(**params)
 
+        stat = status()
+        res = None
 
-def coderunner(runner, output_file, temp_output_file):
-    stat = status()
-    res = None
-    if (stat['run_status'] == "OK"):
-        if (compare(output_file, temp_output_file)):
-            stat['run_status'] = "AC"
-            res = {  # Passed
-                "code": 0,
-                "status": stat
-            }
+        if (stat['run_status'] == "OK"):
+            if (compare(output_file, temp_output_file)):
+                stat['run_status'] = "AC"
+                res = {  # Passed
+                    "code": 0,
+                    "status": stat
+                }
+            else:
+                stat['run_status'] = "WA"
+                res = {  # Failed
+                    "code": 0,
+                    "status": stat
+                }
         else:
-            stat['run_status'] = "WA"
-            res = {  # Failed
-                "code": 0,
-                "status": stat
-            }
-    else:
-        res = {"code": 2, "status": stat}
-    os.remove(temp_output_file)
-    return res
-
-
-def run_c(f, time, mem, input_file, temp_output_file, output_file):
-    language = Programming_Language.objects.get(name="c")
-    compile_stat = compiler(language.compile_command.format(f))
-    if compile_stat == True:
-        runner = language.run_command.format(
-            ENGINE_PATH, time, mem, input_file, temp_output_file
-        )
-        return coderunner(runner, output_file, temp_output_file)
-    else:
-        return compile_stat
-
-
-def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
-    language = Programming_Language.objects.get(name="c++")
-    compile_stat = compiler(language.compile_command.format(f))
-    if compile_stat == True:
-        runner = language.run_command.format(
-            ENGINE_PATH, time, mem, input_file, temp_output_file
-        )
-        return coderunner(runner, output_file, temp_output_file)
-    else:
-        return compile_stat
-
-def run_python3(f, time, mem, input_file, temp_output_file, output_file):
-    language = Programming_Language.objects.get(name="python3")
-    compile_stat = compiler(language.compile_command.format(f))
-    if compile_stat == True:
-        runner = language.run_command.format(
-            ENGINE_PATH, time, mem, f, input_file, temp_output_file
-        )
-        return coderunner(runner, output_file, temp_output_file)
-    else:
-        return compile_stat
-
-def run_python2(f, time, mem, input_file, temp_output_file, output_file):
-    language = Programming_Language.objects.get(name="python2")
-    compile_stat = compiler(language.compile_command.format(f))
-    if compile_stat == True:
-        runner = language.run_command.format(
-            ENGINE_PATH, time, mem, f, input_file, temp_output_file
-        )
-        return coderunner(runner, output_file, temp_output_file)
-    else:
-        return compile_stat
-
-def run_java(f, time, mem, input_file, temp_output_file, output_file):
-    language = Programming_Language.objects.get(name="java")
-    compile_stat = compiler(language.compile_command.format(f))
-    if compile_stat == True:
-        runner = language.run_command.format(
-            ENGINE_PATH, time, mem, os.path.abspath(OUTPATH_DIR), input_file, temp_output_file
-        )
-        return coderunner(runner, output_file, temp_output_file)
-    else:
-        return compile_stat
+            res = {"code": 2, "status": stat}
+        os.remove(temp_output_file)
+        return res        

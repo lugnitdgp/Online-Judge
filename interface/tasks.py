@@ -46,7 +46,7 @@ def execute(question, coder, code, lang, contest):
         f = os.path.join(OUTPATH_DIR, filename)
         temp_output_file = os.path.join(OUTPATH_DIR, execute.request.id.__str__() + ".txt")
         net_res = []
-        multiplier = getattr(question, language.multiplier) 
+        multiplier = getattr(question, language.multiplier_name) 
         time, mem = question.time_limit*multiplier, question.mem_limit*multiplier
 
         for tests in testcases:

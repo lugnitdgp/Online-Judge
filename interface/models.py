@@ -8,6 +8,7 @@ from shutil import rmtree
 import os
 from accounts.models import Coder
 from tinymce.models import HTMLField
+import hashlib
 
 
 class Config(models.Model):
@@ -99,6 +100,8 @@ class Testcases(models.Model):
     test_case_no = models.IntegerField(default= 1, help_text="Test Case ID for the particular question")
     input_test = models.FileField(upload_to=input_dir, help_text="Input test case")
     output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
+    input_hash = models.SlugField(max_length=128)
+    output_hash = models.SlugField(max_length=128)
 
     def __str__(self):
         return ("Testcase of " + self.question.question_code)
@@ -108,6 +111,30 @@ class Testcases(models.Model):
 
     def output_path(self):
         return self.output_test.path
+    
+    def save(self, *args, **kwargs):
+        hash_in = hashlib.sha512()
+        hash_out = hashlib.sha512()
+        buff_size = 65536
+        end1 = False
+        end2 = False
+        while True:
+            if not end1:
+                data = self.input_test.read(buff_size)
+                if not data:
+                    end1 = True
+                hash_in.update(data)
+            if not end2:
+                data = self.output_test.read(buff_size)
+                if not data:
+                    end1 = True
+                hash_out.update(data)
+            if not end1 and not end2:
+                break
+        self.input_hash = hash_in.hexdigest()
+        self.output_hash = hash_out.hexdigest()
+        super(Testcases, self).save(*args, **kwargs)
+
 
 class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True, on_delete=models.CASCADE)

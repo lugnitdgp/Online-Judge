@@ -45,15 +45,9 @@ def execute(question, coder, code, lang, contest):
         
         f = os.path.join(OUTPATH_DIR, filename)
         temp_output_file = os.path.join(OUTPATH_DIR, execute.request.id.__str__() + ".txt")
-        time, mem = 0, 0
         net_res = []
-        
-        if (ext == "c" or ext == "cpp"):
-            time, mem = question.c_cpp_lim()
-        elif (ext == "py"):
-            time, mem = question.python_lim()
-        elif (ext == "java"):
-            time, mem = question.java_lim()
+        multiplier = getattr(question, language.multiplier) 
+        time, mem = question.time_limit*multiplier, question.mem_limit*multiplier
 
         for tests in testcases:
             result = script.run(

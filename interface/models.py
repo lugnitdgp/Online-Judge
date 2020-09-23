@@ -24,6 +24,7 @@ class Programming_Language(models.Model):
     ext = models.CharField(max_length=16)
     compile_command = models.CharField(max_length=255)
     run_command = models.CharField(max_length=255)
+    multiplier_name = models.CharField(max_length=64)
 
     def __str__(self):
         return self.name 
@@ -69,15 +70,6 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question_code
-
-    def c_cpp_lim(self):
-        return [self.c_cpp_multiplier * self.time_limit, self.c_cpp_multiplier * self.mem_limit]
-
-    def python_lim(self):
-        return [self.python_multiplier * self.time_limit, self.python_multiplier * self.mem_limit]
-
-    def java_lim(self):
-        return [self.java_multipler * self.time_limit, self.java_multipler * self.mem_limit]
 
     def save(self, *args, **kwargs):
         super(Question, self).save(*args, **kwargs)

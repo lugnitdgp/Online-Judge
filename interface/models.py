@@ -8,6 +8,7 @@ from shutil import rmtree
 import os
 from accounts.models import Coder
 from tinymce.models import HTMLField
+import hashlib
 
 
 class Config(models.Model):
@@ -16,6 +17,17 @@ class Config(models.Model):
 
     def __str__(self):
         return "Server wide config for start and end time"
+
+
+class Programming_Language(models.Model):
+    name = models.CharField(max_length=16)
+    ext = models.CharField(max_length=16)
+    compile_command = models.CharField(max_length=255)
+    run_command = models.CharField(max_length=255)
+    multiplier_name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name 
 
 
 class Contest(models.Model):
@@ -27,6 +39,7 @@ class Contest(models.Model):
     min_score = models.IntegerField(default=1, help_text="Add the fraction multiplier to question score Eg. 3 for 1/3")
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
+    contest_langs = models.ManyToManyField(Programming_Language)
 
     def __str__(self):
         return self.contest_name + " " + self.contest_code
@@ -58,15 +71,6 @@ class Question(models.Model):
     def __str__(self):
         return self.question_code
 
-    def c_cpp_lim(self):
-        return [self.c_cpp_multiplier * self.time_limit, self.c_cpp_multiplier * self.mem_limit]
-
-    def python_lim(self):
-        return [self.python_multiplier * self.time_limit, self.python_multiplier * self.mem_limit]
-
-    def java_lim(self):
-        return [self.java_multipler * self.time_limit, self.java_multipler * self.mem_limit]
-
     def save(self, *args, **kwargs):
         super(Question, self).save(*args, **kwargs)
         if os.path.isdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk))):
@@ -88,6 +92,8 @@ class Testcases(models.Model):
     test_case_no = models.IntegerField(default= 1, help_text="Test Case ID for the particular question")
     input_test = models.FileField(upload_to=input_dir, help_text="Input test case")
     output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
+    input_hash = models.SlugField(max_length=128)
+    output_hash = models.SlugField(max_length=128)
 
     def __str__(self):
         return ("Testcase of " + self.question.question_code)
@@ -97,6 +103,30 @@ class Testcases(models.Model):
 
     def output_path(self):
         return self.output_test.path
+    
+    def save(self, *args, **kwargs):
+        hash_in = hashlib.sha512()
+        hash_out = hashlib.sha512()
+        buff_size = 65536
+        end1 = False
+        end2 = False
+        while True:
+            if not end1:
+                data = self.input_test.read(buff_size)
+                if not data:
+                    end1 = True
+                hash_in.update(data)
+            if not end2:
+                data = self.output_test.read(buff_size)
+                if not data:
+                    end1 = True
+                hash_out.update(data)
+            if not end1 and not end2:
+                break
+        self.input_hash = hash_in.hexdigest()
+        self.output_hash = hash_out.hexdigest()
+        super(Testcases, self).save(*args, **kwargs)
+
 
 class Job(models.Model):
     question = models.ForeignKey(Question, blank=True, null=True, on_delete=models.CASCADE)

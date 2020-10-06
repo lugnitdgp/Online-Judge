@@ -3,6 +3,8 @@ from interface.models import *
 
 admin.site.site_header = 'Online Judge GLUG'
 
+admin.site.register(Programming_Language)
+
 class ContestAdmin(admin.ModelAdmin): 
     list_display = ('contest_name', 'start_time', 'end_time') 
 
@@ -10,6 +12,7 @@ admin.site.register(Contest, ContestAdmin)
 
 class TestCaseInline(admin.TabularInline):
     model = Testcases
+    fields = ['input_test', 'output_test']
     extra = 1
 
 class QuestionAdmin(admin.ModelAdmin): 
@@ -30,6 +33,7 @@ admin.site.register(Editorial, EditorialAdmin)
 class TestcaseAdmin(admin.ModelAdmin): 
     list_display = ('question',) 
     list_filter = ('question',)
+    readonly_fields = ['output_hash', 'input_hash']
 
 admin.site.register(Testcases, TestcaseAdmin)
 

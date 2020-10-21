@@ -12,6 +12,7 @@ import "../styles/leaderboard.css";
 import "../styles/submissions.css";
 import "../styles/socialAuth.css";
 import "../styles/questions.css";
+import "../styles/newAppbar.css";
 import Loader from "../components/loading";
 import { Provider } from "react-redux";
 import store from "../store";

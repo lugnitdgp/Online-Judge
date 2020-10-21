@@ -1,0 +1,42 @@
+.NAlist {
+    width: 200;
+}
+
+.NApadding {
+    padding-right: 30;
+    cursor: pointer;
+}
+
+.NAsideBarIcon {
+    padding: 0;
+    color: white;
+    cursor: pointer;
+}
+
+.NAmenuButton {
+    margin-right: 10px;
+}
+
+.NAtitle {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.NAmodal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.NApaper {
+    background-color: #fff;
+    border: 2px solid #104e8b;
+    border-top: 10px solid #104e8b;
+    border-bottom: 10px solid #104e8b;
+    outline: none;
+    padding: 30px;
+    border-radius: 20px;
+    min-width: 50%;
+    min-height: 50%;
+    color: #104e8b;
+}

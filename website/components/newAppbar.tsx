@@ -11,53 +11,11 @@ import {
   Avatar,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import { withStyles} from "@material-ui/core/styles";
 import Router from "next/router";
 
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-
-const customStyles = () => ({
-  list: {
-    width: 200,
-  },
-  padding: {
-    paddingRight: 30,
-    cursor: "pointer",
-  },
-
-  sideBarIcon: {
-    padding: 0,
-    color: "white",
-    cursor: "pointer",
-  },
-  menuButton: {
-    marginRight: "10px",
-  },
-  title: {
-    flexGrow: 1,
-    cursor: "pointer",
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: "#fff",
-    border: '2px solid #104e8b',
-    borderTop:"10px solid #104e8b",
-    borderBottom:"10px solid #104e8b",
-    outline:"none",
-    padding: "30px",
-    borderRadius:"20px",
-    minWidth:"50%",
-    minHeight:"50%",
-    color:"#104e8b",
-    
-  },
-});
 
 interface IProps {
   classes: any;
@@ -99,7 +57,7 @@ class Newappbar extends Component<IProps, {}> {
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        className={this.props.classes.modal}
+        className="NAmodal"
         open={this.state.open}
         onClose={this.handleClose}
         closeAfterTransition
@@ -109,7 +67,7 @@ class Newappbar extends Component<IProps, {}> {
         }}
       >
         <Fade in={this.state.open}>
-          <div className={this.props.classes.paper}>
+          <div className="NApaper">
             <h2>Announcement/Rules</h2>
             <ul>
               <li>Sample announcement or rule here. Sample announcement or rule here.</li>
@@ -156,7 +114,7 @@ class Newappbar extends Component<IProps, {}> {
               // alignItems="Right"
             >
               <MenuIcon
-                className={this.props.classes.sideBarIcon}
+                className="NAsideBarIcon"
                 onClick={() => {
                   this.setState({ drawer: true });
                 }}
@@ -165,7 +123,7 @@ class Newappbar extends Component<IProps, {}> {
               <div
                 // color="inherit"
                 // variant="h3"
-                className={this.props.classes.title}
+                className="NAtitle"
                 // alignItems="Right"
                 // style={{ textAlign: "Right" }}
               >
@@ -200,7 +158,7 @@ class Newappbar extends Component<IProps, {}> {
               this.setState({ drawer: false });
             }}
           >
-            <List className={this.props.classes.list}>
+            <List className="NAlist">
             {localStorage.onlinejudge_info ? (
               <ListItem key={3} button >
 
@@ -290,7 +248,7 @@ class Newappbar extends Component<IProps, {}> {
         <Toolbar>
           <Typography
             variant="h6"
-            className={this.props.classes.title}
+            className="NAtitle"
             onClick={() => Router.push("/")}
           >
             <img
@@ -375,4 +333,4 @@ class Newappbar extends Component<IProps, {}> {
 //   classes: PropTypes.object.isRequired,
 // };
 
-export default withStyles(customStyles)(Newappbar);
+export default Newappbar;

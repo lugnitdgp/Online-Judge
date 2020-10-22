@@ -399,16 +399,7 @@ useEffect(() => {
                   className="descriptionButton"
                   color="primary"
                   variant="outlined"
-                  style={{
-                    border: "None",
-                    backgroundColor: "#104e8b",
-                    height: "30px",
-                    width: "100px",
-                    borderRadius: "5px",
-                    color: "white",
-                    textDecoration: "None",
-                    marginBottom: "20px",
-                  }}
+
                   onClick={() =>
                     submitcode(value, language)
                   }

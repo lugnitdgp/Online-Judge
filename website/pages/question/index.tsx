@@ -93,18 +93,7 @@ export default function questionlist(){
           <Grid container spacing={0}>
             <Grid item xs={12} md={6}>
               <p
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  fontSize: "30px",
-                  color: "#104e8b",
-                  fontWeight: "bold",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "0",
-                  margin: "0 auto",
-                }}
+                className="Qcontestname"
               >
                 Contest Name
               </p>

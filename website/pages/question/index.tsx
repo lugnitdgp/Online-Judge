@@ -1,24 +1,37 @@
-import React from "react";
-import Layout from "components/Layout";
+import React,{useEffect, useState} from "react";
+import Layout from "components/layout";
 import { TableContainer, TableHead, TableCell, Paper } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import Timer from "../../components/Timer";
 import Grid from "@material-ui/core/Grid";
-import SecondaryNav from "../../components/SecondaryNav";
-import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
-import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
+import SecondaryNav from "../../components/secondaryNav";
+import Loader from "../../components/loading";
 
-class questionlist extends React.Component {
-  state = {
-    list: [],
-    timestamp: "",
-    message: "",
-    performance: [],
-  };
+//Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { getQuestionsData } from "../../store/actions/questionsAction";
 
-  componentDidMount() {
+
+export default function questionlist(){
+  ////
+  const dispatch = useDispatch();
+
+  const {questions} = useSelector((state) => state.questionsReducer);
+
+  const {timestamp} = useSelector((state) => state.questionsReducer);
+
+  const {message} = useSelector((state) => state.questionsReducer);
+
+  const {ended} = useSelector((state) => state.questionsReducer);
+
+  const { loaded } = useSelector((state) => state.questionsReducer);
+
+
+
+
+  useEffect(() => {   
     if (!localStorage.token || !localStorage.code) window.location.href = "/";
     if (!localStorage.source) {
       var contestdeet = [
@@ -46,95 +59,42 @@ class questionlist extends React.Component {
         localStorage.setItem("source", JSON.stringify(source));
       }
     }
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/getanswer?contest_id=${localStorage.code}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${localStorage.token}`,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((resp) => {
-        console.log("start");
-        console.log(resp);
-        this.setState({ performance: resp });
-        console.log("end");
-      })
-      .then(() => {
-        fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Token ${localStorage.token}`,
-            },
-          }
-        )
-          .then((respon) => respon.json())
-          .then((res) => {
-            res.map((question) => {
-              console.log(question);
-              question.icon = <div></div>;
-              this.state.performance.map((ques) => {
-                if (ques.ques_name === question.question_name) {
-                  if (ques.correct >= 1) question.icon = <CheckTwoToneIcon />;
-                  else question.icon = <CloseTwoToneIcon />;
-                }
-              });
-            });
-            this.setState({ list: res });
-            var today = Date.now();
-            var start = localStorage.start * 1000;
-            var end = localStorage.end * 1000;
-            console.log(start + "   " + today + "  " + end);
-            if (start < today && end > today) {
-              this.setState({
-                timestamp: end,
-                message: "The Contest ends in",
-              });
-            } else if (start < today && end < today) {
-              this.setState({
-                timestamp: 0,
-                message: "The Contest has ended",
-              });
-            } else if (start > today) {
-              this.setState({
-                timestamp: start,
-                message: "The Contest begins in",
-              });
-            }
-          })
-          .catch((error) => {
-            error = JSON.stringify(error);
-            console.log(error);
-          });
-      });
-  }
 
-  render() {
-    return (
+  });
+
+
+
+  useEffect(() => {
+    dispatch(getQuestionsData());
+  }, []);
+  
+  const [loadedState, setLoaded] = useState(false);
+  const [list, setList] = useState([]);
+  const [time, setTime] = useState("");
+  const [msg, setMsg] = useState("");
+  const [endedBool, setEnded] = useState(false);
+  ////
+
+  if(JSON.stringify(list)!==JSON.stringify(questions) || loadedState!=loaded || endedBool!== ended){
+    setList(questions)
+    setTime(timestamp)
+    setMsg(message)
+    setLoaded(loaded)
+    setEnded(ended)
+    }
+
+    return (  
       <Layout>
+        
+      {loadedState ? 
+      <>
         <SecondaryNav />
         <div style={{ maxWidth: "1000px", margin: "10px auto" }}>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6}>
               <p
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  fontSize: "30px",
-                  color: "#104e8b",
-                  fontWeight: "bold",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "0",
-                  margin: "0 auto",
-                }}
+                className="Qcontestname"
               >
-                {/* {localStorage.contest_name} */}
                 Contest Name
               </p>
             </Grid>
@@ -148,7 +108,7 @@ class questionlist extends React.Component {
                 alignItems: "center",
               }}
             >
-              <Timer time={this.state.timestamp} message={this.state.message} />
+              <Timer time={time} message={msg} />
             </Grid>
           </Grid>
         </div>
@@ -189,7 +149,7 @@ class questionlist extends React.Component {
                   Question
                 </TableCell>
                 <TableCell
-                  align="right"
+                  align="left"
                   style={{ color: "#fff", marginBottom: "20px" }}
                 >
                   Status
@@ -200,11 +160,18 @@ class questionlist extends React.Component {
                 >
                   Score
                 </TableCell>
+                {endedBool==false?(null):(
+                <TableCell
+                  align="right"
+                  style={{ color: "#fff", marginBottom: "20px" }}
+                >
+                  Editorial
+                </TableCell>)}
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.list.length > 0
-                ? this.state.list.map((item, i) => (
+              {list.length > 0
+                ? list.map((item, i) => (
                     <>
                       <TableRow
                         key={i}
@@ -248,7 +215,7 @@ class questionlist extends React.Component {
                           </a>
                         </TableCell>
                         <TableCell
-                          align="right"
+                          align="left"
                           style={{ textDecoration: "None", color: "#104e8b" }}
                         >
                           {item.icon}
@@ -259,6 +226,21 @@ class questionlist extends React.Component {
                         >
                           {item.question_score}
                         </TableCell>
+                        {endedBool==false?(null):(
+                        <TableCell
+                          align="right"
+                          style={{
+                            textDecoration: "None",
+                            borderRadius: "10px",
+                          }}
+                        >
+                          <a
+                            href={`/question/editorial?id=${item.question_code}`}
+                            style={{  textDecoration: "None", color: "#104e8b" }}
+                          >
+                            View Editorial
+                          </a>
+                        </TableCell>)}
                       </TableRow>
                     </>
                   ))
@@ -269,29 +251,10 @@ class questionlist extends React.Component {
         <div className="FooterFixed">
           &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
         </div>
+        </>
+        : <Loader />}
+          
       </Layout>
     );
-  }
-}
-
-export default questionlist;
-
-{
-  /* <CopyToClipboard text={this.props.data.input_example} onCopy={this.changeCopyState}>
-                <Typography variant="subtitle1" gutterBottom>
-                  <div
-                    style={{ whiteSpace: "pre-wrap" }}
-                    dangerouslySetInnerHTML={{
-                      __html: this.props.data.input_example,
-                    }}
-                  />
-
-                  <Tooltip title={this.state.copied ? "COPIED !" : "COPY TO CLIPBOARD"}>
-                    <IconButton aria-label="upload picture" component="span">
-                      < FileCopyRoundedIcon />
-                    </IconButton>
-                  </Tooltip>
-
-                </Typography>
-              </CopyToClipboard> */
+  
 }

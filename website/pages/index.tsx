@@ -1,245 +1,178 @@
-import React from "react";
+import React, { useState } from "react";
 import { Typography, Button } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "../styles/IndexStyles";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import Grid from "@material-ui/core/Grid";
-import ContestCard from "../components/ContestCard";
+import ContestCard from "../components/contestCard";
 import Router from "next/router";
+import Loader from "../components/loading";
+import { useMediaQuery } from "react-responsive";
+import { useEffect } from "react";
 
-interface IProps {
-  classes: any;
-}
+//Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { getContest } from "../store/actions/contestAction";
 
-class IndexPage extends React.Component<IProps, {}> {
-  state = {
-    gotData: false,
-    ongoing: [],
-    ended: [],
-    upcoming: [],
-  };
-  componentDidMount() {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`, {
-      method: "GET",
-    })
-      .then((resp) => resp.json())
-      .then((res) => {
-        var ongoing = [];
-        var upcoming = [];
-        var ended = [];
-        res.map((contest) => {
-          console.log(contest);
-          var dateObj = new Date(contest["start_time"] * 1000);
-          contest["start"] = dateObj.toString();
-          contest["start"] =
-            contest["start"].substring(0, 10) +
-            contest["start"].substring(15, 24);
-          var today = Date.now();
-          var dateo = new Date(today);
-          console.log(dateObj.toString(), "   ", dateo.toString(), "  ");
-          dateObj = new Date(contest["end_time"] * 1000);
-          contest["end"] = dateObj.toString();
-          contest["end"] =
-            contest["end"].substring(0, 10) + contest["end"].substring(15, 24);
-          console.log(contest["end"]);
-          if (
-            contest["start_time"] * 1000 < today &&
-            contest["end_time"] * 1000 > today
-          ) {
-            contest["timestamp"] = contest["end_time"] * 1000;
-            ongoing.push(contest);
-          } else if (contest["start_time"] * 1000 > today) {
-            contest["upcoming"] = true;
-            contest["timestamp"] = contest["start_time"] * 1000;
-            upcoming.push(contest);
-          } else {
-            contest["ended"] = true;
-            ended.push(contest);
-          }
-        });
-        this.setState({ ongoing: ongoing, upcoming: upcoming, ended: ended });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+//ALL CSS INJECTED FROM "main.css"
+
+export default function IndexPage() {
+  const dispatch = useDispatch();
+  const { contests } = useSelector((state) => state.contestReducer);
+  const { loaded } = useSelector((state) => state.contestReducer);
+  useEffect(() => {
+    dispatch(getContest());
+  }, []);
+
+  const [loadedState, setLoaded] = useState(false);
+  const [contestsTotal, setContests] = useState([]);
+
+  if (
+    JSON.stringify(contests) !== JSON.stringify(contestsTotal) ||
+    loadedState != loaded
+  ) {
+    setContests(contests);
+    setLoaded(loaded);
   }
 
-  render() {
-    return (
-      <Layout>
-        {localStorage.onlinejudge_info ? (
-          <>
-            <Grid container spacing={0} className="contestMainrow">
-              <Grid item xs={12} md={3} className="ContestSectionHead">
-                Ongoing
-                <br /> Contests
-              </Grid>
-              <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.ongoing.length > 0 ? (
-                  <>
-                    {this.state.ongoing.map((res) => (
-                      <div className="horizontalscroll">
-                        <ContestCard contestInfo={res} />
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      textTransform: "uppercase",
-                      fontSize: "30px",
-                      margin: "0px",
-                      color: "#005",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    There are no ongoing contests right now.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
+  //const isTabletOrMobile = () => useMediaQuery({ query: "(max-width: 800px)" });
+  const isDesktopOrLaptop = () =>
+    useMediaQuery({ query: "(min-width: 801px)" });
 
-            <Grid container spacing={0} className="contestMainrow">
-              <Grid item xs={12} md={3} className="ContestSectionHead">
-                Upcoming
-                <br /> Contests
-              </Grid>
-              <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.upcoming.length > 0 ? (
-                  <>
-                    {this.state.upcoming.map((res) => (
-                      <div className="horizontalscroll">
-                        <ContestCard contestInfo={res} />
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      textTransform: "uppercase",
-                      fontSize: "30px",
-                      margin: "0px",
-                      color: "#005",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    There are no ongoing contests right now.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid container spacing={0} className="contestMainrow">
-              <Grid item xs={12} md={3} className="ContestSectionHead">
-                Previous
-                <br /> Contests
-              </Grid>
-              <Grid item xs={12} md={9} className="ContestGrid2">
-                {this.state.ended.length > 0 ? (
-                  <>
-                    {this.state.ended.map((res) => (
-                      <div className="horizontalscroll">
-                        <ContestCard contestInfo={res} />
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      textTransform: "uppercase",
-                      fontSize: "30px",
-                      margin: "0px",
-                      color: "#005",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    There are no ongoing contests right now.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-            <div className="Footer">
-              &copy; Created and maintained by GNU/Linux Users' group, Nit
-              Durgapur
-            </div>
-          </>
-        ) : (
-          <>
-            <Grid container spacing={0}>
-              <Grid item xs={12} md={7} style={{ textAlign: "center" }}>
-                <img
-                  src="/Coding-bro.png"
-                  alt="."
-                  style={{
-                    width: "100%",
-                    padding: "0",
-                    position: "relative",
-                  }}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={5}
-                className="ContestGrid"
-                style={{ textAlign: "center" }}
-              >
-                <h3 className="welcometext">
-                  <i>
-                    "Hi there, welcome to Online Judge presented to you by
-                    Gnu/Linux Users' Group, Nit Durgapur"
-                  </i>
-                </h3>
-                <div className="buttonsparent">
-                  <Typography
-                    style={{
-                      textAlign: "center",
-                      fontSize: "37px",
-                      margin: "20px auto",
+  return (
+    <>
+      {isDesktopOrLaptop && (
+        <Layout>
+          {localStorage.onlinejudge_info ? (
+            <>
+              {loadedState ? (
+                <>
+                  <Grid container spacing={0} className="contestMainrow">
+                    <Grid item xs={12} md={3} className="ContestSectionHead">
+                      Ongoing
+                      <br /> Contests
+                    </Grid>
+                    <Grid item xs={12} md={9} className="ContestGrid2">
+                      {contestsTotal[0].length > 0 ? (
+                        <>
+                          {contestsTotal[0].map((res) => (
+                            <div className="horizontalscroll">
+                              <ContestCard contestInfo={res} />
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <Typography className="noContestResponse">
+                          There are no ongoing contests right now.
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
 
-                      color: "#104E8B",
-                      fontWeight: "bold",
-                      width: "100%",
-                      backgroundColor: "#fff",
-                    }}
-                  >
-                    Enter right into contests
-                  </Typography>
-                  <div className="buttonsWrapper">
-                    <Button
-                      variant="outlined"
-                      className="loginbtn"
-                      type="submit"
-                      color="primary"
-                      onClick={() => Router.push("/login")}
-                    >
-                      Login
-                    </Button>
-                    &nbsp;&nbsp;&nbsp;&nbsp; OR &nbsp;&nbsp;&nbsp;&nbsp;
-                    <Button
-                      variant="contained"
-                      className="loginbtn"
-                      type="submit"
-                      color="primary"
-                      onClick={() => Router.push("/login")}
-                    >
-                      Signup
-                    </Button>
+                  <Grid container spacing={0} className="contestMainrow">
+                    <Grid item xs={12} md={3} className="ContestSectionHead">
+                      Upcoming
+                      <br /> Contests
+                    </Grid>
+                    <Grid item xs={12} md={9} className="ContestGrid2">
+                      {contestsTotal[1].length > 0 ? (
+                        <>
+                          {contestsTotal[1].map((res) => (
+                            <div className="horizontalscroll">
+                              <ContestCard contestInfo={res} />
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <Typography className="noContestResponse">
+                          There are no upcoming contests as of now.
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={0} className="contestMainrow">
+                    <Grid item xs={12} md={3} className="ContestSectionHead">
+                      Previous
+                      <br /> Contests
+                    </Grid>
+                    <Grid item xs={12} md={9} className="ContestGrid2">
+                      {contestsTotal[2].length > 0 ? (
+                        <>
+                          {contestsTotal[2].map((res) => (
+                            <div className="horizontalscroll">
+                              <ContestCard contestInfo={res} />
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <Typography className="noContestResponse">
+                          Nothing here yet!
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                  <div className="Footer">
+                    &copy; Created and maintained by GNU/Linux Users' group, Nit
+                    Durgapur
                   </div>
-                </div>
+                </>
+              ) : (
+                <Loader />
+              )}
+            </>
+          ) : (
+            <>
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={7} style={{ textAlign: "center" }}>
+                  <img src="/Coding-bro.png" alt="." className="bannerImage" />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={5}
+                  className="ContestGrid"
+                  style={{ textAlign: "center" }}
+                >
+                  <h3 className="welcometext">
+                    <i>
+                      "Hi there, welcome to Online Judge presented to you by
+                      Gnu/Linux Users' Group, Nit Durgapur"
+                    </i>
+                  </h3>
+                  <div className="buttonsparent">
+                    <Typography className="enterIntoContests">
+                      Enter right into contests
+                    </Typography>
+                    <div className="buttonsWrapper">
+                      <Button
+                        variant="outlined"
+                        className="loginbtn"
+                        type="submit"
+                        color="primary"
+                        onClick={() => Router.push("/login")}
+                      >
+                        Login
+                      </Button>
+                      &nbsp;&nbsp;&nbsp;&nbsp; OR &nbsp;&nbsp;&nbsp;&nbsp;
+                      <Button
+                        variant="contained"
+                        className="loginbtn"
+                        type="submit"
+                        color="primary"
+                        onClick={() => Router.push("/signup")}
+                      >
+                        Signup
+                      </Button>
+                    </div>
+                  </div>
+                </Grid>
               </Grid>
-            </Grid>
-            <div className="FooterFixed">
-              &copy; Created and maintained by GNU/Linux Users' group, Nit
-              Durgapur
-            </div>
-          </>
-        )}
-      </Layout>
-    );
-  }
+              <div className="FooterFixed">
+                &copy; Created and maintained by GNU/Linux Users' group, Nit
+                Durgapur
+              </div>
+            </>
+          )}
+        </Layout>
+      )}
+    </>
+  );
 }
-
-export default withStyles(styles)(IndexPage);

@@ -12,6 +12,7 @@ import json
 from urllib.parse import unquote
 from django.utils import timezone as t
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from judge.settings import MEDIA_URL
 # Create your views here.
 
 
@@ -62,8 +63,10 @@ def GetQuestion(request):
 ])
 def submitCode(request):
     lang = request.data.get('lang')
-    code = unquote(request.data.get('code'))
+    # code = unquote(request.data.get('code'))
+    code = request.data.get('code')
     contest_code = request.data.get('contest_id')
+    base_uri = request.build_absolute_uri(MEDIA_URL)
     try:
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         try:
@@ -82,7 +85,7 @@ def submitCode(request):
             CoderSerializer(coder).data, code, lang,
             ContestSerializer(contest, context={
                 "request": request
-            }).data)
+            }).data, base_uri)
         return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
@@ -227,3 +230,24 @@ def GetEditorial(request):
         return Response(data)
     except:
         return Response({'status': 301, 'message': 'Editorial not found, please contact the Admin!'})
+
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def check(request):
+    question_id = request.GET["q_id"]
+    question = Question.objects.get(question_code=question_id)
+    testcases = Testcases.objects.filter(question=question)
+    input_file_urls, output_file_urls, input_file_hashes, output_file_hashes = [], [], [], []
+    for test in testcases:
+        input_file_urls.append(request.build_absolute_uri(MEDIA_URL+test.input_test.url.split(MEDIA_URL)[-1]))
+        output_file_urls.append(request.build_absolute_uri(MEDIA_URL+test.output_test.url.split(MEDIA_URL)[-1]))
+        input_file_hashes.append(test.input_hash)
+        output_file_hashes.append(test.output_hash)
+    return Response({
+        "input_file_urls": input_file_urls,
+        "output_file_urls": output_file_urls,
+        "input_file_hashes": input_file_hashes,
+        "output_file_hashes": output_file_hashes
+    })

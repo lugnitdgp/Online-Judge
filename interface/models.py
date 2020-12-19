@@ -129,7 +129,6 @@ class Testcases(models.Model):
 
 
 class Job(models.Model):
-    question = models.ForeignKey(Question, blank=True, null=True, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
     coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, null=True, help_text="Name goes here")
@@ -146,7 +145,7 @@ class Job(models.Model):
         ordering = ['-timestamp']
 
     def __str__(self):
-        return self.question.question_code + " " + self.coder.name
+        return str(self.id) + " " + self.coder.name
 
 
 @receiver(pre_delete, sender=Question)

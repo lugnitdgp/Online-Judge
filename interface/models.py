@@ -73,25 +73,25 @@ class Question(models.Model):
 
     def save(self, *args, **kwargs):
         super(Question, self).save(*args, **kwargs)
-        if os.path.isdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk))):
-            pass
-        else:
-            os.mkdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk)))
+        # if os.path.isdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk))):
+        #     pass
+        # else:
+        #     os.mkdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk)))
 
     class Meta:
         ordering = ['question_score']
 
 def input_dir(instance, filename):
-    return os.path.join(TEST_CASE_DIR, "ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
+    return os.path.join("ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
 
 def output_dir(instance, filename):
-    return os.path.join(TEST_CASE_DIR, "ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
+    return os.path.join("ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
 
 class Testcases(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     test_case_no = models.IntegerField(default= 1, help_text="Test Case ID for the particular question")
-    input_test = models.FileField(upload_to=input_dir, help_text="Input test case")
-    output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
+    input_test = models.FileField(upload_to="testcases/", help_text="Input test case")
+    output_test = models.FileField(upload_to="testcases/", help_text="Output test case")
     input_hash = models.SlugField(max_length=128)
     output_hash = models.SlugField(max_length=128)
 

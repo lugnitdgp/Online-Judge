@@ -27,7 +27,7 @@ class Programming_Language(models.Model):
     multiplier_name = models.CharField(max_length=64)
 
     def __str__(self):
-        return self.name 
+        return self.name
 
 
 class Contest(models.Model):
@@ -53,6 +53,7 @@ class Contest(models.Model):
     class Meta:
         ordering = ['end_time']
 
+
 class Question(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
     question_code = models.CharField(max_length=50, blank=True, help_text="Code for the question")
@@ -70,28 +71,24 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question_code
-
-    def save(self, *args, **kwargs):
-        super(Question, self).save(*args, **kwargs)
-        # if os.path.isdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk))):
-        #     pass
-        # else:
-        #     os.mkdir(os.path.join(TEST_CASE_DIR, "ques{}".format(self.pk)))
-
+        
     class Meta:
         ordering = ['question_score']
 
+
 def input_dir(instance, filename):
-    return os.path.join("ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
+    return "testcases/ques_{}".format(instance.question.id) + "/test_{}/".format(instance.test_case_no) + filename
+
 
 def output_dir(instance, filename):
-    return os.path.join("ques_{}".format(instance.question.id), "test_{}".format(instance.test_case_no), filename)
+    return "testcases/ques_{}".format(instance.question.id) + "/test_{}/".format(instance.test_case_no) + filename
+
 
 class Testcases(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    test_case_no = models.IntegerField(default= 1, help_text="Test Case ID for the particular question")
-    input_test = models.FileField(upload_to="testcases/", help_text="Input test case")
-    output_test = models.FileField(upload_to="testcases/", help_text="Output test case")
+    test_case_no = models.IntegerField(default=1, help_text="Test Case ID for the particular question")
+    input_test = models.FileField(upload_to=input_dir, help_text="Input test case")
+    output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
     input_hash = models.SlugField(max_length=128)
     output_hash = models.SlugField(max_length=128)
 
@@ -103,7 +100,7 @@ class Testcases(models.Model):
 
     def output_path(self):
         return self.output_test.path
-    
+
     def save(self, *args, **kwargs):
         hash_in = hashlib.sha512()
         hash_out = hashlib.sha512()
@@ -147,25 +144,16 @@ class Job(models.Model):
     def __str__(self):
         return str(self.id) + " " + self.coder.name
 
-
-@receiver(pre_delete, sender=Question)
-def ques_delete(sender, instance, using, **kwargs):
-    rmtree(os.path.join(TEST_CASE_DIR, "ques{}".format(instance.pk)))
-
-
 @receiver(pre_delete, sender=Testcases)
 def testcases_delete(sender, instance, using, **kwargs):
-    os.remove(
-        os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(instance.question.pk)),
-                     "input{}.in".format(instance.pk)))
-    os.remove(
-        os.path.join(os.path.join(TEST_CASE_DIR, "ques{}".format(instance.question.pk)),
-                     "output{}.out".format(instance.pk)))
+    instance.input_test.delete(save=False)
+    instance.output_test.delete(save=False)
+
 
 class Answer(models.Model):
     user = models.ForeignKey(Coder, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    contest = models.ForeignKey(Contest ,on_delete=models.CASCADE)
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     ques_name = models.CharField(max_length=200, blank=True, null=True, help_text="Question name")
     correct = models.IntegerField(default=0, help_text="Number of correct attempts")
     wrong = models.IntegerField(default=0, help_text="Number of wrong attempts")
@@ -173,6 +161,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.question.question_name + " " + self.user.name
+
 
 class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
@@ -183,6 +172,7 @@ class Contest_Score(models.Model):
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name
+
 
 class Editorial(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)

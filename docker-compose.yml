@@ -16,10 +16,17 @@ services:
   
   web:
     build: .
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
     command: >- 
-      bash -c "python manage.py makemigrations && 
+      bash -c "python manage.py makemigrations &&
+      python manage.py makemigrations interface && 
       python manage.py migrate --noinput && 
-      gunicorn --env DJANGO_SETTINGS_MODULE=judge.settings -w 4 judge.wsgi:application"
+      python manage.py migrate --noinput interface && 
+      python manage.py collectstatic --no-input &&
+      gunicorn judge.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
       - .:/backend
     env_file: 
@@ -42,7 +49,7 @@ services:
 
   frontend:
     build: ./website
-    command: bash -c "npm run start"
+    command: npm run dev
     env_file: 
       .frnt.env
     ports:

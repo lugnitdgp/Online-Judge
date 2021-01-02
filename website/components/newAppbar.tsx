@@ -18,7 +18,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
 interface IProps {
-  classes: any;
+  classes?: any;
 }
 
 class Newappbar extends Component<IProps, {}> {

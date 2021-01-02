@@ -17,8 +17,8 @@ services:
   web:
     build: .
     command: >- 
-      bash -c "python backend/manage.py makemigrations && 
-      python backend/manage.py migrate --noinput && 
+      bash -c "python manage.py makemigrations && 
+      python manage.py migrate --noinput && 
       gunicorn --env DJANGO_SETTINGS_MODULE=judge.settings -w 4 judge.wsgi:application"
     volumes:
       - .:/backend
@@ -38,13 +38,13 @@ services:
     depends_on:
       - redis
       - db 
+      - web
 
   frontend:
     build: ./website
+    command: bash -c "npm run start"
     env_file: 
       .frnt.env
-    volumes:
-      - .:/frontend
     ports:
       - "3000:3000"
 

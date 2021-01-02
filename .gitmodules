@@ -1,1 +1,4 @@
 
+[submodule "safeexec"]
+	path = safeexec
+	url = https://github.com/realsdx/safeexec.git

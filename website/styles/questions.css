@@ -1,0 +1,79 @@
+ .descriptionPaper {
+     flex-direction: column;
+     margin-left: 24px;
+     margin-right: 24px;
+     margin-top: 40px;
+     border-radius: 20px;
+     border-radius: 20px;
+     min-height: 80%;
+     max-width: 1300px;
+     border: 2px solid #104e8b;
+     border-top: 10px solid #104e8b;
+     border-bottom: 10px solid #104e8b;
+ }
+ 
+ .descriptionPaper2 {
+     flex-direction: column;
+     margin-left: auto;
+     margin-right: auto;
+     margin-top: 0px;
+     margin-bottom: 64px;
+     max-width: 1300px;
+     overflow: hidden;
+     border: 2px solid #104e8b;
+     border-top: 10px solid #104e8b;
+     border-bottom: 10px solid #104e8b;
+     border-radius: 20px;
+ }
+ 
+ .descriptionDetails {
+     padding-top: 16px;
+     padding-left: 24px;
+     padding-right: 24px;
+     padding-bottom: 24px;
+ }
+ 
+ .formControl {
+     margin: 8px;
+     margin-top: 14.4px;
+     min-width: 120;
+     overflow: hidden;
+ }
+ 
+ .descriptionButton {
+     margin-top: 24px;
+     border: None;
+     background-color: #104e8b;
+     height: 30px;
+     width: 100px;
+     border-radius: 5px;
+     color: white;
+     text-decoration: None;
+     margin-bottom: 20px;
+ }
+ 
+ .editorialBody {
+     margin: 50px auto;
+     width: 90%;
+     max-width: 1000px;
+     text-align: left;
+     padding: 30px;
+     border-radius: 20px;
+     border: 2px solid #104E8B;
+     border-top: 10px solid #104E8B;
+     border-bottom: 10px solid #104E8B;
+     color: #104E8B;
+ }
+ 
+ .Qcontestname {
+     width: 100%;
+     height: 100%;
+     display: flex;
+     font-size: 30px;
+     color: #104e8b;
+     font-weight: bold;
+     justify-content: center;
+     align-items: center;
+     padding: 0;
+     margin: 0 auto;
+ }

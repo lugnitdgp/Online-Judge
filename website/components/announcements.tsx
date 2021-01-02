@@ -1,8 +1,8 @@
 import React from 'react';
 import Announcement from 'react-announcement'
 
-export default class announcement extends React.Component {
-  render () {
+export default function announcement() {
+
     return (
       <Announcement
           title="Here is your component"
@@ -16,4 +16,3 @@ export default class announcement extends React.Component {
       />
     )
   }
-}

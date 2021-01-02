@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import {
   AppBar,
   Toolbar,
@@ -12,56 +11,23 @@ import {
   Avatar,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
 import Router from "next/router";
 
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
-const styleSheet = {
-  list: {
-    width: 200,
-  },
-  padding: {
-    paddingRight: 30,
-    cursor: "pointer",
-  },
+interface IProps {
+  classes: any;
+}
 
-  sideBarIcon: {
-    padding: 0,
-    color: "white",
-    cursor: "pointer",
-  },
-  menuButton: {
-    marginRight: "10px",
-  },
-  title: {
-    flexGrow: 1,
-    cursor: "pointer",
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: "#fff",
-    border: '2px solid #104e8b',
-    borderTop:"10px solid #104e8b",
-    borderBottom:"10px solid #104e8b",
-    outline:"none",
-    padding: "30px",
-    borderRadius:"20px",
-    minWidth:"50%",
-    minHeight:"50%",
-    color:"#104e8b",
-    
-  },
-};
-
-class Newappbar extends Component {
-  constructor(props) {
+class Newappbar extends Component<IProps, {}> {
+  state = {
+    drawerActivate: false, 
+    drawer: false, 
+    open: false,
+  };
+  constructor(props: Readonly<IProps>) {
     super(props);
     this.state = { drawerActivate: false, drawer: false, open: false };
     this.createDrawer = this.createDrawer.bind(this);
@@ -86,12 +52,12 @@ class Newappbar extends Component {
   }
 
   modal(){
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return(
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        className={classes.modal}
+        className="NAmodal"
         open={this.state.open}
         onClose={this.handleClose}
         closeAfterTransition
@@ -101,7 +67,7 @@ class Newappbar extends Component {
         }}
       >
         <Fade in={this.state.open}>
-          <div className={classes.paper}>
+          <div className="NApaper">
             <h2>Announcement/Rules</h2>
             <ul>
               <li>Sample announcement or rule here. Sample announcement or rule here.</li>
@@ -135,7 +101,7 @@ class Newappbar extends Component {
  
   //Small Screens
   createDrawer() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div>
         {this.modal()}
@@ -145,21 +111,21 @@ class Newappbar extends Component {
               container
               direction="row"
               justify="space-between"
-              alignItems="Right"
+              // alignItems="Right"
             >
               <MenuIcon
-                className={this.props.classes.sideBarIcon}
+                className="NAsideBarIcon"
                 onClick={() => {
                   this.setState({ drawer: true });
                 }}
               />
 
-              <Typography
-                color="inherit"
-                variant="headline"
-                className={classes.title}
-                alignItems="Right"
-                style={{ textAlign: "Right" }}
+              <div
+                // color="inherit"
+                // variant="h3"
+                className="NAtitle"
+                // alignItems="Right"
+                // style={{ textAlign: "Right" }}
               >
                 Online Judge &nbsp;&nbsp;
                 <img
@@ -167,7 +133,7 @@ class Newappbar extends Component {
                   alt="."
                   style={{ width: "30px", borderRadius: "5px" }}
                 />
-              </Typography>
+              </div>
             </Grid>
           </Toolbar>
         </AppBar>
@@ -192,7 +158,7 @@ class Newappbar extends Component {
               this.setState({ drawer: false });
             }}
           >
-            <List className={this.props.classes.list}>
+            <List className="NAlist">
             {localStorage.onlinejudge_info ? (
               <ListItem key={3} button >
 
@@ -272,17 +238,17 @@ class Newappbar extends Component {
 
   //Larger Screens
   destroyDrawer() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div>
       {this.modal()}
     
       <AppBar position="static" elevation={0}>
         
-        <Toolbar disableElevation>
+        <Toolbar>
           <Typography
             variant="h6"
-            className={classes.title}
+            className="NAtitle"
             onClick={() => Router.push("/")}
           >
             <img
@@ -363,8 +329,8 @@ class Newappbar extends Component {
   }
 }
 
-Newappbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
+// Newappbar.propTypes = {
+//   classes: PropTypes.object.isRequired,
+// };
 
-export default withStyles(styleSheet)(Newappbar);
+export default Newappbar;

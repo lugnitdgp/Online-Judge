@@ -8,7 +8,15 @@ import Router from "next/router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserContextProvider from "../components/UserContextProvider";
 import "../styles/main.css";
+import "../styles/leaderboard.css";
+import "../styles/submissions.css";
+import "../styles/socialAuth.css";
+import "../styles/questions.css";
+import "../styles/newAppbar.css";
 import Loader from "../components/loading";
+import { Provider } from "react-redux";
+import store from "../store";
+import {withRedux, createWrapper} from "next-redux-wrapper";
 
 
 class MyApp extends App {
@@ -39,6 +47,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
+      <Provider store={store}>
       <React.Fragment>
         <Head>
           <title>Online Judge</title>
@@ -63,8 +72,12 @@ class MyApp extends App {
           </ThemeProvider>
         </UserContextProvider>
       </React.Fragment>
+      </Provider>
     );
   }
 }
 
-export default MyApp;
+const makeStore = () => store;
+const wrapper = createWrapper(makeStore)
+
+export default wrapper.withRedux(MyApp);

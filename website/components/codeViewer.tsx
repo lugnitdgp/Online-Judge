@@ -5,6 +5,7 @@ import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-kr_theme";
 import "ace-builds/src-noconflict/snippets/c_cpp";
+import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/snippets/java";
 import "ace-builds/src-noconflict/snippets/python";
 import "ace-builds/src-min-noconflict/ext-language_tools";
@@ -26,7 +27,7 @@ function Viewer(props: IProps) {
     
         <AceEditor
           mode={dict[props.lang]}
-          theme={"kr_theme"}
+          theme={"github"}
           value={props.value}
           readOnly={true}
           fontSize={18}

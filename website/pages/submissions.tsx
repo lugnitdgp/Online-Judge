@@ -1,277 +1,225 @@
-import React from "react";
-import Layout from "../components/Layout";
+import React, { useState } from "react";
+import Layout from "../components/layout";
 import MUIDataTable from "mui-datatables";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
-import CheckTwoToneIcon from "@material-ui/icons/CheckTwoTone";
-import CloseTwoToneIcon from "@material-ui/icons/CloseTwoTone";
-import SecondaryNav from "../components/SecondaryNav";
+import { useEffect } from "react";
+import SecondaryNav from "../components/secondaryNav";
+import Loader from "../components/loading";
 
-const customStyles = () => ({
+//Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { getSubmissionsData } from "../store/actions/submissionsAction";
+
+const customStyles = makeStyles(() => ({
   Successful: {
     "& td": { backgroundColor: "#99ff99" },
   },
   WA: {
     "& td": { backgroundColor: "#ff6961" },
   },
-});
+}));
 
-interface IProps {
-  classes: any;
-}
+export default function submissions() {
+  const classes = customStyles();
+  const dispatch = useDispatch();
+  const { submissions } = useSelector((state) => state.submissionsReducer);
+  const { loaded } = useSelector((state) => state.submissionsReducer);
+  useEffect(() => {
+    dispatch(getSubmissionsData());
+  }, []);
 
-class submissions extends React.Component<IProps, {}> {
-  state = {
-    gotData: false,
-    list: [],
+  const [loadedState, setLoaded] = useState(false);
+  const [data, setData] = useState([]);
+
+  if (submissions.length !== data.length || loadedState != loaded) {
+    setLoaded(false);
+    setData(submissions);
+    setLoaded(loaded);
+  } else if (
+    submissions.length === 0 &&
+    loaded === true &&
+    loadedState === false
+  ) {
+    setData(submissions);
+    setLoaded(loaded);
+  }
+
+  const columns = [
+    {
+      name: "isFail",
+      label: " ",
+      options: {
+        filter: false,
+        sort: false,
+        setCellHeaderProps: () => ({
+          style: {
+            background: "#104e8b",
+            maxWidth: 5,
+            color: "#fff",
+            textAlign: "center",
+            textDecoration: "bold",
+          },
+        }),
+
+        setCellProps: () => ({
+          style: {
+            fontWeight: "bolder",
+            maxWidth: 25,
+            fontSize: 15,
+            textAlign: "center",
+            color: "#104e8b",
+          },
+        }),
+      },
+    },
+    {
+      name: "user",
+      label: "  USER",
+      options: {
+        filter: false,
+        sort: false,
+        setCellHeaderProps: () => ({
+          style: {
+            background: "#104e8b",
+            color: "#fff",
+            textAlign: "center",
+            textDecoration: "bold",
+          },
+        }),
+
+        setCellProps: () => ({
+          style: {
+            fontWeight: "bolder",
+            fontSize: 15,
+            textAlign: "center",
+            color: "#104e8b",
+          },
+        }),
+      },
+    },
+    {
+      name: "problem",
+      label: "PROBLEM",
+      options: {
+        filter: false,
+        sort: false,
+        setCellHeaderProps: () => ({
+          style: {
+            background: "#104e8b",
+            color: "#fff",
+            textAlign: "center",
+            fontWeight: "bolder",
+          },
+        }),
+
+        setCellProps: () => ({
+          style: { fontSize: 15, textAlign: "center", color: "#104e8b" },
+        }),
+      },
+    },
+
+    {
+      name: "status",
+      label: "STATUS",
+      options: {
+        filter: true,
+        sort: false,
+        setCellHeaderProps: () => ({
+          style: {
+            background: "#104e8b",
+            color: "#fff",
+            textAlign: "center",
+          },
+        }),
+
+        setCellProps: () => ({
+          style: { fontSize: 14, textAlign: "center", color: "#104e8b" },
+        }),
+      },
+    },
+    {
+      name: "time",
+      label: "TIME",
+      options: {
+        filter: false,
+        sort: true,
+        setCellHeaderProps: () => ({
+          style: {
+            background: "#104e8b",
+            color: "#fff",
+            textDecoration: "bold",
+          },
+        }),
+
+        setCellProps: () => ({
+          style: {
+            fontWeight: "bolder",
+            fontSize: 14,
+            color: "#104e8b",
+          },
+        }),
+      },
+    },
+    {
+      name: "memory",
+      label: "MEMORY",
+      options: {
+        filter: false,
+        sort: true,
+        setCellHeaderProps: () => ({
+          style: {
+            background: "#104e8b",
+            color: "#fff",
+            textDecoration: "bold",
+          },
+        }),
+
+        setCellProps: () => ({
+          style: {
+            fontWeight: "bolder",
+            fontSize: 14,
+            color: "#104e8b",
+          },
+        }),
+      },
+    },
+  ];
+  const options = {
+    download: false,
+    selectableRows: "none",
+    viewColumns: false,
+    setRowProps: (row) => {
+      return {
+        className: classnames({
+          [classes.Successful]: row[3] === "AC",
+          [classes.WA]: row[3] === "WA",
+        }),
+      };
+    },
   };
-  componentDidMount() {
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submissions?contest_id=${localStorage.code}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${localStorage.token}`,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((res) => {
-        var arr = [];
-        console.log(res);
-        res.map((r) => {
-          var stat = "";
-          var time = "";
-          var mem = "";
-          var isFail = false;
-          var sign;
-          const cases = JSON.parse(r.status);
-          cases.map((testcase) => {
-            if (testcase.code == 1) {
-              stat = "Compilation Error";
-              isFail = true;
-              time = "NA";
-              mem = "NA";
-            } else {
-              if (testcase.status.run_status == "AC") {
-                if (stat == "") {
-                  stat = "AC";
-                  isFail = false;
-                  time = testcase.status.cpu_time + " sec";
-                  mem = testcase.status.memory_taken;
-                }
-              } else {
-                stat = testcase.status.run_status;
-                isFail = true;
-                time = testcase.status.cpu_time + " sec";
-                mem = testcase.status.memory_taken;
-              }
-            }
-            if (isFail == true) sign = <CloseTwoToneIcon />;
-            else sign = <CheckTwoToneIcon />;
-          });
-
-          var payload = {
-            user: r["name"],
-            problem: r.question,
-            status: stat,
-            time: time,
-            memory: mem,
-            isFail: sign,
-          };
-
-          arr.push(payload);
-        });
-        this.setState({ list: arr });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  render() {
-    const columns = [
-      {
-        name: "isFail",
-        label: " ",
-        options: {
-          filter: false,
-          sort: false,
-          setCellHeaderProps: () => ({
-            style: {
-              background: "#104e8b",
-              maxWidth: 5,
-              color: "#fff",
-              textAlign: "center",
-              textDecoration: "bold",
-            },
-          }),
-
-          setCellProps: () => ({
-            style: {
-              fontWeight: "bolder",
-              maxWidth: 25,
-              fontSize: 15,
-              textAlign: "center",
-              color: "#104e8b",
-            },
-          }),
-        },
-      },
-      {
-        name: "user",
-        label: "  USER",
-        options: {
-          filter: false,
-          sort: false,
-          setCellHeaderProps: () => ({
-            style: {
-              background: "#104e8b",
-              color: "#fff",
-              textAlign: "center",
-              textDecoration: "bold",
-            },
-          }),
-
-          setCellProps: () => ({
-            style: {
-              fontWeight: "bolder",
-              fontSize: 15,
-              textAlign: "center",
-              color: "#104e8b",
-            },
-          }),
-        },
-      },
-      {
-        name: "problem",
-        label: "PROBLEM",
-        options: {
-          filter: false,
-          sort: false,
-          setCellHeaderProps: () => ({
-            style: {
-              background: "#104e8b",
-              color: "#fff",
-              textAlign: "center",
-              fontWeight: "bolder",
-            },
-          }),
-
-          setCellProps: () => ({
-            style: { fontSize: 15, textAlign: "center", color: "#104e8b" },
-          }),
-        },
-      },
-
-      {
-        name: "status",
-        label: "STATUS",
-        options: {
-          filter: true,
-          sort: false,
-          setCellHeaderProps: () => ({
-            style: {
-              background: "#104e8b",
-              color: "#fff",
-              textAlign: "center",
-            },
-          }),
-
-          setCellProps: () => ({
-            style: { fontSize: 14, textAlign: "center", color: "#104e8b" },
-          }),
-        },
-      },
-      {
-        name: "time",
-        label: "TIME",
-        options: {
-          filter: false,
-          sort: true,
-          setCellHeaderProps: () => ({
-            style: {
-              background: "#104e8b",
-              color: "#fff",
-              textDecoration: "bold",
-            },
-          }),
-
-          setCellProps: () => ({
-            style: {
-              fontWeight: "bolder",
-              fontSize: 14,
-              color: "#104e8b",
-            },
-          }),
-        },
-      },
-      {
-        name: "memory",
-        label: "MEMORY",
-        options: {
-          filter: false,
-          sort: true,
-          setCellHeaderProps: () => ({
-            style: {
-              background: "#104e8b",
-              color: "#fff",
-              textDecoration: "bold",
-            },
-          }),
-
-          setCellProps: () => ({
-            style: {
-              fontWeight: "bolder",
-              fontSize: 14,
-              color: "#104e8b",
-            },
-          }),
-        },
-      },
-    ];
-    const options = {
-      download: false,
-      selectableRows: "none",
-      viewColumns: false,
-      setRowProps: (row) => {
-        return {
-          className: classnames({
-            [this.props.classes.Successful]: row[3] === "AC",
-            [this.props.classes.WA]: row[3] === "WA",
-          }),
-        };
-      },
-    };
-    const data = this.state.list;
-    return (
-      <Layout>
-        <SecondaryNav />
-        <div
-          className="contain"
-          style={{
-            maxWidth: "1000px",
-            width: "100%",
-            fontSize: "16px",
-            position: "relative",
-            marginBottom: "100px",
-            marginTop: "0px",
-          }}
-        >
-          <MUIDataTable
-            title={"Submissions"}
-            data={data}
-            columns={columns}
-            options={options}
-            style={{ fontSize: "16px", margin: "0 auto" }}
-          />
-        </div>
-        <div className="Footer">
-          &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
-        </div>
-      </Layout>
-    );
-  }
+  return (
+    <Layout>
+      {loadedState ? (
+        <>
+          <SecondaryNav />
+          <div className="submissionsTableWrap">
+            <MUIDataTable
+              title={"Submissions"}
+              data={data}
+              columns={columns}
+              options={options}
+              style={{ fontSize: "16px", margin: "0 auto" }}
+            />
+          </div>
+          <div className="Footer">
+            &copy; Created and maintained by GNU/Linux Users' group, Nit
+            Durgapur
+          </div>
+        </>
+      ) : (
+        <Loader />
+      )}
+    </Layout>
+  );
 }
-
-export default withStyles(customStyles)(submissions);

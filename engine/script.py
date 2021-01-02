@@ -2,7 +2,9 @@ import argparse
 import subprocess
 import os
 import filecmp
-from judge.settings import ENGINE_PATH
+from judge.settings import ENGINE_PATH, OUTPATH_DIR
+from interface.models import Programming_Language
+import json
 
 
 def status():
@@ -19,29 +21,37 @@ def status():
 
 
 def compare(path1, path2):
-    with open(path1) as f1, open(path2) as f2:
-        if f1.read() == f2.read():
-            return True
-        else:
-            return False
+    # Compares generated files
+    compare_code = os.system("diff -q "+path1+" "+path2)
+    if compare_code == 0:
+        return True
+    else:
+        return False
 
 
-def run_c(f, time, mem, input_file, temp_output_file, output_file):
-    compilation = "gcc -Wno-deprecated {} -o compiled_code 2> compile_log".format(f)
-    os.system(compilation)
+def run(f, time, mem, input_file, temp_output_file, output_file, lang):
+    language = Programming_Language.objects.get(name=lang)
+    os.system(language.compile_command.format(f))
+
     if (os.stat("compile_log").st_size != 0):
         with open("compile_log", "r+") as temp_file:
             return {  # Compilation Error
                 "code": 1,
                 "message": temp_file.read()
             }
+
     else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(
-            ENGINE_PATH, time, mem, input_file, temp_output_file)
-        os.system(command)
+        params = {
+            "engine_path": ENGINE_PATH, "time": time, "mem": mem, "f": f,
+            "outpath": os.path.abspath(OUTPATH_DIR),
+            "in_file": input_file, "temp_out_file": temp_output_file
+        }
+        runner = language.run_command.format(**params)
+        os.system(runner)
         stat = status()
         res = None
-        if stat['run_status'] == "OK":
+
+        if (stat['run_status'] == "OK"):
             if (compare(output_file, temp_output_file)):
                 stat['run_status'] = "AC"
                 res = {  # Passed
@@ -57,141 +67,4 @@ def run_c(f, time, mem, input_file, temp_output_file, output_file):
         else:
             res = {"code": 2, "status": stat}
         os.remove(temp_output_file)
-        return res
-
-
-def run_cpp(f, time, mem, input_file, temp_output_file, output_file):
-    compilation = "g++ -o compiled_code {} 2> compile_log".format(f)
-    os.system(compilation)
-    if (os.stat("compile_log").st_size != 0):
-        with open("compile_log", "r+") as temp_file:
-            return {  # Compilation Error
-                "code": 1,
-                "message": temp_file.read()
-            }
-    else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec compiled_code < {} > {}".format(
-            ENGINE_PATH, time, mem, input_file, temp_output_file)
-        os.system(command)
-        stat = status()
-        res = None
-        if stat['run_status'] == "OK":
-            if (compare(output_file, temp_output_file)):
-                stat['run_status'] = "AC"
-                res = {  # Passed
-                    "code": 0,
-                    "status": stat
-                }
-            else:
-                stat['run_status'] = "WA"
-                res = {  # Failed
-                    "code": 0,
-                    "status": stat
-                }
-        else:
-            res = {"code": 2, "status": stat}
-        # os.remove(temp_output_file)
-        return res
-
-
-def run_java(f, time, mem, input_file, temp_output_file, output_file):
-    compilation = "javac {} 2> compile_log".format(f)
-    os.system(compilation)
-    if (os.stat("compile_log").st_size != 0):
-        with open("compile_log", "r+") as temp_file:
-            return {  # Compilation Error
-                "code": 1,
-                "message": temp_file.read()
-            }
-    else:
-        command = "sudo {} --cpu {} --mem {} --nproc 20 --usage usage.txt --exec /usr/bin/java -cp {} test < {} > {}".format(
-            ENGINE_PATH, time, mem, os.path.dirname(ENGINE_PATH), input_file, temp_output_file)
-        os.system(command)
-        res = None
-        stat = status()
-        if stat['run_status'] == "OK":
-            if (compare(output_file, temp_output_file)):
-                stat['run_status'] = "AC"
-                res = {  # Passed
-                    "code": 0,
-                    "status": stat
-                }
-            else:
-                stat['run_status'] = "WA"
-                res = {  # Failed
-                    "code": 0,
-                    "status": stat
-                }
-        else:
-            res = {"code": 2, "status": stat}
-        os.remove(temp_output_file)
-        return res
-
-
-def run_python2(f, time, mem, input_file, temp_output_file, output_file):
-    compilation = "python2 -m py_compile {} 2> compile_log".format(f)
-    os.system(compilation)
-    if (os.stat("compile_log").st_size != 0):
-        with open("compile_log", "r+") as temp_file:
-            return {  # Compilation Error
-                "code": 1,
-                "message": temp_file.read()
-            }
-    else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python2 {} < {} > {}".format(
-            ENGINE_PATH, time, mem, f, input_file, temp_output_file)
-        os.system(command)
-        stat = status()
-        res = None
-        if stat['run_status'] == "OK":
-            if (compare(output_file, temp_output_file)):
-                stat['run_status'] = "AC"
-                res = {  # Passed
-                    "code": 0,
-                    "status": stat
-                }
-            else:
-                stat['run_status'] = "WA"
-                res = {  # Failed
-                    "code": 0,
-                    "status": stat
-                }
-        else:
-            res = {"code": 2, "status": stat}
-        os.remove(temp_output_file)
-        return res
-
-
-def run_python3(f, time, mem, input_file, temp_output_file, output_file):
-    compilation = "python3 -m py_compile {} 2> compile_log".format(f)
-    os.system(compilation)
-    if (os.stat("compile_log").st_size != 0):
-        with open("compile_log", "r+") as temp_file:
-            return {  # Compilation Error
-                "code": 1,
-                "message": temp_file.read()
-            }
-    else:
-        command = "sudo {} --cpu {} --mem {} --usage usage.txt --exec /usr/bin/python3 {} < {} > {}".format(
-            ENGINE_PATH, time, mem, f, input_file, temp_output_file)
-        os.system(command)
-        os.system(command)
-        stat = status()
-        res = None
-        if stat['run_status'] == "OK":
-            if (compare(output_file, temp_output_file)):
-                stat['run_status'] = "AC"
-                res = {  # Passed
-                    "code": 0,
-                    "status": stat
-                }
-            else:
-                stat['run_status'] = "WA"
-                res = {  # Failed
-                    "code": 0,
-                    "status": stat
-                }
-        else:
-            res = {"code": 2, "status": stat}
-        os.remove(temp_output_file)
-        return res
+        return res        

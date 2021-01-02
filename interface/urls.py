@@ -8,6 +8,7 @@ urlpatterns = [
     path('status', views.status, name="StatusForTheSubmittedAnswer"),
     path('leaderboard', views.leaderboard, name="LeaderBoardapi"),
     path('contests', views.GetContestList, name="Contest"),
+    path('contest/<contest_code>/',views.GetContest, name="ContestCode"),
     path('submissions', views.GetSubmissions, name="submission"),
     path('personalsubmissions', views.GetPersonalSubmissions, name="personalsubmission"),
     path('getanswer', views.GetAnswer, name="getanswer"),

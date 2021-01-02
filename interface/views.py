@@ -26,6 +26,13 @@ def GetContestList(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
+def GetContest(request, contest_code):
+    query_set = Contest.objects.filter(contest_code=contest_code)[0]
+    serializer = ContestSerializer(query_set, context={'request': request})
+    return Response(serializer.data)
+
+@api_view(['GET'])
 @permission_classes([
     IsAuthenticated,
 ])

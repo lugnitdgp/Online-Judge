@@ -6,7 +6,7 @@ admin.site.site_header = 'Online Judge GLUG'
 admin.site.register(Programming_Language)
 
 class ContestAdmin(admin.ModelAdmin): 
-    list_display = ('contest_name', 'start_time', 'end_time') 
+    list_display = ('contest_code', 'contest_name', 'start_time', 'end_time') 
 
 admin.site.register(Contest, ContestAdmin)
 
@@ -49,5 +49,8 @@ class JobAdmin(admin.ModelAdmin):
 
 admin.site.register(Job, JobAdmin)
 
+class Contest_ScoreAdmin(admin.ModelAdmin): 
+    list_display = ('contest','coder','score') 
+    list_filter = ('contest')
+
 admin.site.register(Contest_Score)
-admin.site.register(Config)

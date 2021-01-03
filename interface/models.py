@@ -11,14 +11,6 @@ from tinymce.models import HTMLField
 import hashlib
 
 
-class Config(models.Model):
-    start_time = models.DateTimeField(default=t.now, help_text="Time and Date the contest starts")
-    end_time = models.DateTimeField(default=t.now, help_text="Time and Date the contest ends")
-
-    def __str__(self):
-        return "Server wide config for start and end time"
-
-
 class Programming_Language(models.Model):
     name = models.CharField(max_length=16)
     ext = models.CharField(max_length=16)
@@ -34,9 +26,6 @@ class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
     contest_image = models.ImageField(upload_to="contest_images/", blank=True, null=True)
-    penalty = models.IntegerField(default=0, help_text="Add Penalty multiplier per minute")
-    wa_penalty = models.IntegerField(default=0, help_text="Add Penalty for WAs, TLEs etc")
-    min_score = models.IntegerField(default=1, help_text="Add the fraction multiplier to question score Eg. 3 for 1/3")
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
     contest_langs = models.ManyToManyField(Programming_Language)
@@ -155,9 +144,9 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     ques_name = models.CharField(max_length=200, blank=True, null=True, help_text="Question name")
-    correct = models.IntegerField(default=0, help_text="Number of correct attempts")
-    wrong = models.IntegerField(default=0, help_text="Number of wrong attempts")
-    score = models.IntegerField(default=0, help_text="Score of the question")
+    correct = models.IntegerField(default=0, help_text="Number of correct attempts of the Question")
+    wrong = models.IntegerField(default=0, help_text="Number of wrong attempts of the Question")
+    timestamp = models.DateTimeField(default=t.now, help_text="Time of submission")
 
     def __str__(self):
         return self.question.question_name + " " + self.user.name
@@ -167,8 +156,7 @@ class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
-    wa = models.IntegerField(default=0, help_text="Number of WAs of the user")
-    timestamp = models.DateTimeField(default=t.now, help_text="Latest submission")
+    timestamp = models.DateTimeField(blank=True, help_text="Latest submission + penalty for leaderboard")
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name

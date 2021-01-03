@@ -45,4 +45,4 @@ class LoginSerializer(serializers.ModelSerializer):
 class CoderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coder
-        fields = ('name', 'first_name', 'email', 'image_link', 'score', 'solved_ques')
+        fields = ('name', 'first_name', 'email', 'image_link', 'solved_ques')

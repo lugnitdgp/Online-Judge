@@ -125,9 +125,6 @@ def status(request):
     try:
         coder = Coder.objects.get(user=request.user)
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
-        penalty = contest.penalty
-        penalty_total = penalty * \
-            (((t.now() - contest.start_time).total_seconds()) / 60)
         try:
             question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         except MultipleObjectsReturned:
@@ -142,25 +139,15 @@ def status(request):
         if job.AC_no == Testcases.objects.filter(question=question).count():
             if coder.check_solved(question.pk) == False:
                 coder.put_solved(question.pk)
-                coder.correct_answers += 1
                 answer.correct += 1
                 if contest.isOver() == False and contest.isStarted():
-                    try:
-                        mn_score = (int)(question.question_score / (contest.min_score))
-                    except:
-                        mn_score = question.question_score
-                    score = question.question_score - penalty_total - \
-                        (coder_contest_score.wa * contest.wa_penalty)
-                    ques_score = max(mn_score, score)
-                    coder_contest_score.score += ques_score
-                    answer.score = ques_score
-                    coder_contest_score.timestamp = t.now()
+                    coder_contest_score.score += question.question_score
+                    answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
+                    coder_contest_score.timestamp += answer.timestamp
         else:
             if contest.isOver() == False and contest.isStarted():
-                coder_contest_score.timestamp = t.now()
-            coder_contest_score.wa += 1
-            coder.wrong_answers += 1
-            answer.wrong += 1
+                answer.timestamp = t.now()
+                answer.wrong += 1
         coder.save()
         answer.save()
         coder_contest_score.save()
@@ -174,14 +161,19 @@ def status(request):
 @permission_classes([AllowAny])
 def leaderboard(request):
     coder_array = []
+    rank_cnt = 1
+    time = Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp')[0].timestamp
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
     for (rank,
-         participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp', 'wa'),
+         participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp'),
                                    start=1):
         query_set = Answer.objects.filter(contest=contest, user=participant.coder)
         serializer = AnswerSerializer(query_set, many=True)
+        if time != participant.timestamp:
+            rank_cnt += 1
+        time = participant.timestamp
         coder_array.append({
-            "rank": rank,
+            "rank": rank_cnt,
             "name": participant.coder.first_name,
             "score": participant.score,
             "image": participant.coder.image_link,

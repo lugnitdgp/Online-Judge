@@ -146,6 +146,7 @@ class Answer(models.Model):
     ques_name = models.CharField(max_length=200, blank=True, null=True, help_text="Question name")
     correct = models.IntegerField(default=0, help_text="Number of correct attempts of the Question")
     wrong = models.IntegerField(default=0, help_text="Number of wrong attempts of the Question")
+    score = models.IntegerField(default=0, help_text="Score of the Question")
     timestamp = models.DateTimeField(default=t.now, help_text="Time of submission")
 
     def __str__(self):
@@ -156,7 +157,7 @@ class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
-    timestamp = models.DateTimeField(blank=True, help_text="Latest submission + penalty for leaderboard")
+    timestamp = models.DateTimeField(blank=True, help_text="For Penalty in questions")
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name

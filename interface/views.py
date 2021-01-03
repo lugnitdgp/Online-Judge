@@ -142,6 +142,7 @@ def status(request):
                 answer.correct += 1
                 if contest.isOver() == False and contest.isStarted():
                     coder_contest_score.score += question.question_score
+                    answer.score = question.question_score
                     answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
                     coder_contest_score.timestamp += answer.timestamp
         else:
@@ -162,8 +163,8 @@ def status(request):
 def leaderboard(request):
     coder_array = []
     rank_cnt = 1
-    time = Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp')[0].timestamp
     contest = Contest.objects.get(contest_code=request.GET['contest_id'])
+    time = Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp')[0].timestamp
     for (rank,
          participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp'),
                                    start=1):

@@ -12,5 +12,6 @@ urlpatterns = [
     path('personalsubmissions', views.GetPersonalSubmissions, name="personalsubmission"),
     path('getanswer', views.GetAnswer, name="getanswer"),
     path('geteditoriallist', views.GetEditorialList, name="geteditoriallist"),
-    path('geteditorial', views.GetEditorial, name="geteditorial")
+    path('geteditorial', views.GetEditorial, name="geteditorial"),
+    path('check', views.check)
 ]

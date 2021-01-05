@@ -4,7 +4,8 @@ from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer
 from interface.models import Question, Job, Testcases, Contest, Contest_Score, Answer, Editorial
-from interface.tasks import execute
+# from interface.tasks import execute
+from judge.celery import app
 from accounts.serializers import CoderSerializer
 from accounts.models import Coder
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,6 +13,7 @@ import json
 from urllib.parse import unquote
 from django.utils import timezone as t
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from judge.settings import MEDIA_URL
 # Create your views here.
 
 
@@ -62,8 +64,7 @@ def GetQuestion(request):
 ])
 def submitCode(request):
     lang = request.data.get('lang')
-    code = unquote(request.data.get('code'))
-    contest_code = request.data.get('contest_id')
+    code = request.data.get('code')
     try:
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         try:
@@ -77,12 +78,35 @@ def submitCode(request):
             return Response({'status': 302, 'message': 'Please wait 30 sec before submitting another code'})
         coder.time_stamp = t.now()
         coder.save()
-        task = execute.delay(
-            QuestionSerializer(question).data,
-            CoderSerializer(coder).data, code, lang,
-            ContestSerializer(contest, context={
-                "request": request
-            }).data)
+
+        testcases = Testcases.objects.filter(question=question)
+        input_file_urls, output_file_urls, input_file_hashes, output_file_hashes = [], [], [], []
+        for test in testcases:
+            input_file_urls.append(test.input_test.url)
+            output_file_urls.append(test.output_test.url)
+            input_file_hashes.append(test.input_hash)
+            output_file_hashes.append(test.output_hash)
+
+        language = contest.contest_langs.get(name=lang)
+        multiplier = getattr(question, language.multiplier_name)
+        time, mem = question.time_limit * multiplier, question.mem_limit * multiplier
+
+        exec_args = {"time": time, "mem": mem}
+
+        task = app.send_task("tasks.execute",
+                             kwargs={
+                                 "input_file_urls": input_file_urls,
+                                 "input_file_hash": input_file_hashes,
+                                 "output_file_hash": output_file_hashes,
+                                 "output_file_urls": output_file_urls,
+                                 "coder": CoderSerializer(coder).data,
+                                 "code": code,
+                                 "lang": lang,
+                                 "contest": ContestSerializer(contest, context={
+                                     "request": request
+                                 }).data,
+                                 "exec_args": exec_args
+                             })
         return Response({'task_id': task.id, 'status': 200})
     except ObjectDoesNotExist:
         return Response({'status': 404, 'message': 'Wrong question code'})
@@ -95,14 +119,15 @@ def status(request):
         coder = Coder.objects.get(user=request.user)
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
         penalty = contest.penalty
-        penalty_total = penalty * (((t.now() - contest.start_time).total_seconds()) / 60)
+        penalty_total = penalty * \
+            (((t.now() - contest.start_time).total_seconds()) / 60)
         try:
             question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
         except MultipleObjectsReturned:
             question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
         coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
         answer = Answer.objects.get_or_create(question=question, user=coder, contest=contest)[0]
-        job = Job.objects.get(coder=coder, question=question, job_id=request.data.get('task_id'))
+        job = Job.objects.get(coder=coder, job_id=request.data.get('task_id'))
         job.name = coder.first_name
         job.question_name = question.question_name
         answer.ques_name = question.question_name
@@ -117,7 +142,8 @@ def status(request):
                         mn_score = (int)(question.question_score / (contest.min_score))
                     except:
                         mn_score = question.question_score
-                    score = question.question_score - penalty_total - (coder_contest_score.wa * contest.wa_penalty)
+                    score = question.question_score - penalty_total - \
+                        (coder_contest_score.wa * contest.wa_penalty)
                     ques_score = max(mn_score, score)
                     coder_contest_score.score += ques_score
                     answer.score = ques_score
@@ -220,10 +246,30 @@ def GetEditorial(request):
         editorial.code.close()
         data = {
             'ques_name': question.question_name,
-            'ques_text' : question.question_text,
-            'solution' : editorial.solution,
+            'ques_text': question.question_text,
+            'solution': editorial.solution,
             'code': encoded_editorial_content
         }
         return Response(data)
     except:
         return Response({'status': 301, 'message': 'Editorial not found, please contact the Admin!'})
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def check(request):
+    question_id = request.GET["q_id"]
+    question = Question.objects.get(question_code=question_id)
+    testcases = Testcases.objects.filter(question=question)
+    input_file_urls, output_file_urls, input_file_hashes, output_file_hashes = [], [], [], []
+    for test in testcases:
+        input_file_urls.append(request.build_absolute_uri(MEDIA_URL + test.input_test.url.split(MEDIA_URL)[-1]))
+        output_file_urls.append(request.build_absolute_uri(MEDIA_URL + test.output_test.url.split(MEDIA_URL)[-1]))
+        input_file_hashes.append(test.input_hash)
+        output_file_hashes.append(test.output_hash)
+    return Response({
+        "input_file_urls": input_file_urls,
+        "output_file_urls": output_file_urls,
+        "input_file_hashes": input_file_hashes,
+        "output_file_hashes": output_file_hashes
+    })

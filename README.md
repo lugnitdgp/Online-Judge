@@ -26,26 +26,6 @@ https://docs.celeryproject.org/en/stable/getting-started/next-steps.html#next-st
 
 https://documenter.getpostman.com/view/7834053/Szmh1vuz?version=latest
 
-## Safeexec Submodule
-
-The sandbox environment has been submoduled to the original repo so the changes immediately reflect back here.
-To work with submodules:
-
-```
-1. git submodule init
-2. git submodule update
-3. cd safeexec
-4. cmake .
-5. make
-
-```
-From next time onwards, we need to check if the submodules have been updated, to do that:
-
-```
-git pull --recurse-submodules
-
-```
-
 ## Development Environment Config
 This project uses PEP8 code style, please make sure to follow. Yapf is our preffered formatting tool.
 If you are using VSCode add the following in your *settings.json* 
@@ -74,3 +54,8 @@ To check if redis is working or not:
 2. Type `ping`
 3. If it returns `PONG`, then your redis-broker server is running fine.
 
+
+To add Language models after running SQL migrations run 
+```bash
+python manage.py loaddata --app interface language_model.json
+```

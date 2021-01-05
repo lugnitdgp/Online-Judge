@@ -66,7 +66,7 @@ export default function ContestCard(props) {
               <img
                 className={classes.media}
                 // image={props.contestInfo.contest_image}
-                src={props.contestInfo.contest_image}
+                src={props.questioncontestInfo.contest_image}
                 title={props.contestInfo.contest_name}
                 style={{borderRadius:"10px"}}
               />
@@ -102,7 +102,7 @@ export default function ContestCard(props) {
                     );
                     localStorage.setItem("start", props.contestInfo.start_time);
                     localStorage.setItem("end", props.contestInfo.end_time);
-                    Router.push("/question");
+                    Router.push(`/${props.contestInfo.contest_code}`);
                   }
                 }}
               >
@@ -124,7 +124,7 @@ export default function ContestCard(props) {
                     );
                     localStorage.setItem("start", props.contestInfo.start_time);
                     localStorage.setItem("end", props.contestInfo.end_time);
-                    Router.push("/question");
+                    Router.push(`/${props.contestInfo.contest_code}`);
                   }
                 }}
               >

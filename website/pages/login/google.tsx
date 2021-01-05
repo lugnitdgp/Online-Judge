@@ -33,6 +33,7 @@ function LoginPage() {
                 })
                     .then((resp) => resp.json())
                     .then((response) => {
+                        // console.log(response);
                         localStorage.token = response.token;
                         document.cookie = `token=${response.token}; path=/; max-age=${
                             60 * 60 * 24 * 100

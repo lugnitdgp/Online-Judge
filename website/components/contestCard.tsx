@@ -57,7 +57,6 @@ export default function ContestCard(props) {
             maxWidth: "300px",
             verticalAlign: "middle",
             margin: "0 auto",
-
             paddingBottom: "0px",
           }}
         >
@@ -66,8 +65,8 @@ export default function ContestCard(props) {
               <img
                 className={classes.media}
                 // image={props.contestInfo.contest_image}
-                src={props.questioncontestInfo.contest_image}
-                title={props.contestInfo.contest_name}
+                src={props.questioncontestInfo?.contest_image}
+                title={props.contestInfo?.contest_name}
                 style={{borderRadius:"10px"}}
               />
             </div>

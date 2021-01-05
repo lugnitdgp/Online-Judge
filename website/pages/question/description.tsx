@@ -59,7 +59,7 @@ function submitcode(code: any, lang: any){
     })
     .then((res) => {
       if (res.status === 302) {
-        alert(res.message);
+        //alert(res.message);
           setLoading(false)
       } else {
         localStorage.taskid = res["task_id"];
@@ -151,7 +151,7 @@ const [ended, setEnded] = useState(false)
 const [copied, setCopied] = useState(false)
 const [language, setLang] =useState("c++")
 const [value, setValues] =useState("")
-const [theme, setTheme] =useState("theme-terminal")
+const [theme, setTheme] =useState("theme-tomorrow")
 const [isLoading, setLoading] =useState(false)
 const [res, setRes] =useState([])
 const [num, setNum]= useState(0)
@@ -391,7 +391,7 @@ useEffect(() => {
                 setValues(d)
                 }}
               />
-
+              <div style={{margin:"15px auto"}}>
               {isLoading ? (
                 <CircularProgress size={24} />
               ) : (
@@ -399,7 +399,6 @@ useEffect(() => {
                   className="descriptionButton"
                   color="primary"
                   variant="outlined"
-
                   onClick={() =>
                     submitcode(value, language)
                   }
@@ -407,6 +406,7 @@ useEffect(() => {
                   Submit
                 </Button>
               )}
+              </div>
             </div>
 
             {res.length > 1 ? (

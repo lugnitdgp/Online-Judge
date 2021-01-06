@@ -1,17 +1,28 @@
 import React, {useState} from "react";
-import Layout from "../../components/layout";
-import Loader from "../../components/loading";
+import Layout from "../../../components/layout";
+import Loader from "../../../components/loading";
 import Viewer from "components/codeViewer";
 import {useEffect} from 'react';
+import { useRouter } from 'next/router'
+
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getEditorial } from "store/actions/editorialAction";
 
 function Editorial(){
+  const router = useRouter()
+  const { contest, question } = router.query
   const dispatch = useDispatch()
     const {editorial} = useSelector(state=>state.editorialReducer);
     const {loaded} = useSelector(state=>state.editorialReducer);
+    useEffect(() => {
+      if (!localStorage.token) window.location.href = "/";
+      else if (!localStorage.code || !localStorage.question) {
+        localStorage.setItem("code", contest.toString())
+        localStorage.setItem("question", question.toString())
+      }
+    })
     useEffect(() => {
         dispatch(getEditorial());
     },[])

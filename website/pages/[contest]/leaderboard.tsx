@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
 import {} from "@material-ui/icons";
 import { Avatar, Card } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
@@ -10,15 +10,17 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import SecondaryNav from "../components/secondaryNav";
-import Loader from "../components/loading";
+import SecondaryNav from "../../components/secondaryNav";
+import Loader from "../../components/loading";
 import { useEffect } from "react";
+import { useRouter } from 'next/router'
+
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import {
   getLearderboardDataQues,
-} from "../store/actions/leaderboardAction";
+} from "../../store/actions/leaderboardAction";
 
 export default function Leaderboard() {
   const dispatch = useDispatch();
@@ -28,6 +30,15 @@ export default function Leaderboard() {
   useEffect(() => {
     dispatch(getLearderboardDataQues())    
   }, []);
+
+  const router = useRouter()
+  const { contest } = router.query
+
+  useEffect(() => {
+    if (!localStorage.token) window.location.href = "/";
+    else if (!localStorage.code) {
+      localStorage.setItem("code", contest.toString());
+    }})
 
 
   const [loadedState, setLoaded] = useState(false);

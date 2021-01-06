@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
 import MUIDataTable from "mui-datatables";
 import { makeStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { useEffect } from "react";
-import SecondaryNav from "../components/secondaryNav";
-import Loader from "../components/loading";
+import SecondaryNav from "../../components/secondaryNav";
+import Loader from "../../components/loading";
+import { useRouter } from 'next/router'
+
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
-import { getSubmissionsData } from "../store/actions/submissionsAction";
+import { getSubmissionsData } from "../../store/actions/submissionsAction";
 
 const customStyles = makeStyles(() => ({
   Successful: {
@@ -31,6 +33,15 @@ export default function submissions() {
 
   const [loadedState, setLoaded] = useState(false);
   const [data, setData] = useState([]);
+
+  const router = useRouter()
+  const { contest } = router.query
+
+  useEffect(() => {
+    if (!localStorage.token) window.location.href = "/";
+    else if (!localStorage.code) {
+      localStorage.setItem("code", contest.toString());
+    }})
 
   if (submissions.length !== data.length || loadedState != loaded) {
     setLoaded(false);

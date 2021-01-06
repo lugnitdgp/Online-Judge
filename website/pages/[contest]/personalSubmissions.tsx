@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../components/layout";
+import Layout from "../../components/layout";
 import MUIDataTable from "mui-datatables";
 import Paper from "@material-ui/core/Paper";
 import classnames from "classnames";
@@ -12,17 +12,18 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import SecondaryNav from "../components/secondaryNav";
+import SecondaryNav from "../../components/secondaryNav";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import Loader from "../components/loading";
+import Loader from "../../components/loading";
 import { makeStyles } from "@material-ui/core/styles";
+import { useRouter } from 'next/router'
 import { useEffect } from "react";
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
-import { getPersonalSubmissionsData } from "../store/actions/personalSubmissionsAction";
+import { getPersonalSubmissionsData } from "../../store/actions/personalSubmissionsAction";
 
 const useStyles = makeStyles(() => ({
   Successful: {
@@ -50,6 +51,16 @@ export default function personalSubmissions() {
   const [modallang, setModallang] = useState("");
   const [view, setView] = useState("");
   const [exec, setExec] = useState([]);
+
+  const router = useRouter()
+  const { contest } = router.query
+
+  useEffect(() => {
+    if (!localStorage.token) window.location.href = "/";
+    else if (!localStorage.code) {
+      localStorage.setItem("code", contest.toString());
+    }})
+
 
   if (
     personal_submissions.length !== Psubmissions.length ||

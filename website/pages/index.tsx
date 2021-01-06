@@ -22,6 +22,8 @@ export default function IndexPage() {
     dispatch(getContest());
   }, []);
 
+  
+
   const [loadedState, setLoaded] = useState(false);
   const [contestsTotal, setContests] = useState([]);
 

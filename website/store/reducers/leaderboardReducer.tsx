@@ -25,7 +25,6 @@ function leaderboardReducer(state = initialState, action) {
     }
     case LEADERBOARD_DATA_SUCCESS: {
       // console.log(action.payload)
-      console.log("ffs i hate this bitch")
       console.log(action.payload)
       return Object.assign({}, state, {
         leaderboard: middleware.processLeaderboard(action.payload[1]),

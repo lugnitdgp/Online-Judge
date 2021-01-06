@@ -14,6 +14,7 @@ from urllib.parse import unquote
 from django.utils import timezone as t
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from judge.settings import MEDIA_URL
+from datetime import timedelta
 # Create your views here.
 
 
@@ -144,7 +145,7 @@ def status(request):
                     coder_contest_score.score += question.question_score
                     answer.score = question.question_score
                     answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
-                    coder_contest_score.timestamp += answer.timestamp
+                    coder_contest_score.timestamp = answer.timestamp
         else:
             if contest.isOver() == False and contest.isStarted():
                 answer.timestamp = t.now()

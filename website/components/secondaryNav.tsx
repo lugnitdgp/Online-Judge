@@ -21,14 +21,14 @@ export default class SecondaryNav extends React.Component {
         }}
       >
         {localStorage.onlinejudge_info ? (
-          <Button color="inherit" onClick={() => Router.push(`/${localStorage.code}`)}>
+          <Button color="inherit" onClick={() => Router.push('/[contest]',`/${localStorage.code}`)}>
             Questions
           </Button>
         ) : (
           <div></div>
         )}
         {localStorage.onlinejudge_info ? (
-          <Button color="inherit" onClick={() => Router.push(`/${localStorage.code}/submissions`)}>
+          <Button color="inherit" onClick={() => Router.push('/[contest]/submissions',`/${localStorage.code}/submissions`)}>
             All Submissons
           </Button>
         ) : (
@@ -36,7 +36,7 @@ export default class SecondaryNav extends React.Component {
         )}
 
         {localStorage.onlinejudge_info ? (
-          <Button color="inherit" onClick={() => Router.push(`/${localStorage.code}/leaderboard`)}>
+          <Button color="inherit" onClick={() => Router.push('/[contest]/leaderboard',`/${localStorage.code}/leaderboard`)}>
             Leaderboard
           </Button>
         ) : (
@@ -45,7 +45,7 @@ export default class SecondaryNav extends React.Component {
         {localStorage.onlinejudge_info ? (
           <Button
             color="inherit"
-            onClick={() => Router.push(`/${localStorage.code}/personalSubmissions`)}
+            onClick={() => Router.push('/[contest]/personalSubmissions',`/${localStorage.code}/personalSubmissions`)}
           >
             My Submissions
           </Button>

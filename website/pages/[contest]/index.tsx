@@ -10,7 +10,7 @@ import SecondaryNav from "../../components/secondaryNav";
 import { useRouter } from 'next/router'
 import Loader from "../../components/loading";
 import Link from 'next/link'
-
+import {contestService} from '../../services/contestService'
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -40,6 +40,8 @@ export default function questionlist() {
     if (!localStorage.token) window.location.href = "/";
     else if (!localStorage.code) {
       localStorage.setItem("code", contest.toString());
+       var temp = contestService.getIndiContest()
+      console.log(temp)
     }
     if (!localStorage.source) {
       var contestdeet = [
@@ -200,7 +202,7 @@ export default function questionlist() {
                             margin: "10px",
                           }}
                         >
-                          <Link href={`/${contest}/${item.question_code}`}>
+                          <Link href="/[contest]/[question]" as={`/${contest}/${item.question_code}`}>
                             <a
 
                               style={{ textDecoration: "None", color: "#104e8b" }}
@@ -216,7 +218,7 @@ export default function questionlist() {
                             borderRadius: "10px",
                           }}
                         >
-                          <Link href={`/${contest}/${item.question_code}`}>
+                          <Link href="/[contest]/[question]" as={`/${contest}/${item.question_code}`}>
                             <a style={{ textDecoration: "None", color: "#104e8b" }}
                             >{item.question_name}</a>
                           </Link>
@@ -241,8 +243,8 @@ export default function questionlist() {
                               borderRadius: "10px",
                             }}
                           >
+                            <Link href="/[contest]/[question]/editorial" as={`/${contest}/${item.question_code}/editorial`}></Link>
                             <a
-                              href={`/${contest}/${item.question_code}/editorial`}
                               style={{ textDecoration: "None", color: "#104e8b" }}
                             >
                               View Editorial

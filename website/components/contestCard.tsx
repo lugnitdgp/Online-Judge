@@ -101,7 +101,7 @@ export default function ContestCard(props) {
                     );
                     localStorage.setItem("start", props.contestInfo.start_time);
                     localStorage.setItem("end", props.contestInfo.end_time);
-                    Router.push(`/${props.contestInfo.contest_code}`);
+                    Router.push('/[contest]',`/${props.contestInfo.contest_code}`);
                   }
                 }}
               >
@@ -123,7 +123,7 @@ export default function ContestCard(props) {
                     );
                     localStorage.setItem("start", props.contestInfo.start_time);
                     localStorage.setItem("end", props.contestInfo.end_time);
-                    Router.push(`/${props.contestInfo.contest_code}`);
+                    Router.push('/[contest]',`/${props.contestInfo.contest_code}`);
                   }
                 }}
               >

@@ -4,6 +4,11 @@ const getContestData = () => {
   return Axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`);
 };
 
+const getIndiContest = ()=>{
+  return Axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contest/${localStorage.code}`);
+
+}
+
 const getLeaderboardDataQues = () => {
   return fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
@@ -83,18 +88,20 @@ const getEditorialData = () => {
         Authorization: `Token ${localStorage.token}`,
       },body: JSON.stringify({
         contest_id: localStorage.code,
-        q_id: getParameterByName("id"),
+        q_id: localStorage.question,
       })
     }
   )
     .then((resp) => resp.json())
 }
 
+
+
 const getQuestionData = () => {
   return fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${
       localStorage.code
-    }&q_id=${getParameterByName("id")}`,
+    }&q_id=${localStorage.question}`,
     {
       headers: {
         Authorization: `Token ${localStorage.token}`,
@@ -104,15 +111,6 @@ const getQuestionData = () => {
 
  }
 
-function getParameterByName(name, url = window.location.href) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return "";
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
 
 export const contestService = {
   getContestData,
@@ -120,6 +118,7 @@ export const contestService = {
   getQuestionData,
   getQuestionsStatus,
   getLeaderboardDataQues,
+  getIndiContest,
   getSubmissions,
   getLeaderboardData,
   getPersonalSubmissions,

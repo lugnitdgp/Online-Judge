@@ -10,7 +10,7 @@ import SecondaryNav from "../../components/secondaryNav";
 import { useRouter } from 'next/router'
 import Loader from "../../components/loading";
 import Link from 'next/link'
-
+import {contestService} from '../../services/contestService'
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,7 @@ import { getQuestionsData } from "../../store/actions/questionsAction";
 export default function questionlist() {
   ////
   const router = useRouter()
-  const { qr } = router.query
+  const { contest } = router.query
   const dispatch = useDispatch();
 
   const { questions } = useSelector((state) => state.questionsReducer);
@@ -37,7 +37,12 @@ export default function questionlist() {
 
 
   useEffect(() => {
-    if (!localStorage.token || !localStorage.code) window.location.href = "/";
+    if (!localStorage.token) window.location.href = "/";
+    else if (!localStorage.code) {
+      localStorage.setItem("code", contest.toString());
+       var temp = contestService.getIndiContest()
+      console.log(temp)
+    }
     if (!localStorage.source) {
       var contestdeet = [
         {
@@ -197,12 +202,13 @@ export default function questionlist() {
                             margin: "10px",
                           }}
                         >
-                          <a
-                            href={`/question/description?id=${item.question_code}`}
-                            style={{ textDecoration: "None", color: "#104e8b" }}
-                          >
-                            {item.question_code}
-                          </a>
+                          <Link href="/[contest]/[question]" as={`/${contest}/${item.question_code}`}>
+                            <a
+
+                              style={{ textDecoration: "None", color: "#104e8b" }}
+                            >
+                              {item.question_code}
+                            </a></Link>
                         </TableCell>
 
                         <TableCell
@@ -212,10 +218,10 @@ export default function questionlist() {
                             borderRadius: "10px",
                           }}
                         >
-                          <Link href={`/${qr[`contest`]}/${item.question_code}`}>
-                            <a>Go to pages/post/[pid]/[comment].js</a>
+                          <Link href="/[contest]/[question]" as={`/${contest}/${item.question_code}`}>
+                            <a style={{ textDecoration: "None", color: "#104e8b" }}
+                            >{item.question_name}</a>
                           </Link>
-                            {item.question_name}
                         </TableCell>
                         <TableCell
                           align="left"
@@ -237,8 +243,8 @@ export default function questionlist() {
                               borderRadius: "10px",
                             }}
                           >
+                            <Link href="/[contest]/[question]/editorial" as={`/${contest}/${item.question_code}/editorial`}></Link>
                             <a
-                              href={`/${qr[`contest`]}/${item.question_code}/editorial`}
                               style={{ textDecoration: "None", color: "#104e8b" }}
                             >
                               View Editorial

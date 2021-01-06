@@ -4,6 +4,11 @@ const getContestData = () => {
   return Axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contests`);
 };
 
+const getIndiContest = ()=>{
+  return Axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contest/${localStorage.code}`);
+
+}
+
 const getLeaderboardDataQues = () => {
   return fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/questions?contest_id=${localStorage.code}`,
@@ -90,6 +95,8 @@ const getEditorialData = () => {
     .then((resp) => resp.json())
 }
 
+
+
 const getQuestionData = () => {
   return fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/quesdetail?contest_id=${
@@ -111,6 +118,7 @@ export const contestService = {
   getQuestionData,
   getQuestionsStatus,
   getLeaderboardDataQues,
+  getIndiContest,
   getSubmissions,
   getLeaderboardData,
   getPersonalSubmissions,

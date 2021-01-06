@@ -61,8 +61,9 @@ export default function QuesDetail() {
         return resp.json();
       })
       .then((res) => {
+        console.log(res);
         if (res.status === 302) {
-          alert(res.message);
+          // alert(res.message);
           setLoading(false)
         } else {
           localStorage.taskid = res["task_id"];

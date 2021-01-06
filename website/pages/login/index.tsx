@@ -7,6 +7,8 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import { Facebook } from "@material-ui/icons";
+import axios from "axios";
+import GitHubIcon from '@material-ui/icons/GitHub';
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
@@ -176,6 +178,7 @@ function LoginPage(props: Props) {
       body: payload
     }).then((resp) => resp.json())
       .then((response) => {
+        
         if(response.status === 401)
         {
           alert(response.message)
@@ -201,18 +204,46 @@ function LoginPage(props: Props) {
     }})
         
       .catch((error) => { console.log(error) });
-
-
-
-
-
   }
   React.useEffect(() => {
     let status = getParameterByName("status")
     if (status == "success") {
       //window.location.href = "/"
-        alert('hemlo')
+        //alert('hemlo')
     }
+    // let params = new URLSearchParams(document.location.search.substring(1));
+    // let code = params.get("code");
+    // if (code) {
+    //   axios
+    //     .post(
+    //       `${process.env.NEXT_PUBLIC_BACKEND_URL}quiz/auth/register`,
+    //       {
+    //         accesscode: code
+    //       },
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then((response) => {
+    //         console.log(response);
+    //         localStorage.token = response.token;
+    //         document.cookie = `token=${response.token}; path=/; max-age=${
+    //             60 * 60 * 24 * 100
+    //             }`;
+    //         localStorage.onlinejudge_info = JSON.stringify({
+    //             name: response.user.name,
+    //             email: response.user.email,
+    //             image_link: response.user.image_link
+    //         });
+    //         window.location.href = "/"
+    //     })
+    //     .catch((e) => {
+    //         console.log(e);
+            
+    //     });
+    // }
   }, [])
 
   return (
@@ -299,7 +330,7 @@ function LoginPage(props: Props) {
               />
             {/* Login with Google */}
           </Button>
-            <Button
+            {/* <Button
               variant="outlined"
               color="secondary"
               size="large"
@@ -308,8 +339,9 @@ function LoginPage(props: Props) {
               className={classes.facebookButton}
             >
               <Facebook className={classes.signInIcon} />
-            {/* Login with Facebook */}
-          </Button>
+            
+          </Button> */}
+          {/* <div><a href={`https://github.com/login/oauth/authorize?client_id=here&scope=user&redirect_uri=homepage`}><GitHubIcon/></a></div> */}
           </div>
           </form>
           

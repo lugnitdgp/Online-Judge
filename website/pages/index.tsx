@@ -13,14 +13,61 @@ import { useDispatch, useSelector } from "react-redux";
 import { getContest } from "../store/actions/contestAction";
 
 //ALL CSS INJECTED FROM "main.css"
+interface State {
+  accesscode: string;
+  provider: string;
+}
 
 export default function IndexPage() {
   const dispatch = useDispatch();
   const { contests } = useSelector((state) => state.contestReducer);
   const { loaded } = useSelector((state) => state.contestReducer);
+  const [values, setValues] = React.useState<State>({
+    accesscode: '',
+    provider: '',
+  });
   useEffect(() => {
     dispatch(getContest());
   }, []);
+
+  useEffect(() => {
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let code = params.get("code");
+    if (code) {
+      console.log(code)
+      var payload = JSON.stringify({
+        accesscode: code,
+        provider: "github"
+      })
+  
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/custom_login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+          },
+            body: payload
+          }).then((resp) => resp.json())
+          
+        .then((response) => {
+            console.log(response);
+            localStorage.token = response.token;
+            document.cookie = `token=${response.token}; path=/; max-age=${
+                60 * 60 * 24 * 100
+                }`;
+            localStorage.onlinejudge_info = JSON.stringify({
+                name: response.user.name,
+                email: response.user.email,
+                image_link: response.user.image_link
+            });
+            window.location.href = "/"
+        })
+        .catch((e) => {
+            console.log(e);
+            
+        });
+    }
+  }, [])
 
   
 

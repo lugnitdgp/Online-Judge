@@ -12,6 +12,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Router from "next/router";
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 const styles = createStyles((theme: Theme) => ({
   main: {
@@ -134,6 +135,8 @@ interface State {
   first_name: string;
   showPassword: boolean;
   view:boolean;
+  accesscode: string;
+  provider: string;
 }
 function LoginPage(props: Props) {
   const { classes } = props;
@@ -148,7 +151,9 @@ function LoginPage(props: Props) {
     username: '',
     first_name: '',
     showPassword: false,
-    view: false
+    view: false,
+    accesscode: '',
+    provider: '',
   });
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,12 +171,12 @@ function LoginPage(props: Props) {
     event.preventDefault();
   };
 
-    async function checkPasswordComplexity(pwd){
+  async function checkPasswordComplexity(pwd){
     console.log('text is : ', pwd)
     var lowerCase = /[a-z]/;
     var upperCase= /[A-Z]/; 
     var number = /[0-9]/;
-    const valid = (number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length) >=6; 
+    const valid = (number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length >=6); 
     console.log(valid)
     if(valid) 
     setValues({ ...values, view: valid})
@@ -230,6 +235,41 @@ function LoginPage(props: Props) {
     if (status == "success") {
       //window.location.href = "/"
         alert('hemlo')
+    }
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let code = params.get("code");
+    if (code) {
+      var payload = JSON.stringify({
+        accesscode: code,
+        provider: "github"
+      })
+  
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/register`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+          },
+            body: payload
+          }).then((resp) => resp.json())
+          
+        .then((response) => {
+            console.log(response);
+            localStorage.token = response.token;
+            document.cookie = `token=${response.token}; path=/; max-age=${
+                60 * 60 * 24 * 100
+                }`;
+            localStorage.onlinejudge_info = JSON.stringify({
+                name: response.user.name,
+                email: response.user.email,
+                image_link: response.user.image_link
+            });
+            window.location.href = "/"
+        })
+        .catch((e) => {
+            console.log(e);
+            
+        });
     }
   }, [])
 
@@ -343,7 +383,7 @@ function LoginPage(props: Props) {
                 />
             {/* Sign Up with Google */}
           </Button>
-              <Button
+              {/* <Button
                 variant="outlined"
                 color="secondary"
                 size="large"
@@ -352,8 +392,9 @@ function LoginPage(props: Props) {
                 className={classes.facebookButton}
               >
                 <Facebook className={classes.signInIcon} />
-            {/* Sign Up with Facebook */}
-          </Button>
+            {/* Sign Up with Facebook }
+          </Button> */}
+          <div><a href={`https://github.com/login/oauth/authorize?client_id=447146d0563c511420ce&scope=user&redirect_uri=http://localhost:3000/`}><GitHubIcon/></a></div>
           </div>
             </form>
           </Paper>

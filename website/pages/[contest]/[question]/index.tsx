@@ -39,6 +39,7 @@ export default function QuesDetail() {
   function changeCopyState() {
     setCopied(true)
     setTimeout(() => setCopied(false), 1500);
+    return null;
   }
 
   function submitcode(code: any, lang: any) {
@@ -71,6 +72,7 @@ export default function QuesDetail() {
         }
       })
       .catch((error) => console.log(error));
+      return null;
   };
 
 
@@ -105,9 +107,10 @@ export default function QuesDetail() {
     //setValues(code);
     setSource(source2);
     localStorage.setItem("source", JSON.stringify(source2));
+    return null;
   };
 
-  function statuscode() {
+ function statuscode() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
       method: "POST",
       headers: {
@@ -119,21 +122,21 @@ export default function QuesDetail() {
         task_id: localStorage.taskid,
         contest_id: localStorage.code,
       }),
-    })
-      .then((resp) => resp.json())
+    }).then((resp) => resp.json())
       .then((response) => {
         console.log(response);
         if (response.status === 302) {
-          alert(response.message);
+          // alert(response.message)
         } else {
-          console.log(response);
-          setRes(response);
-          setLoading(false);
-          clearInterval(interval);
+          console.log(response)
+          setRes(response)
+          setLoading(false)
+          clearInterval(interval)
         }
       })
       .then(() => console.log(res))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      return null;
   };
 
 
@@ -155,12 +158,10 @@ export default function QuesDetail() {
   const [copied, setCopied] = useState(false)
   const [language, setLang] = useState("c++")
   const [value, setValues] = useState("")
-  const [theme, setTheme] = useState("theme-terminal")
+  const [theme, setTheme] = useState("theme-tomorrow")
   const [isLoading, setLoading] = useState(false)
   const [res, setRes] = useState([])
   const [num, setNum] = useState(0)
-
-
 
   const dispatch = useDispatch()
   const { qdata } = useSelector(state => state.individualQuestionReducer);
@@ -173,6 +174,7 @@ export default function QuesDetail() {
   
     if (!localStorage.source) window.location.href = `/${localStorage.code}`;
   })
+
   useEffect(() => {
     dispatch(getIndividualQuestionData());
 
@@ -197,6 +199,7 @@ export default function QuesDetail() {
 
 
   if (JSON.stringify(qdata) !== JSON.stringify(data) || loadedState != loaded) {
+    console.log(qdata)
     setData(qdata)
     setLoaded(loaded)
   }
@@ -215,7 +218,9 @@ export default function QuesDetail() {
       }
     })
     if (JSON.stringify(source) != JSON.stringify(source2))
-      setSource(source2)
+      setSource(source2);
+      
+    return null;
   }
 
 
@@ -409,7 +414,7 @@ export default function QuesDetail() {
                         className="descriptionButton"
                         color="primary"
                         variant="outlined"
-
+                        style={{margin: "20px auto"}}
                         onClick={() =>
                           submitcode(value, language)
                         }
@@ -419,7 +424,7 @@ export default function QuesDetail() {
                     )}
                 </div>
 
-                {res.length > 1 ? (
+                {res?.length > 1 ? (
                   <TableContainer component={Paper}>
                     <Table
                       style={{
@@ -436,19 +441,19 @@ export default function QuesDetail() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {res.map((resa, index) => (
+                        {res?.map((resa, index) => (
                           <TableRow key={index}>
                             <TableCell component="th" scope="row">
                               {index + 1}
                             </TableCell>
                             <TableCell align="right">
-                              <ResultStatus status={resa.status.run_status} />
+                              <ResultStatus status={resa?.status?.run_status} />
                             </TableCell>
                             <TableCell align="right">
-                              {resa.status.cpu_time}
+                              {resa?.status?.cpu_time}
                             </TableCell>
                             <TableCell align="right">
-                              {resa.status.memory_taken}
+                              {resa?.status?.memory_taken}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -457,12 +462,12 @@ export default function QuesDetail() {
                   </TableContainer>
                 ) : (
                     <React.Fragment>
-                      {res.map((resa, index) => (
+                      {res?.map((resa, index) => (
                         <div>
                           {resa.message ? (
                             <div key={index}>
                               <p>Compilation Error</p>
-                              <p>{resa.message.split(",", 2)[1]}</p>
+                              <p>{resa?.message?.split(",", 2)[1]}</p>
                             </div>
                           ) : (
                               <TableContainer component={Paper}>
@@ -486,13 +491,13 @@ export default function QuesDetail() {
                                         {index + 1}
                                       </TableCell>
                                       <TableCell align="right">
-                                        <ResultStatus status={resa.status.run_status} />
+                                        <ResultStatus status={resa?.status?.run_status} />
                                       </TableCell>
                                       <TableCell align="right">
-                                        {resa.status.cpu_time}
+                                        {resa?.status?.cpu_time}
                                       </TableCell>
                                       <TableCell align="right">
-                                        {resa.status.memory_taken}
+                                        {resa?.status?.memory_taken}
                                       </TableCell>
                                     </TableRow>
                                   </TableBody>
@@ -537,6 +542,7 @@ function ResultStatus({ status }) {
   } else if (status == "WA") {
     return <Error />;
   } else return status;
+
 }
 
 

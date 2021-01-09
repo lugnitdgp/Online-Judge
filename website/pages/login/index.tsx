@@ -133,10 +133,11 @@ interface State {
   username: string;
   first_name: string;
   showPassword: boolean;
+  accesscode: string;
+  provider: string;
 }
 function LoginPage(props: Props) {
   const { classes } = props;
-  
 
   const [values, setValues] = React.useState<State>({
     email1: '',
@@ -146,6 +147,8 @@ function LoginPage(props: Props) {
     username: '',
     first_name: '',
     showPassword: false,
+    accesscode: '',
+    provider: '',
   });
 
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,39 +214,41 @@ function LoginPage(props: Props) {
       //window.location.href = "/"
         //alert('hemlo')
     }
-    // let params = new URLSearchParams(document.location.search.substring(1));
-    // let code = params.get("code");
-    // if (code) {
-    //   axios
-    //     .post(
-    //       `${process.env.NEXT_PUBLIC_BACKEND_URL}quiz/auth/register`,
-    //       {
-    //         accesscode: code
-    //       },
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //         console.log(response);
-    //         localStorage.token = response.token;
-    //         document.cookie = `token=${response.token}; path=/; max-age=${
-    //             60 * 60 * 24 * 100
-    //             }`;
-    //         localStorage.onlinejudge_info = JSON.stringify({
-    //             name: response.user.name,
-    //             email: response.user.email,
-    //             image_link: response.user.image_link
-    //         });
-    //         window.location.href = "/"
-    //     })
-    //     .catch((e) => {
-    //         console.log(e);
+    let params = new URLSearchParams(document.location.search.substring(1));
+    let code = params.get("code");
+    if (code) {
+      var payload = JSON.stringify({
+        accesscode: code,
+        provider: "github"
+      })
+  
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/custom_login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+          },
+            body: payload
+          }).then((resp) => resp.json())
+          
+        .then((response) => {
+            console.log(response);
+            localStorage.token = response.token;
+            document.cookie = `token=${response.token}; path=/; max-age=${
+                60 * 60 * 24 * 100
+                }`;
+            localStorage.onlinejudge_info = JSON.stringify({
+                name: response.user.name,
+                email: response.user.email,
+                image_link: response.user.image_link
+            });
+            window.location.href = "/"
+        })
+        .catch((e) => {
+            console.log(e);
             
-    //     });
-    // }
+        });
+    }
   }, [])
 
   return (
@@ -341,7 +346,7 @@ function LoginPage(props: Props) {
               <Facebook className={classes.signInIcon} />
             
           </Button> */}
-          {/* <div><a href={`https://github.com/login/oauth/authorize?client_id=here&scope=user&redirect_uri=homepage`}><GitHubIcon/></a></div> */}
+          <div><a href={`https://github.com/login/oauth/authorize?client_id=447146d0563c511420ce&scope=user&redirect_uri=http://localhost:3000/`}><GitHubIcon/></a></div>
           </div>
           </form>
           

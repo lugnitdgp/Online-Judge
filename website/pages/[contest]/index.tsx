@@ -38,11 +38,10 @@ export default function questionlist() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    else if (!localStorage.code) {
       localStorage.setItem("code", contest.toString());
        var temp = contestService.getIndiContest()
       console.log(temp)
-    }
+    
     if (!localStorage.source) {
       var contestdeet = [
         {

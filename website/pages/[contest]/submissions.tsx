@@ -39,9 +39,8 @@ export default function submissions() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    else if (!localStorage.code) {
       localStorage.setItem("code", contest.toString());
-    }})
+    })
 
   if (submissions.length !== data.length || loadedState != loaded) {
     setLoaded(false);

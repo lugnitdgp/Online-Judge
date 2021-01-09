@@ -79,7 +79,41 @@ def verifyFacebookToken(accesstoken, userID):
         "image": idInfo['picture']['data']['url'],
         'status': 200
     }
-
+def verifyGithubToken(accessCode):
+    try:
+        tokenurl= "https://github.com/login/oauth/access_token"
+        params = {
+            "client_id": config('GITHUB_CLIENT_ID'),
+            "client_secret":config('GITHUB_CLIENT_SECRET'),
+            "code": accessCode,
+            "redirect_uri":"https://df.nitdgplug.org/"
+        }
+        headers = {
+            "Accept":"application/json"
+        }
+        
+        accesscode= r.post(url=tokenurl,params=params,headers=headers).json()
+        print(accesscode)
+        if not "access_token" in accesscode.keys():
+            return {"status": 404, "message": "Your Token has expired. Please login/register again!"}
+        userurl = "https://api.github.com/user"
+        emailurl="https://api.github.com/user/emails"
+        headers = {
+            "Authorization" : "Bearer {}".format(accesscode['access_token'])
+        }
+        userinfo=r.get(url=userurl, headers=headers).json()
+        emailsinfo=r.get(url=emailurl,headers=headers).json()
+        print(userinfo)
+        print(emailsinfo)
+        return {
+            "email":emailsinfo[0]['email'],
+            "username":emailsinfo[0]['email'],
+            "first_name":userinfo['name'],
+            "image":userinfo['avatar_url'],
+            "status":200
+        } 
+    except ValueError:
+        return {"status": 404, "message": "Your Token has expired. Please login/register again!"}
 
 @permission_classes([
     AllowAny,
@@ -169,8 +203,10 @@ class SocialLogin(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         if request.data.get('provider') == 'google':
             res = verifyGoogleToken(request.data.get('id_token'))
-        else:
+        elif request.data.get('provider') == 'facebook':
             res = verifyFacebookToken(request.data.get('access_token'), request.data.get('userID'))
+        elif request.data.get('provider') == 'github':
+            res = verifyGithubToken(request.data.get('accesscode'))
         if res['status'] == 404:
             return Response({'status': 404, 'message': 'Token expired'})
         else:

@@ -17,6 +17,7 @@ class Programming_Language(models.Model):
     compile_command = models.CharField(max_length=255)
     run_command = models.CharField(max_length=255)
     multiplier_name = models.CharField(max_length=64)
+    template = models.CharField(max_length=1024, blank=True)
 
     def __str__(self):
         return self.name

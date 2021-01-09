@@ -124,6 +124,7 @@ class Job(models.Model):
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
     WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
+    compile_error = models.BooleanField(default=False, help_text="To check if the solution compiled properly or not")
     job_id = models.CharField(max_length=200, null=True, unique=True, help_text="Celery Job id for the current task")
     timestamp = models.DateTimeField(default=t.now, help_text="Latest submission")
 

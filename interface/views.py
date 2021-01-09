@@ -151,9 +151,10 @@ def status(request):
                     except:
                         coder_contest_score.timestamp = answer.timestamp
         else:
-            if contest.isOver() == False and contest.isStarted() and answer.correct != 0 :
-                answer.timestamp = t.now()
-                answer.wrong += 1
+            if contest.isOver() == False and contest.isStarted():
+                if not job.compile_error:
+                    answer.timestamp = t.now()
+                    answer.wrong += 1
         coder.save()
         answer.save()
         coder_contest_score.save()

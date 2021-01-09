@@ -145,9 +145,13 @@ def status(request):
                     coder_contest_score.score += question.question_score
                     answer.score = question.question_score
                     answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
-                    coder_contest_score.timestamp = answer.timestamp
+                    # coder_contest_score.timestamp = answer.timestamp
+                    try:
+                        coder_contest_score.timestamp += answer.timestamp
+                    except:
+                        coder_contest_score.timestamp = answer.timestamp
         else:
-            if contest.isOver() == False and contest.isStarted():
+            if contest.isOver() == False and contest.isStarted() and answer.correct != 0 :
                 answer.timestamp = t.now()
                 answer.wrong += 1
         coder.save()

@@ -157,7 +157,7 @@ class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
-    timestamp = models.DateTimeField(blank=True, help_text="For Penalty in questions")
+    timestamp = models.DateTimeField(blank=True, null=True, help_text="For Penalty in questions")
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name

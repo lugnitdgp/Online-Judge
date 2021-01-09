@@ -57,9 +57,8 @@ export default function personalSubmissions() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    else if (!localStorage.code) {
       localStorage.setItem("code", contest.toString());
-    }})
+    })
 
 
   if (

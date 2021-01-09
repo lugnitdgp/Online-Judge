@@ -168,10 +168,9 @@ export default function QuesDetail() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    else if (!localStorage.code || !localStorage.question) {
       localStorage.setItem("code", contest.toString())
       localStorage.setItem("question", question.toString())
-    }
+  
     if (!localStorage.source) window.location.href = `/${localStorage.code}`;
   })
   useEffect(() => {

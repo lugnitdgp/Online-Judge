@@ -36,9 +36,8 @@ export default function Leaderboard() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    else if (!localStorage.code) {
       localStorage.setItem("code", contest.toString());
-    }})
+    })
 
 
   const [loadedState, setLoaded] = useState(false);

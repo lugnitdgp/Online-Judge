@@ -26,6 +26,7 @@ services:
       python manage.py migrate --noinput && 
       python manage.py migrate --noinput interface && 
       python manage.py collectstatic --no-input &&
+      python manage.py loaddata language_models.json &&
       gunicorn judge.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
       - .:/backend

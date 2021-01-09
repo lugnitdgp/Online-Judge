@@ -244,7 +244,7 @@ function LoginPage(props: Props) {
         provider: "github"
       })
   
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/register`,
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/social_login`,
           {
             method: "POST",
             headers: {

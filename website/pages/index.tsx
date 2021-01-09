@@ -40,7 +40,7 @@ export default function IndexPage() {
         provider: "github"
       })
   
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/custom_login`,
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/social_login`,
           {
             method: "POST",
             headers: {

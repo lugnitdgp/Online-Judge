@@ -68,7 +68,7 @@ export default function QuesDetail() {
           setLoading(false)
         } else {
           localStorage.taskid = res["task_id"];
-          interval = setInterval(() => statuscode(), 2000);
+          interval = setInterval(() => statuscode(), 5000);
         }
       })
       .catch((error) => console.log(error));
@@ -127,7 +127,8 @@ export default function QuesDetail() {
         console.log(response);
         if (response.status === 302) {
           // alert(response.message)
-        } else {
+        }
+        else {
           console.log(response)
           setRes(response)
           setLoading(false)
@@ -196,7 +197,6 @@ export default function QuesDetail() {
       setMsg("The Contest begins in")
     }
   }, [])
-
 
   if (JSON.stringify(qdata) !== JSON.stringify(data) || loadedState != loaded) {
     console.log(qdata)
@@ -377,10 +377,11 @@ export default function QuesDetail() {
                         setLang(e.target.value as string)
                       }
                     >
-                      <MenuItem value="c">C</MenuItem>
-                      <MenuItem value="c++">C++</MenuItem>
-                      <MenuItem value="python3">Python</MenuItem>
-                      <MenuItem value="java">Java</MenuItem>
+                      {data["languages"]?.map((val) => (
+                        
+                        <MenuItem value={val}>{val}</MenuItem>
+                      ))}
+                      
                     </Select>
                   </FormControl>
 
@@ -441,8 +442,9 @@ export default function QuesDetail() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {res?.map((resa, index) => (
-                          <TableRow key={index}>
+                        {res?.map((resa, index) => {
+                          if(resa.code === 0) {
+                          (<TableRow key={index}>
                             <TableCell component="th" scope="row">
                               {index + 1}
                             </TableCell>
@@ -455,8 +457,41 @@ export default function QuesDetail() {
                             <TableCell align="right">
                               {resa?.status?.memory_taken}
                             </TableCell>
-                          </TableRow>
-                        ))}
+                          </TableRow>)
+                          }
+                          else if(resa.code === 1){
+                            (<TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                {index + 1}
+                              </TableCell>
+                              <TableCell align="right">
+                                Compilation Error
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                            </TableRow>)
+                          }
+                          else {
+                            (<TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                {index + 1}
+                              </TableCell>
+                              <TableCell align="right">
+                                Compilation Error
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                            </TableRow>)
+                          }
+                      })}
                       </TableBody>
                     </Table>
                   </TableContainer>

@@ -60,7 +60,6 @@ export default function personalSubmissions() {
       localStorage.setItem("code", contest.toString());
     })
 
-
   if (
     personal_submissions.length !== Psubmissions.length ||
     loadedState != loaded
@@ -100,6 +99,7 @@ export default function personalSubmissions() {
   const handleCloseModal = () => {
     setOpen(false);
   };
+
   const columns = [
     {
       name: "user",
@@ -144,7 +144,6 @@ export default function personalSubmissions() {
         }),
       },
     },
-
     {
       name: "status",
       label: "STATUS",
@@ -154,7 +153,6 @@ export default function personalSubmissions() {
         setCellHeaderProps: () => ({
           style: { textAlign: "center", color: "#104e8b" },
         }),
-
         setCellProps: () => ({
           style: { fontSize: 15, textAlign: "center", color: "#104e8b" },
         }),

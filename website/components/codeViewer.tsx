@@ -28,7 +28,7 @@ function Viewer(props: IProps) {
         <AceEditor
           mode={dict[props.lang]}
           theme={"github"}
-          value={props.value}
+          value={decodeURI(props.value)}
           readOnly={true}
           fontSize={18}
           style={{ width: "100%" }}

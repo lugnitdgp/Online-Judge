@@ -3,9 +3,17 @@ from interface.models import Question, Contest, Job, Answer, Editorial
 import datetime
 
 class QuestionSerializer(serializers.ModelSerializer):
+    languages = serializers.SerializerMethodField('get_langs')
+
+    def get_langs(self, obj):
+        langs = []
+        for each in obj.contest.contest_langs.all():
+            langs.append(each.name)
+        return langs
     class Meta:
         model = Question
         fields = '__all__'
+        read_only_fields = ( 'languages', )
 
 
 class QuestionListSerializer(serializers.BaseSerializer):

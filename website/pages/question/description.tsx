@@ -58,6 +58,7 @@ function submitcode(code: any, lang: any){
       return resp.json();
     })
     .then((res) => {
+      console.log(res);
       if (res.status === 302) {
         //alert(res.message);
           setLoading(false)

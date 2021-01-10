@@ -7,7 +7,7 @@ const getContestData = () => {
 const getIndiContest = ()=>{
   return Axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contest/${localStorage.code}`);
 
-}
+};
 
 const getLeaderboardDataQues = () => {
   return fetch(

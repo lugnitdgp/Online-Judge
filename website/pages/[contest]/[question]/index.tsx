@@ -39,6 +39,7 @@ export default function QuesDetail() {
   function changeCopyState() {
     setCopied(true)
     setTimeout(() => setCopied(false), 1500);
+    return null;
   }
 
   function submitcode(code: any, lang: any) {
@@ -67,10 +68,11 @@ export default function QuesDetail() {
           setLoading(false)
         } else {
           localStorage.taskid = res["task_id"];
-          interval = setInterval(() => statuscode(), 2000);
+          interval = setInterval(() => statuscode(), 5000);
         }
       })
       .catch((error) => console.log(error));
+      return null;
   };
 
 
@@ -105,9 +107,10 @@ export default function QuesDetail() {
     //setValues(code);
     setSource(source2);
     localStorage.setItem("source", JSON.stringify(source2));
+    return null;
   };
 
-  function statuscode() {
+ function statuscode() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
       method: "POST",
       headers: {
@@ -119,21 +122,22 @@ export default function QuesDetail() {
         task_id: localStorage.taskid,
         contest_id: localStorage.code,
       }),
-    })
-      .then((resp) => resp.json())
+    }).then((resp) => resp.json())
       .then((response) => {
         console.log(response);
         if (response.status === 302) {
-          alert(response.message);
-        } else {
-          console.log(response);
-          setRes(response);
-          setLoading(false);
-          clearInterval(interval);
+          // alert(response.message)
+        }
+        else {
+          console.log(response)
+          setRes(response)
+          setLoading(false)
+          clearInterval(interval)
         }
       })
       .then(() => console.log(res))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      return null;
   };
 
 
@@ -155,12 +159,10 @@ export default function QuesDetail() {
   const [copied, setCopied] = useState(false)
   const [language, setLang] = useState("c++")
   const [value, setValues] = useState("")
-  const [theme, setTheme] = useState("theme-terminal")
+  const [theme, setTheme] = useState("theme-tomorrow")
   const [isLoading, setLoading] = useState(false)
   const [res, setRes] = useState([])
   const [num, setNum] = useState(0)
-
-
 
   const dispatch = useDispatch()
   const { qdata } = useSelector(state => state.individualQuestionReducer);
@@ -168,12 +170,12 @@ export default function QuesDetail() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    else if (!localStorage.code || !localStorage.question) {
       localStorage.setItem("code", contest.toString())
       localStorage.setItem("question", question.toString())
-    }
+  
     if (!localStorage.source) window.location.href = `/${localStorage.code}`;
   })
+
   useEffect(() => {
     dispatch(getIndividualQuestionData());
 
@@ -196,8 +198,8 @@ export default function QuesDetail() {
     }
   }, [])
 
-
   if (JSON.stringify(qdata) !== JSON.stringify(data) || loadedState != loaded) {
+    console.log(qdata)
     setData(qdata)
     setLoaded(loaded)
   }
@@ -216,7 +218,9 @@ export default function QuesDetail() {
       }
     })
     if (JSON.stringify(source) != JSON.stringify(source2))
-      setSource(source2)
+      setSource(source2);
+      
+    return null;
   }
 
 
@@ -373,10 +377,11 @@ export default function QuesDetail() {
                         setLang(e.target.value as string)
                       }
                     >
-                      <MenuItem value="c">C</MenuItem>
-                      <MenuItem value="c++">C++</MenuItem>
-                      <MenuItem value="python3">Python</MenuItem>
-                      <MenuItem value="java">Java</MenuItem>
+                      {data["languages"]?.map((val) => (
+                        
+                        <MenuItem value={val}>{val}</MenuItem>
+                      ))}
+                      
                     </Select>
                   </FormControl>
 
@@ -410,7 +415,7 @@ export default function QuesDetail() {
                         className="descriptionButton"
                         color="primary"
                         variant="outlined"
-
+                        style={{margin: "20px auto"}}
                         onClick={() =>
                           submitcode(value, language)
                         }
@@ -420,7 +425,7 @@ export default function QuesDetail() {
                     )}
                 </div>
 
-                {res.length > 1 ? (
+                {res?.length >= 1 ? (
                   <TableContainer component={Paper}>
                     <Table
                       style={{
@@ -437,72 +442,184 @@ export default function QuesDetail() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {res.map((resa, index) => (
+                        {res?.map((resa, index) => (
+                          
+                          (resa.code === 0) ? (
+                            <>
                           <TableRow key={index}>
                             <TableCell component="th" scope="row">
                               {index + 1}
                             </TableCell>
                             <TableCell align="right">
-                              <ResultStatus status={resa.status.run_status} />
+                              <ResultStatus status={resa?.status?.run_status} />
                             </TableCell>
                             <TableCell align="right">
-                              {resa.status.cpu_time}
+                              {resa?.status?.cpu_time}
                             </TableCell>
                             <TableCell align="right">
-                              {resa.status.memory_taken}
+                              {resa?.status?.memory_taken}
                             </TableCell>
                           </TableRow>
+                          </>
+                          ) : (
+                          (resa.code === 1) ? (
+                            <>
+                          <TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                {index + 1}
+                              </TableCell>
+                              <TableCell align="right">
+                                Compilation Error
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                            </TableRow>
+                            </>
+                          ) : (
+                          <>
+                            <TableRow key={index}>
+                            <TableCell component="th" scope="row">
+                              {index + 1}
+                            </TableCell>
+                            <TableCell align="right">
+                              <ResultStatus status={resa?.status?.run_status} />
+                            </TableCell>
+                            <TableCell align="right">
+                              {resa?.status?.cpu_time}
+                            </TableCell>
+                            <TableCell align="right">
+                              {resa?.status?.memory_taken}
+                            </TableCell>
+                          </TableRow>
+                            </>
+                            )
+                        )
                         ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
-                ) : (
-                    <React.Fragment>
-                      {res.map((resa, index) => (
-                        <div>
-                          {resa.message ? (
-                            <div key={index}>
-                              <p>Compilation Error</p>
-                              <p>{resa.message.split(",", 2)[1]}</p>
-                            </div>
-                          ) : (
-                              <TableContainer component={Paper}>
-                                <Table
-                                  style={{
-                                    minWidth: 650,
-                                  }}
-                                  aria-label="simple table"
-                                >
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>TestCase (Number)</TableCell>
-                                      <TableCell align="right">Status</TableCell>
-                                      <TableCell align="right">Run-Time</TableCell>
-                                      <TableCell align="right">Memory Used</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    <TableRow key={index}>
-                                      <TableCell component="th" scope="row">
-                                        {index + 1}
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <ResultStatus status={resa.status.run_status} />
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        {resa.status.cpu_time}
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        {resa.status.memory_taken}
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableBody>
-                                </Table>
-                              </TableContainer>
-                            )}
-                        </div>
-                      ))}
-                    </React.Fragment>
+                ) : ( <> </>
+                  // <TableContainer component={Paper}>
+                  //   <Table
+                  //     style={{
+                  //       minWidth: 650,
+                  //     }}
+                  //     aria-label="simple table"
+                  //   >
+                  //     <TableHead>
+                  //       <TableRow>
+                  //         <TableCell>TestCase (Number)</TableCell>
+                  //         <TableCell align="right">Status</TableCell>
+                  //         <TableCell align="right">Run-Time</TableCell>
+                  //         <TableCell align="right">Memory Used</TableCell>
+                  //       </TableRow>
+                  //     </TableHead>
+                  //     <TableBody>
+                  //       {res?.map((resa, index) => {
+                  //         if(resa.code === 0) {
+                  //         (<>
+                  //         <TableRow key={index}>
+                  //           <TableCell component="th" scope="row">
+                  //             {index + 1}
+                  //           </TableCell>
+                  //           <TableCell align="right">
+                  //             <ResultStatus status={resa?.status?.run_status} />
+                  //           </TableCell>
+                  //           <TableCell align="right">
+                  //             {resa?.status?.cpu_time}
+                  //           </TableCell>
+                  //           <TableCell align="right">
+                  //             {resa?.status?.memory_taken}
+                  //           </TableCell>
+                  //         </TableRow>
+                  //         </>)
+                  //         }
+                  //         else if(resa.code === 1){
+                  //           (<TableRow key={index}>
+                  //             <TableCell component="th" scope="row">
+                  //               {index + 1}
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               Compilation Error
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //           </TableRow>)
+                  //         }
+                  //         else {
+                  //           (<TableRow key={index}>
+                  //             <TableCell component="th" scope="row">
+                  //               {index + 1}
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               Compilation Error
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //           </TableRow>)
+                  //         }
+                  //     })}
+                  //     </TableBody>
+                  //   </Table>
+                  // </TableContainer>
+                    // <React.Fragment>
+                    //   {res?.map((resa, index) => (
+                    //     <div>
+                    //       {resa.message ? (
+                    //         <div key={index}>
+                    //           <p>Compilation Error</p>
+                    //           <p>{resa?.message?.split(",", 2)[1]}</p>
+                    //         </div>
+                    //       ) : (
+                    //           <TableContainer component={Paper}>
+                    //             <Table
+                    //               style={{
+                    //                 minWidth: 650,
+                    //               }}
+                    //               aria-label="simple table"
+                    //             >
+                    //               <TableHead>
+                    //                 <TableRow>
+                    //                   <TableCell>TestCase (Number)</TableCell>
+                    //                   <TableCell align="right">Status</TableCell>
+                    //                   <TableCell align="right">Run-Time</TableCell>
+                    //                   <TableCell align="right">Memory Used</TableCell>
+                    //                 </TableRow>
+                    //               </TableHead>
+                    //               <TableBody>
+                    //                 <TableRow key={index}>
+                    //                   <TableCell component="th" scope="row">
+                    //                     {index + 1}
+                    //                   </TableCell>
+                    //                   <TableCell align="right">
+                    //                     <ResultStatus status={resa?.status?.run_status} />
+                    //                   </TableCell>
+                    //                   <TableCell align="right">
+                    //                     {resa?.status?.cpu_time}
+                    //                   </TableCell>
+                    //                   <TableCell align="right">
+                    //                     {resa?.status?.memory_taken}
+                    //                   </TableCell>
+                    //                 </TableRow>
+                    //               </TableBody>
+                    //             </Table>
+                    //           </TableContainer>
+                    //         )}
+                    //     </div>
+                    //   ))}
+                    // </React.Fragment>
                   )}
               </Paper>
             </div>
@@ -538,6 +655,7 @@ function ResultStatus({ status }) {
   } else if (status == "WA") {
     return <Error />;
   } else return status;
+
 }
 
 

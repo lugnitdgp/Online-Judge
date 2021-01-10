@@ -18,10 +18,8 @@ function Editorial(){
     const {loaded} = useSelector(state=>state.editorialReducer);
     useEffect(() => {
       if (!localStorage.token) window.location.href = "/";
-      else if (!localStorage.code || !localStorage.question) {
         localStorage.setItem("code", contest.toString())
         localStorage.setItem("question", question.toString())
-      }
     })
     useEffect(() => {
         dispatch(getEditorial());

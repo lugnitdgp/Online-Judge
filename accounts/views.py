@@ -86,7 +86,7 @@ def verifyGithubToken(accessCode):
             "client_id": config('GITHUB_CLIENT_ID'),
             "client_secret":config('GITHUB_CLIENT_SECRET'),
             "code": accessCode,
-            "redirect_uri":"http://localhost:3000/"
+            "redirect_uri":config('GITHUB_REDIRECT_URI')
         }
         headers = {
             "Accept":"application/json"

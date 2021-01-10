@@ -12,6 +12,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Router from "next/router";
+import Link from "next/link";
 import GitHubIcon from '@material-ui/icons/GitHub';
 
 const styles = createStyles((theme: Theme) => ({
@@ -140,9 +141,6 @@ interface State {
 }
 function LoginPage(props: Props) {
   const { classes } = props;
-  
-  
-
 
   const [values, setValues] = React.useState<State>({
     email1: '',
@@ -394,7 +392,9 @@ function LoginPage(props: Props) {
                 <Facebook className={classes.signInIcon} />
             {/* Sign Up with Facebook }
           </Button> */}
-          <div><a href={`https://github.com/login/oauth/authorize?client_id=447146d0563c511420ce&scope=user&redirect_uri=http://localhost:3000/`}><GitHubIcon/></a></div>
+         
+         <a style={{maxHeight:"63px", border:"1px solid #104E8B", borderRadius:"60px", maxWidth:"63px", padding:"20px"}} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon/></a>
+         
           </div>
             </form>
           </Paper>

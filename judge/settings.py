@@ -72,14 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'judge.wsgi.application'
 
-# if DEBUG:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#         }
-#     }
-# else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -172,9 +164,9 @@ DJRICHTEXTFIELD_CONFIG = {
     }
 }
 
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# if not DEBUG:
+#     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')

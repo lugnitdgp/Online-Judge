@@ -145,11 +145,10 @@ def status(request):
                     coder_contest_score.score += question.question_score
                     answer.score = question.question_score
                     answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
-                    # coder_contest_score.timestamp = answer.timestamp
-                    try:
-                        coder_contest_score.timestamp += answer.timestamp
-                    except:
-                        coder_contest_score.timestamp = answer.timestamp
+                    if coder_contest_score.timestamp == None :
+                        coder_contest_score.timestamp = (answer.timestamp - contest.start_time)
+                    else:
+                        coder_contest_score.timestamp += (answer.timestamp - contest.start_time)
         else:
             if contest.isOver() == False and contest.isStarted():
                 if not job.compile_error:

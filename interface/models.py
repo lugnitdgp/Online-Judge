@@ -17,7 +17,6 @@ class Programming_Language(models.Model):
     compile_command = models.CharField(max_length=255)
     run_command = models.CharField(max_length=255)
     multiplier_name = models.CharField(max_length=64)
-    template = models.CharField(max_length=1024, blank=True)
 
     def __str__(self):
         return self.name
@@ -125,7 +124,6 @@ class Job(models.Model):
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
     WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
-    compile_error = models.BooleanField(default=False, help_text="To check if the solution compiled properly or not")
     job_id = models.CharField(max_length=200, null=True, unique=True, help_text="Celery Job id for the current task")
     timestamp = models.DateTimeField(default=t.now, help_text="Latest submission")
 
@@ -159,7 +157,7 @@ class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
-    timestamp = models.DateTimeField(blank=True, null=True, help_text="For Penalty in questions")
+    timestamp = models.DurationField(blank=True, null=True, help_text="Penalty Time of submission")
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name

@@ -90,8 +90,8 @@ def submitCode(request):
         testcases = Testcases.objects.filter(question=question)
         input_file_urls, output_file_urls, input_file_hashes, output_file_hashes = [], [], [], []
         for test in testcases:
-            input_file_urls.append(test.input_test.url)
-            output_file_urls.append(test.output_test.url)
+            input_file_urls.append(request.build_absolute_uri(test.input_test.url))
+            output_file_urls.append(request.build_absolute_uri(test.output_test.url))
             input_file_hashes.append(test.input_hash)
             output_file_hashes.append(test.output_hash)
 

@@ -26,7 +26,9 @@ services:
       python manage.py loaddata language_models.json &&
       python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/backend
+      - app:/backend:rw
+      - static:/backend/static/
+      - media:/backend/media/
     env_file: 
       - .env
     ports:
@@ -55,3 +57,6 @@ services:
 
 volumes:
   postgres_data:
+  app:
+  static:
+  media:

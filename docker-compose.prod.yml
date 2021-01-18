@@ -38,48 +38,25 @@ services:
       - db
       - redis
   
-  celery:
+  executor:
     image: phantsure/oj:latest
     depends_on:
       - redis
       - db 
       - backend
 
-  nginx-proxy:
-    container_name: nginx-proxy
-    build: nginx
-    restart: always
-    ports:
-      - 443:443
-      - 80:80
+  celery:
+    build: .
+    command: celery -A judge worker -l info
     volumes:
-      - static:/backend/static
-      - media:/backend/media
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - .:/backend
     depends_on:
+      - redis
+      - db
       - backend
-
-  nginx-proxy-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    env_file:
-      - .env.prod.proxy-comp
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-    depends_on:
-      - nginx-proxy
-
 
 volumes:
   postgres_data:
   app:
   media:
   static:
-  certs:
-  html:
-  vhost:

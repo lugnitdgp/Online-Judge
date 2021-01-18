@@ -26,8 +26,14 @@ import SecondaryNav from "../../../components/secondaryNav";
 import Loader from "../../../components/loading";
 import Disqus from "disqus-react"
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from 'next/router'
-import { getIndividualQuestionData } from "../../../store/actions/individualQuestionAction"
+import { useRouter } from 'next/router';
+import { getIndividualQuestionData } from "../../../store/actions/individualQuestionAction";
+import dynamic from 'next/dynamic';
+
+const DynamicComponentWithNoSSR = dynamic(
+  () => import('../../../components/editor'),
+  { ssr: false }
+)
 
 export default function QuesDetail() {
 
@@ -422,7 +428,15 @@ export default function QuesDetail() {
                       <MenuItem value="theme-twilight">twilight</MenuItem>
                     </Select>
                   </FormControl>
-                  <Editor
+                  {/* <Editor
+                    value={value}
+                    lang={language}
+                    theme={theme}
+                    setValue={(d) => {
+                      setValues(d)
+                    }}
+                  /> */}
+                  <DynamicComponentWithNoSSR 
                     value={value}
                     lang={language}
                     theme={theme}

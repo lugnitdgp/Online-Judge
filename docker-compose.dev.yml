@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  
+  db:
+    image: postgres:12
+    env_file: 
+      .db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  redis:
+    image: redis
+  
+  web:
+    build: .
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    command: >- 
+      bash -c "python manage.py makemigrations &&
+      python manage.py makemigrations interface && 
+      python manage.py migrate --noinput && 
+      python manage.py migrate --noinput interface && 
+      python manage.py loaddata language_models.json &&
+      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/backend
+    env_file: 
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+  
+  celery:
+    build: .
+    command: celery -A judge worker -l info
+    volumes:
+      - .:/backend
+    depends_on:
+      - redis
+      - db 
+      - web
+
+  frontend:
+    build: ./website
+    command: npm run dev
+    env_file: 
+      .frnt.env
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:

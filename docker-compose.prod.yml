@@ -1,13 +1,11 @@
-version: '3'
+version: '3.7'
 
 services:
   
   db:
     image: postgres:12
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    env_file: 
+      .db.env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
@@ -29,9 +27,11 @@ services:
       python manage.py loaddata language_models.json &&
       gunicorn judge.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
-      - .:/backend
+      - app:/backend:rw
+      - static:/backend/static/
+      - media:/backend/media/
     env_file: 
-      - .env
+      - .env.prod
     ports:
       - "8000:8000"
     depends_on:
@@ -50,11 +50,47 @@ services:
 
   frontend:
     build: ./website
-    command: npm run dev
+    command: npm run start
     env_file: 
       .frnt.env
     ports:
       - "3000:3000"
 
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: nginx
+    restart: always
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - static:/backend/static
+      - media:/backend/media
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - web
+
+  nginx-proxy-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    env_file:
+      - .env.prod.proxy-comp
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+    depends_on:
+      - nginx-proxy
+
+
 volumes:
   postgres_data:
+  app:
+  media:
+  static:
+  certs:
+  html:
+  vhost:

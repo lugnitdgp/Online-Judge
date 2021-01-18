@@ -12,7 +12,7 @@ services:
   redis:
     image: redis
   
-  web:
+  backend:
     build: .
     deploy:
       restart_policy:
@@ -24,7 +24,7 @@ services:
       python manage.py migrate --noinput && 
       python manage.py migrate --noinput interface && 
       python manage.py collectstatic --no-input &&
-      python manage.py loaddata language_models.json &&
+      python manage.py loaddata /backend/language_models.json &&
       gunicorn judge.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
       - app:/backend:rw
@@ -39,22 +39,11 @@ services:
       - redis
   
   celery:
-    build: .
-    command: celery -A judge worker -l info
-    volumes:
-      - .:/backend
+    image: phantsure/oj:latest
     depends_on:
       - redis
       - db 
-      - web
-
-  frontend:
-    build: ./website
-    command: npm run start
-    env_file: 
-      .frnt.env
-    ports:
-      - "3000:3000"
+      - backend
 
   nginx-proxy:
     container_name: nginx-proxy
@@ -71,7 +60,7 @@ services:
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
-      - web
+      - backend
 
   nginx-proxy-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion

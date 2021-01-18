@@ -12,7 +12,7 @@ services:
   redis:
     image: redis
   
-  web:
+  backend:
     build: .
     deploy:
       restart_policy:
@@ -43,7 +43,7 @@ services:
     depends_on:
       - redis
       - db 
-      - web
+      - backend
 
   frontend:
     build: ./website

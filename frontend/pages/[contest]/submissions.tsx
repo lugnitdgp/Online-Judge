@@ -8,7 +8,6 @@ import SecondaryNav from "../../components/secondaryNav";
 import Loader from "../../components/loading";
 import { useRouter } from 'next/router'
 
-
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getSubmissionsData } from "../../store/actions/submissionsAction";

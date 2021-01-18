@@ -9,6 +9,12 @@ import Paper from "@material-ui/core/Paper";
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getEditorial } from "store/actions/editorialAction";
+import dynamic from 'next/dynamic';
+
+const DynamicComponentWithNoSSR = dynamic(
+  () => import('../../../components/codeViewer'),
+  { ssr: false }
+)
 
 function Editorial(){
   const router = useRouter()
@@ -67,7 +73,7 @@ function Editorial(){
                 <hr></hr>
                 <br/>
                 <h4>code</h4>
-                <Viewer value={decodeURIComponent((Editorial['code']))} lang="c++" />
+                <DynamicComponentWithNoSSR value={decodeURIComponent((Editorial['code']))} lang="c++" />
             </div>
             
             </>

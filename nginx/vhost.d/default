@@ -1,9 +1,0 @@
-location /staticfiles/ {
-  alias /backend/static/;
-  add_header Access-Control-Allow-Origin *;
-}
-
-location /mediafiles/ {
-  alias /backend/media/;
-  add_header Access-Control-Allow-Origin *;
-}

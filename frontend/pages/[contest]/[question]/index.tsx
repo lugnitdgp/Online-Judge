@@ -35,6 +35,7 @@ export default function QuesDetail() {
   const { contest, question } = router.query
 
   var interval;
+  var count;
 
   function changeCopyState() {
     setCopied(true)
@@ -68,6 +69,7 @@ export default function QuesDetail() {
           setLoading(false)
         } else {
           localStorage.taskid = res["task_id"];
+          count = 0;
           interval = setInterval(() => statuscode(), 5000);
         }
       })
@@ -111,6 +113,17 @@ export default function QuesDetail() {
   };
 
  function statuscode() {
+   if(count === 60){
+     count=0;
+     clearInterval(interval);
+     var res2 = [{
+       code: 9
+     }];
+     setLoading(false);
+     setRes(res2);
+
+     return null;
+   }
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
       method: "POST",
       headers: {
@@ -137,6 +150,9 @@ export default function QuesDetail() {
       })
       .then(() => console.log(res))
       .catch((err) => console.log(err))
+      
+
+      count += 1;
       return null;
   };
 
@@ -480,6 +496,7 @@ export default function QuesDetail() {
                             </TableRow>
                             </>
                           ) : (
+                          (resa.code === 2) ? (
                           <>
                             <TableRow key={index}>
                             <TableCell component="th" scope="row">
@@ -496,6 +513,22 @@ export default function QuesDetail() {
                             </TableCell>
                           </TableRow>
                             </>
+                          ) : (<>
+                          <TableRow key={index}>
+                              <TableCell component="th" scope="row">
+                                -1
+                              </TableCell>
+                              <TableCell align="right">
+                                Compilation timeout
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                              <TableCell align="right">
+                                N/A
+                              </TableCell>
+                            </TableRow>
+                           </>)
                             )
                         )
                         ))}

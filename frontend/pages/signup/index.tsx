@@ -174,10 +174,12 @@ function LoginPage(props: Props) {
     var lowerCase = /[a-z]/;
     var upperCase= /[A-Z]/; 
     var number = /[0-9]/;
-    const valid = (number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length >=6); 
+    let valid = (number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length >=6); 
     console.log(valid)
     if(valid) 
-    setValues({ ...values, view: valid})
+    setValues({ ...values, password2: pwd, view: valid})
+    else
+    setValues({ ...values, password2: pwd, view: valid})
   }
 
   const signUp = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -3,6 +3,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_401_UNAUTHORIZED
 from rest_framework import viewsets, generics, authentication, permissions
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
@@ -49,7 +50,7 @@ def verifyGoogleToken(token):
             "status": 200
         }
     except ValueError:
-        return {'status': 404, 'message': 'Your Token has expired. Please login again!'}
+        return Response({'status': 404, 'message': 'Your Token has expired. Please login again!'})
 
 
 @api_view(['POST'])
@@ -65,20 +66,19 @@ def google_oauth(request):
         'redirect_uri': request.data.get('redirect_uri') + "/login/google"
     })
     res = r.post(url=url, headers=headers, data=data).json()
-    return Response(res)
+    return Response(res, status = HTTP_200_OK)
 
 
 def verifyFacebookToken(accesstoken, userID):
     url = "https://graph.facebook.com/{}".format(userID)
     parameters = {'fields': 'name,email,picture', 'access_token': accesstoken}
     idInfo = r.get(url=url, params=parameters).json()
-    return {
+    return Response({
         "email": idInfo['email'],
         "username": idInfo['email'],
         "first_name": idInfo['name'],
-        "image": idInfo['picture']['data']['url'],
-        'status': 200
-    }
+        "image": idInfo['picture']['data']['url']
+    }, status = HTTP_200_OK)
 def verifyGithubToken(accessCode):
     try:
         tokenurl= "https://github.com/login/oauth/access_token"
@@ -93,9 +93,8 @@ def verifyGithubToken(accessCode):
         }
         
         accesscode= r.post(url=tokenurl,params=params,headers=headers).json()
-        print(accesscode)
         if not "access_token" in accesscode.keys():
-            return {"status": 404, "message": "Your Token has expired. Please login/register again!"}
+            return Response("Your Token has expired. Please login/register again!", status = HTTP_404_NOT_FOUND)
         userurl = "https://api.github.com/user"
         emailurl="https://api.github.com/user/emails"
         headers = {
@@ -103,17 +102,14 @@ def verifyGithubToken(accessCode):
         }
         userinfo=r.get(url=userurl, headers=headers).json()
         emailsinfo=r.get(url=emailurl,headers=headers).json()
-        print(userinfo)
-        print(emailsinfo)
-        return {
+        return Response({
             "email":emailsinfo[0]['email'],
             "username":emailsinfo[0]['email'],
             "first_name":userinfo['name'],
-            "image":userinfo['avatar_url'],
-            "status":200
-        } 
+            "image":userinfo['avatar_url']
+        }, status = HTTP_200_OK )
     except ValueError:
-        return {"status": 404, "message": "Your Token has expired. Please login/register again!"}
+        return Response("Your Token has expired. Please login/register again!", status = HTTP_404_NOT_FOUND)
 
 @permission_classes([
     AllowAny,
@@ -126,7 +122,7 @@ class Register(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         res = customRegister(request)
         if res['status'] == 404:
-            return Response({'status': 404, 'message': 'Token expired'})
+            return Response('Token expired', status = HTTP_404_NOT_FOUND)
         else:
             if verifyUser(res['email']) == False:
                 self.serializer = self.get_serializer(data=res)
@@ -140,9 +136,9 @@ class Register(generics.GenericAPIView):
                 self.serializer_class = CoderSerializer
                 self.serializer = self.get_serializer(Coder.objects.get(user=self.user))
             else:
-                return Response({"status": 401, "message": "User has already registered under this email."})
+                return Response("User has already registered under this email.", status = HTTP_401_UNAUTHORIZED)
 
-        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1], "status": 200})
+        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
 
 
 def customRegister(request):
@@ -152,20 +148,19 @@ def customRegister(request):
             "username": request.data['username'],
             "first_name": request.data['first_name'],
             "password": request.data["password"],
-            "image": "https://robohash.org/" + request.data['email'],
-            "status": 200
+            "image": "https://robohash.org/" + request.data['email']
         }
+        return Response(res, status = HTTP_200_OK)
     except:
-        res = {"status": 404}
-    return res
+        return Response("Try Again", status = HTTP_400_BAD_REQUEST)
 
 
 def customLogin(request):
     try:
-        res = {"email": request.data['email'], "password": request.data["password"], "status": 200}
+        res = {"email": request.data['email'], "password": request.data["password"]}
+        return Response(res, status = HTTP_200_OK)
     except:
-        res = {"status": 404}
-    return res
+        return Response("Try Again", status = HTTP_404_NOT_FOUND)
 
 
 @permission_classes([
@@ -178,7 +173,7 @@ class CustomLogin(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         res = customLogin(request)
         if res['status'] == 404:
-            return Response({'status': 404, 'message': 'Token expired'})
+            return Response('Token expired', status = HTTP_404_NOT_FOUND)
         else:
             if verifyUser(res['email']) == False:
                 return Response({"status": 401, "message": "User doesn't exist."})
@@ -188,9 +183,9 @@ class CustomLogin(generics.GenericAPIView):
                 coder = Coder.objects.get(email=res['email'])
                 self.serializer = self.get_serializer(coder)
             else:
-                return Response({"status": 401, "message": "Incorrect password"})
+                return Response("Incorrect password", status = HTTP_401_UNAUTHORIZED)
 
-        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1], "status": 200})
+        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
 
 
 @permission_classes([
@@ -208,7 +203,7 @@ class SocialLogin(generics.GenericAPIView):
         elif request.data.get('provider') == 'github':
             res = verifyGithubToken(request.data.get('accesscode'))
         if res['status'] == 404:
-            return Response({'status': 404, 'message': 'Token expired'})
+            return Response('Token expired', status = HTTP_404_NOT_FOUND)
         else:
             if verifyUser(res['email']) == False:
                 self.serializer = self.get_serializer(data=res)
@@ -225,4 +220,4 @@ class SocialLogin(generics.GenericAPIView):
                 coder = Coder.objects.get(email=res['email'])
                 self.serializer = self.get_serializer(coder)
 
-        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1], "status": 200})
+        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)

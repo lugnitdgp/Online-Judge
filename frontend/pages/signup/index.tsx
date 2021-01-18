@@ -202,11 +202,11 @@ function LoginPage(props: Props) {
           if(response.status === 401)
           {
             alert(response.message)
-            window.location.href= "/login"
+            window.location.href= "/signup"
           }
           else if(response.status === 400){
             alert("Please enter your details properly.")
-            window.location.href= "/login"
+            window.location.href= "/signup"
           }
           else if(response.status === 200){
           localStorage.token = response.token;

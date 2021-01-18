@@ -157,12 +157,12 @@ export default function QuesDetail() {
   };
 
 
-  const disqusShortname = "onlinejudge-1"
-  const disqusConfig = {
-    url: "http://localhost:3000",
-    identifier: "article-id",
-    title: "Title of Your Article"
-  }
+  // const disqusShortname = "onlinejudge-1"
+  // const disqusConfig = {
+  //   url: "http://localhost:3000",
+  //   identifier: "article-id",
+  //   title: "Title of Your Article"
+  // }
 
   ///////////////////////
 
@@ -217,6 +217,9 @@ export default function QuesDetail() {
   if (JSON.stringify(qdata) !== JSON.stringify(data) || loadedState != loaded) {
     console.log(qdata)
     setData(qdata)
+    if(qdata["languages"].length === 1){
+      setLang(qdata["languages"][0]);
+    }
     setLoaded(loaded)
   }
 
@@ -393,10 +396,14 @@ export default function QuesDetail() {
                         setLang(e.target.value as string)
                       }
                     >
-                      {data["languages"]?.map((val) => (
+                      {(data["languages"].length > 1) ? (data["languages"]?.map((val) => (
                         
                         <MenuItem value={val}>{val}</MenuItem>
-                      ))}
+                      ))) : (data["languages"]?.map((val) => (
+                        
+                      <MenuItem value={val}>{val}</MenuItem>
+                      
+                      )))}
                       
                     </Select>
                   </FormControl>
@@ -657,7 +664,7 @@ export default function QuesDetail() {
               </Paper>
             </div>
 
-            {ended ?
+            {/* {ended ?
               null
               : (
                 <Paper elevation={0} className="descriptionPaper2">
@@ -668,7 +675,7 @@ export default function QuesDetail() {
                     />
                   </div>
                 </Paper>
-              )}
+              )} */}
 
             <div className="Footer">
               &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur

@@ -4,8 +4,8 @@ import Loader from "../../../components/loading";
 import Viewer from "components/codeViewer";
 import {useEffect} from 'react';
 import { useRouter } from 'next/router'
-
-
+import Disqus from "disqus-react"
+import Paper from "@material-ui/core/Paper";
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getEditorial } from "store/actions/editorialAction";
@@ -29,6 +29,14 @@ function Editorial(){
     const [loadedState, setLoaded] = useState(false);
     const [Editorial, setEditorial] = useState([]);
     
+    const disqusShortname = "onlinejudge-1"
+    const disqusConfig = {
+      url: "http://localhost:3000",
+      identifier: "article-id",
+      title: "Title of Your Article"
+    }
+  
+
     if (JSON.stringify(editorial) !== JSON.stringify(Editorial) || loadedState!=loaded ) {
       setEditorial(editorial);
       setLoaded(loaded);
@@ -65,6 +73,18 @@ function Editorial(){
             </>
             )
             : null}
+
+            
+                <Paper elevation={0} className="descriptionPaper2">
+                  <div style={{ margin: "20px", textAlign: "center" }}>
+                    <Disqus.DiscussionEmbed
+                      shortname={disqusShortname}
+                      config={disqusConfig}
+                    />
+                  </div>
+                </Paper>
+              
+
             <div className="Footer">
               &copy; Created and maintained by GNU/Linux Users' group, Nit
               Durgapur

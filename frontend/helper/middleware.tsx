@@ -276,7 +276,7 @@ const processAllSubmissions = (payload)=>{
         
                   var payload = {
                     user: r["name"],
-                    problem: r.question,
+                    problem: r.question_name,
                     status: stat,
                     time: time,
                     memory: mem,

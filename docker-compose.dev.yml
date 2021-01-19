@@ -48,7 +48,7 @@ services:
       - backend
 
   frontend:
-    build: ./website
+    build: ./frontend
     command: npm run dev
     env_file: 
       .frnt.env

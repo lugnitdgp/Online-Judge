@@ -1,0 +1,80 @@
+.leaderboardHeadWrapper {
+    max-width: 700px;
+    height: 30px;
+    text-align: center;
+    margin: 20px auto;
+    padding: 0px;
+}
+
+.leaderboardHead {
+    margin: 0px auto;
+    text-transform: uppercase;
+    color: #001144;
+}
+
+.leaderboardTableWrapper {
+    padding-top: 10px;
+    left: 50%;
+    transform: translate(-50%, +5%);
+    position: absolute;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 50px;
+    padding: 10px;
+    margin: 10px;
+    padding: 1px;
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+}
+
+.leaderboardCard {
+    overflow-x: scroll;
+    border: 2px solid #104e8b;
+    margin-bottom: 30px;
+}
+
+.leaderboardTableContainer {
+    position: relative;
+}
+
+.leaderboardTableCell {
+    background-color: #fff;
+    color: #104e8b;
+    font-size: 15px;
+}
+
+.leaderboardTableCellRed {
+    min-width: 20px;
+    background-color: #f25;
+    color: #000000;
+    font-size: 15px;
+    border-bottom: 0px solid #006;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.leaderboardTableCellGreen {
+    min-width: 20px;
+    background-color: #98ff98;
+    color: #000000;
+    font-size: 15px;
+    border-bottom: 0px solid #006;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.leaderboardTableCellWhite {
+    min-width: 20px;
+    background-color: #fff;
+    color: #000000;
+    font-size: 15px;
+    border-bottom: 0px solid #006;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.leaderboardPagination {
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}

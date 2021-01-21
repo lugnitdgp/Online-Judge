@@ -10,7 +10,7 @@ import SecondaryNav from "../../components/secondaryNav";
 import { useRouter } from 'next/router'
 import Loader from "../../components/loading";
 import Link from 'next/link'
-import {contestService} from '../../services/contestService'
+import { contestService } from '../../services/contestService'
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
@@ -38,10 +38,13 @@ export default function questionlist() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-      localStorage.setItem("code", contest.toString());
-       var temp = contestService.getIndiContest()
-      console.log(temp)
-    
+    localStorage.setItem("code", contest.toString());
+    contestService.getIndiContest().then(temp => {
+      for (let i = 0; i < temp.data.languages.length; i++)
+        localStorage.setItem(`${contest.toString()}:template:${temp.data.languages[i]}`,
+          temp.data.templates[i])
+    })
+
     if (!localStorage.source) {
       var contestdeet = [
         {

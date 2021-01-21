@@ -24,19 +24,25 @@ class QuestionListSerializer(serializers.BaseSerializer):
             'question_score': instance.question_score
         }
 
-
 class ContestSerializer(serializers.ModelSerializer):
     languages = serializers.SerializerMethodField('get_langs')
+    templates = serializers.SerializerMethodField('get_templates')
     
     def get_langs(self, obj):
         langs = []
         for each in obj.contest_langs.all():
             langs.append(each.name)
         return langs
+
+    def get_templates(self, obj):
+        default_code = []
+        for each in obj.contest_langs.all():
+            default_code.append(each.template)
+        return default_code
             
     class Meta:
         model = Contest
-        fields = ('contest_name', 'contest_code', 'start_time', 'end_time', 'contest_image', 'languages')
+        fields = ('contest_name', 'contest_code', 'start_time', 'end_time', 'contest_image', 'languages', 'templates')
 
     def to_representation(self, instance):
         data = super(ContestSerializer, self).to_representation(instance)
@@ -69,3 +75,5 @@ class EditorialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Editorial
         fields = ('question', 'solution', 'code', 'ques_name')
+
+

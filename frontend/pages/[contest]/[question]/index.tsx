@@ -30,7 +30,7 @@ import { useRouter } from 'next/router'
 import { getIndividualQuestionData } from "../../../store/actions/individualQuestionAction"
 import dynamic from "next/dynamic";
 
-const Editor = dynamic(import("components/editor"),{ssr:false});
+const Editor = dynamic(import("components/editor"), { ssr: false });
 
 export default function QuesDetail() {
 
@@ -75,7 +75,7 @@ export default function QuesDetail() {
         }
       })
       .catch((error) => console.log(error));
-      return null;
+    return null;
   };
 
 
@@ -95,8 +95,10 @@ export default function QuesDetail() {
           var flag = false;
           contest.questions.map((ques) => {
             if (ques.qid == sourcecode.qid) {
-              ques.code = sourcecode.code;
-              ques.lang = sourcecode.lang;
+              ques.langcode = {}
+              Object.assign(ques.langcode, {
+                [sourcecode.lang]: sourcecode.code
+              })
               flag = true;
             }
           });
@@ -113,7 +115,7 @@ export default function QuesDetail() {
     return null;
   };
 
- function statuscode() {
+  function statuscode() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
       method: "POST",
       headers: {
@@ -140,7 +142,7 @@ export default function QuesDetail() {
       })
       .then(() => console.log(res))
       .catch((err) => console.log(err))
-      return null;
+    return null;
   };
 
 
@@ -173,17 +175,16 @@ export default function QuesDetail() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-      localStorage.setItem("code", contest.toString())
-      localStorage.setItem("question", question.toString())
-  
+    localStorage.setItem("code", contest.toString())
+    localStorage.setItem("question", question.toString())
+
     if (!localStorage.source) window.location.href = `/${localStorage.code}`;
   })
 
   useEffect(() => {
     dispatch(getIndividualQuestionData());
 
-    var source2 = JSON.parse(localStorage.source);
-    setCodeFromAutoSave(source2)
+    
 
     var today = Date.now();
     var start = localStorage.start * 1000;
@@ -208,23 +209,42 @@ export default function QuesDetail() {
   }
 
   function setCodeFromAutoSave(source2: any) {
-    console.log(source2)
+    console.log("this is source2", source2);
+    let flag = false;
+    if (JSON.stringify(source) != JSON.stringify(source2))
+      setSource(source2);
+
     source2.map((contest) => {
       console.log(contest)
       if (contest.name === localStorage.code) {
         if (contest.questions)
           contest.questions.map((ques) => {
-            if (ques.qid === question.toString())
-              setValues(decodeURI(ques.code))
-            setLang(ques.lang)
+            if (ques.qid === question.toString()) {
+              if(!ques.langcode) return;
+              if (!ques.langcode[language] && ques.langcode[language] != "") {
+                setValues(decodeURI(ques.code))
+                if (decodeURI(ques.code).trim().length > 0) {
+                  flag = true
+                }
+              }
+            }
+
+            // setLang(ques.lang)
           });
       }
     })
-    if (JSON.stringify(source) != JSON.stringify(source2))
-      setSource(source2);
-      
+
+    if (!flag) setValues(decodeURIComponent(localStorage.getItem(`${localStorage.code}:template:${language}`)))
+
     return null;
   }
+
+  useEffect(() => {
+    var source2 = JSON.parse(localStorage.source);
+    setCodeFromAutoSave(source2)
+    // if (language != "")
+    // setValues(decodeURIComponent(localStorage.getItem(`${localStorage.code}:template:${language}`)))
+  }, [language])
 
 
   useEffect(() => {
@@ -381,10 +401,10 @@ export default function QuesDetail() {
                       }
                     >
                       {data["languages"]?.map((val) => (
-                        
+
                         <MenuItem value={val}>{val}</MenuItem>
                       ))}
-                      
+
                     </Select>
                   </FormControl>
 
@@ -418,7 +438,7 @@ export default function QuesDetail() {
                         className="descriptionButton"
                         color="primary"
                         variant="outlined"
-                        style={{margin: "20px auto"}}
+                        style={{ margin: "20px auto" }}
                         onClick={() =>
                           submitcode(value, language)
                         }
@@ -446,137 +466,137 @@ export default function QuesDetail() {
                       </TableHead>
                       <TableBody>
                         {res?.map((resa, index) => (
-                          
+
                           (resa.code === 0) ? (
                             <>
-                          <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {index + 1}
-                            </TableCell>
-                            <TableCell align="right">
-                              <ResultStatus status={resa?.status?.run_status} />
-                            </TableCell>
-                            <TableCell align="right">
-                              {resa?.status?.cpu_time}
-                            </TableCell>
-                            <TableCell align="right">
-                              {resa?.status?.memory_taken}
-                            </TableCell>
-                          </TableRow>
-                          </>
-                          ) : (
-                          (resa.code === 1) ? (
-                            <>
-                          <TableRow key={index}>
-                              <TableCell component="th" scope="row">
-                                {index + 1}
-                              </TableCell>
-                              <TableCell align="right">
-                                Compilation Error
-                              </TableCell>
-                              <TableCell align="right">
-                                N/A
-                              </TableCell>
-                              <TableCell align="right">
-                                N/A
-                              </TableCell>
-                            </TableRow>
+                              <TableRow key={index}>
+                                <TableCell component="th" scope="row">
+                                  {index + 1}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <ResultStatus status={resa?.status?.run_status} />
+                                </TableCell>
+                                <TableCell align="right">
+                                  {resa?.status?.cpu_time}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {resa?.status?.memory_taken}
+                                </TableCell>
+                              </TableRow>
                             </>
                           ) : (
-                          <>
-                            <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {index + 1}
-                            </TableCell>
-                            <TableCell align="right">
-                              <ResultStatus status={resa?.status?.run_status} />
-                            </TableCell>
-                            <TableCell align="right">
-                              {resa?.status?.cpu_time}
-                            </TableCell>
-                            <TableCell align="right">
-                              {resa?.status?.memory_taken}
-                            </TableCell>
-                          </TableRow>
-                            </>
+                              (resa.code === 1) ? (
+                                <>
+                                  <TableRow key={index}>
+                                    <TableCell component="th" scope="row">
+                                      {index + 1}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      Compilation Error
+                              </TableCell>
+                                    <TableCell align="right">
+                                      N/A
+                              </TableCell>
+                                    <TableCell align="right">
+                                      N/A
+                              </TableCell>
+                                  </TableRow>
+                                </>
+                              ) : (
+                                  <>
+                                    <TableRow key={index}>
+                                      <TableCell component="th" scope="row">
+                                        {index + 1}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        <ResultStatus status={resa?.status?.run_status} />
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {resa?.status?.cpu_time}
+                                      </TableCell>
+                                      <TableCell align="right">
+                                        {resa?.status?.memory_taken}
+                                      </TableCell>
+                                    </TableRow>
+                                  </>
+                                )
                             )
-                        )
                         ))}
                       </TableBody>
                     </Table>
                   </TableContainer>
-                ) : ( <> </>
-                  // <TableContainer component={Paper}>
-                  //   <Table
-                  //     style={{
-                  //       minWidth: 650,
-                  //     }}
-                  //     aria-label="simple table"
-                  //   >
-                  //     <TableHead>
-                  //       <TableRow>
-                  //         <TableCell>TestCase (Number)</TableCell>
-                  //         <TableCell align="right">Status</TableCell>
-                  //         <TableCell align="right">Run-Time</TableCell>
-                  //         <TableCell align="right">Memory Used</TableCell>
-                  //       </TableRow>
-                  //     </TableHead>
-                  //     <TableBody>
-                  //       {res?.map((resa, index) => {
-                  //         if(resa.code === 0) {
-                  //         (<>
-                  //         <TableRow key={index}>
-                  //           <TableCell component="th" scope="row">
-                  //             {index + 1}
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             <ResultStatus status={resa?.status?.run_status} />
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             {resa?.status?.cpu_time}
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             {resa?.status?.memory_taken}
-                  //           </TableCell>
-                  //         </TableRow>
-                  //         </>)
-                  //         }
-                  //         else if(resa.code === 1){
-                  //           (<TableRow key={index}>
-                  //             <TableCell component="th" scope="row">
-                  //               {index + 1}
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               Compilation Error
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //           </TableRow>)
-                  //         }
-                  //         else {
-                  //           (<TableRow key={index}>
-                  //             <TableCell component="th" scope="row">
-                  //               {index + 1}
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               Compilation Error
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //           </TableRow>)
-                  //         }
-                  //     })}
-                  //     </TableBody>
-                  //   </Table>
-                  // </TableContainer>
+                ) : (<> </>
+                    // <TableContainer component={Paper}>
+                    //   <Table
+                    //     style={{
+                    //       minWidth: 650,
+                    //     }}
+                    //     aria-label="simple table"
+                    //   >
+                    //     <TableHead>
+                    //       <TableRow>
+                    //         <TableCell>TestCase (Number)</TableCell>
+                    //         <TableCell align="right">Status</TableCell>
+                    //         <TableCell align="right">Run-Time</TableCell>
+                    //         <TableCell align="right">Memory Used</TableCell>
+                    //       </TableRow>
+                    //     </TableHead>
+                    //     <TableBody>
+                    //       {res?.map((resa, index) => {
+                    //         if(resa.code === 0) {
+                    //         (<>
+                    //         <TableRow key={index}>
+                    //           <TableCell component="th" scope="row">
+                    //             {index + 1}
+                    //           </TableCell>
+                    //           <TableCell align="right">
+                    //             <ResultStatus status={resa?.status?.run_status} />
+                    //           </TableCell>
+                    //           <TableCell align="right">
+                    //             {resa?.status?.cpu_time}
+                    //           </TableCell>
+                    //           <TableCell align="right">
+                    //             {resa?.status?.memory_taken}
+                    //           </TableCell>
+                    //         </TableRow>
+                    //         </>)
+                    //         }
+                    //         else if(resa.code === 1){
+                    //           (<TableRow key={index}>
+                    //             <TableCell component="th" scope="row">
+                    //               {index + 1}
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               Compilation Error
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //           </TableRow>)
+                    //         }
+                    //         else {
+                    //           (<TableRow key={index}>
+                    //             <TableCell component="th" scope="row">
+                    //               {index + 1}
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               Compilation Error
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //           </TableRow>)
+                    //         }
+                    //     })}
+                    //     </TableBody>
+                    //   </Table>
+                    // </TableContainer>
                     // <React.Fragment>
                     //   {res?.map((resa, index) => (
                     //     <div>

@@ -17,6 +17,7 @@ class Programming_Language(models.Model):
     compile_command = models.CharField(max_length=255)
     run_command = models.CharField(max_length=255)
     multiplier_name = models.CharField(max_length=64)
+    template = models.TextField(max_length=1024, blank=True)
 
     def __str__(self):
         return self.name
@@ -121,6 +122,7 @@ class Job(models.Model):
     question_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
     code = models.TextField(blank=True, help_text="Code goes here")
     lang = models.CharField(max_length=100, blank=True, help_text="language of the code")
+    compile_error = models.BooleanField(default=False, help_text="To check if a compiler error has occured")
     status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
     AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
     WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")

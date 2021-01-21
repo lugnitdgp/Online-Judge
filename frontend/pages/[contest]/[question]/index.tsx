@@ -69,7 +69,7 @@ export default function QuesDetail() {
           // alert(res.message);
           setLoading(false);
         } else {
-          localStorage.taskid = res["task_id"];
+          localStorage.taskid = res;
           interval = setInterval(() => statuscode(), 5000);
         }
       })

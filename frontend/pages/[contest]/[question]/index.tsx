@@ -24,30 +24,29 @@ import FileCopySharpIcon from "@material-ui/icons/FileCopySharp";
 import Timer from "../../../components/Timer";
 import SecondaryNav from "../../../components/secondaryNav";
 import Loader from "../../../components/loading";
-import Disqus from "disqus-react"
+import Disqus from "disqus-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from 'next/router'
-import { getIndividualQuestionData } from "../../../store/actions/individualQuestionAction"
+import { useRouter } from "next/router";
+import { getIndividualQuestionData } from "../../../store/actions/individualQuestionAction";
 import dynamic from "next/dynamic";
 
 const Editor = dynamic(import("components/editor"), { ssr: false });
 
 export default function QuesDetail() {
-
-  const router = useRouter()
-  const { contest, question } = router.query
+  const router = useRouter();
+  const { contest, question } = router.query;
 
   var interval;
 
   function changeCopyState() {
-    setCopied(true)
+    setCopied(true);
     setTimeout(() => setCopied(false), 1500);
     return null;
   }
 
   function submitcode(code: any, lang: any) {
     setLoading(true);
-    setRes([])
+    setRes([]);
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
       method: "POST",
       headers: {
@@ -68,7 +67,7 @@ export default function QuesDetail() {
         console.log(res);
         if (res.status === 302) {
           // alert(res.message);
-          setLoading(false)
+          setLoading(false);
         } else {
           localStorage.taskid = res["task_id"];
           interval = setInterval(() => statuscode(), 5000);
@@ -76,44 +75,14 @@ export default function QuesDetail() {
       })
       .catch((error) => console.log(error));
     return null;
-  };
-
+  }
 
   async function autosavecode(code: any, lang: any) {
-    var source2 = [];
-    //setValues(code)
-    source.map((contest) => {
-      if (contest.name === localStorage.code) {
-        var sourcecode = {
-          lang: lang,
-          code: encodeURI(code),
-          qid: question,
-        };
-        if (!contest.questions) {
-          contest.questions = [sourcecode];
-        } else {
-          var flag = false;
-          contest.questions.map((ques) => {
-            if (ques.qid == sourcecode.qid) {
-              ques.langcode = {}
-              Object.assign(ques.langcode, {
-                [sourcecode.lang]: sourcecode.code
-              })
-              flag = true;
-            }
-          });
-          if (flag === false) {
-            contest.questions.push(sourcecode);
-          }
-        }
-      }
-      source2.push(contest);
-    });
-    //setValues(code);
-    setSource(source2);
-    localStorage.setItem("source", JSON.stringify(source2));
-    return null;
-  };
+    localStorage.setItem(
+      `${localStorage.code}:${question}:${lang}`,
+      encodeURI(code)
+    );
+  }
 
   function statuscode() {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/status`, {
@@ -127,140 +96,124 @@ export default function QuesDetail() {
         task_id: localStorage.taskid,
         contest_id: localStorage.code,
       }),
-    }).then((resp) => resp.json())
+    })
+      .then((resp) => resp.json())
       .then((response) => {
         console.log(response);
         if (response.status === 302) {
           // alert(response.message)
-        }
-        else {
-          console.log(response)
-          setRes(response)
-          setLoading(false)
-          clearInterval(interval)
+        } else {
+          console.log(response);
+          setRes(response);
+          setLoading(false);
+          clearInterval(interval);
         }
       })
       .then(() => console.log(res))
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
     return null;
-  };
+  }
 
-
-  const disqusShortname = "onlinejudge-1"
+  const disqusShortname = "onlinejudge-1";
   const disqusConfig = {
     url: "http://localhost:3000",
     identifier: "article-id",
-    title: "Title of Your Article"
-  }
+    title: "Title of Your Article",
+  };
 
   ///////////////////////
 
   const [loadedState, setLoaded] = useState(false);
-  const [source, setSource] = useState([])
-  const [data, setData] = useState([])
-  const [timestamp, setTime] = useState(0)
-  const [message, setMsg] = useState("")
-  const [ended, setEnded] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [language, setLang] = useState("c++")
-  const [value, setValues] = useState("")
-  const [theme, setTheme] = useState("theme-tomorrow")
-  const [isLoading, setLoading] = useState(false)
-  const [res, setRes] = useState([])
-  const [num, setNum] = useState(0)
+  const [source, setSource] = useState([]);
+  const [data, setData] = useState([]);
+  const [timestamp, setTime] = useState(0);
+  const [message, setMsg] = useState("");
+  const [ended, setEnded] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [language, setLang] = useState("c++");
+  const [value, setValues] = useState("");
+  const [theme, setTheme] = useState("theme-tomorrow");
+  const [isLoading, setLoading] = useState(false);
+  const [res, setRes] = useState([]);
+  const [num, setNum] = useState(0);
 
-  const dispatch = useDispatch()
-  const { qdata } = useSelector(state => state.individualQuestionReducer);
-  const { loaded } = useSelector(state => state.individualQuestionReducer);
+  const dispatch = useDispatch();
+  const { qdata } = useSelector((state) => state.individualQuestionReducer);
+  const { loaded } = useSelector((state) => state.individualQuestionReducer);
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-    localStorage.setItem("code", contest.toString())
-    localStorage.setItem("question", question.toString())
+    localStorage.setItem("code", contest.toString());
+    localStorage.setItem("question", question.toString());
 
     if (!localStorage.source) window.location.href = `/${localStorage.code}`;
-  })
+  });
 
   useEffect(() => {
     dispatch(getIndividualQuestionData());
-
-    
 
     var today = Date.now();
     var start = localStorage.start * 1000;
     var end = localStorage.end * 1000;
 
     if (start < today && end > today) {
-      setTime(end)
-      setMsg("The Contest ends in")
+      setTime(end);
+      setMsg("The Contest ends in");
     } else if (start < today && end < today) {
-      setMsg("The Contest has ended")
-      setEnded(true)
+      setMsg("The Contest has ended");
+      setEnded(true);
     } else if (start > today) {
-      setTime(start)
-      setMsg("The Contest begins in")
+      setTime(start);
+      setMsg("The Contest begins in");
     }
-  }, [])
+  }, []);
 
   if (JSON.stringify(qdata) !== JSON.stringify(data) || loadedState != loaded) {
-    console.log(qdata)
-    setData(qdata)
-    setLoaded(loaded)
+    console.log(qdata);
+    setData(qdata);
+    setLoaded(loaded);
   }
 
-  function setCodeFromAutoSave(source2: any) {
-    console.log("this is source2", source2);
-    let flag = false;
-    if (JSON.stringify(source) != JSON.stringify(source2))
-      setSource(source2);
+  function setCodeFromAutoSave() {
+    let savedCode = localStorage.getItem(
+      `${localStorage.code}:${question}:${language}`
+    );
 
-    source2.map((contest) => {
-      console.log(contest)
-      if (contest.name === localStorage.code) {
-        if (contest.questions)
-          contest.questions.map((ques) => {
-            if (ques.qid === question.toString()) {
-              if(!ques.langcode) return;
-              if (!ques.langcode[language] && ques.langcode[language] != "") {
-                setValues(decodeURI(ques.code))
-                if (decodeURI(ques.code).trim().length > 0) {
-                  flag = true
-                }
-              }
-            }
+    if (savedCode && savedCode != "") {
+      setValues(
+        decodeURIComponent(
+          localStorage.getItem(`${localStorage.code}:${question}:${language}`)
+        )
+      );
+      return;
+    }
 
-            // setLang(ques.lang)
-          });
-      }
-    })
-
-    if (!flag) setValues(decodeURIComponent(localStorage.getItem(`${localStorage.code}:template:${language}`)))
-
-    return null;
+    // Load from contest template
+    setValues(
+      decodeURIComponent(
+        localStorage.getItem(`${localStorage.code}:template:${language}`)
+      )
+    );
   }
 
   useEffect(() => {
-    var source2 = JSON.parse(localStorage.source);
-    setCodeFromAutoSave(source2)
-    // if (language != "")
-    // setValues(decodeURIComponent(localStorage.getItem(`${localStorage.code}:template:${language}`)))
-  }, [language])
-
+    setCodeFromAutoSave();
+  }, [language]);
 
   useEffect(() => {
-    if (num == 1)
-      autosavecode(value, language);
-    else if (num == 0)
-      setNum(1)
+    if (num == 1) autosavecode(value, language);
+    else if (num == 0) setNum(1);
   }, [value]);
 
   return (
     <div>
       <Layout>
-        {loadedState ?
+        {loadedState ? (
           <>
             <SecondaryNav />
-            <div style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}>
+            <div
+              style={{ maxWidth: "1000px", margin: "0px auto", padding: "0" }}
+            >
               <Timer
                 time={timestamp}
                 message={message}
@@ -283,7 +236,7 @@ export default function QuesDetail() {
                     gutterBottom
                   >
                     {data[`question_code`]}&nbsp;|&nbsp;
-                {data[`question_name`]}
+                    {data[`question_name`]}
                   </Typography>
 
                   <div
@@ -308,12 +261,10 @@ export default function QuesDetail() {
                             style={{ marginLeft: 15, verticalAlign: "middle" }}
                           >
                             INPUT EXAMPLE
-                      </div>
+                          </div>
                           <div className="column">
                             <Tooltip
-                              title={
-                                copied ? "COPIED !" : "COPY TO CLIPBOARD"
-                              }
+                              title={copied ? "COPIED !" : "COPY TO CLIPBOARD"}
                             >
                               <IconButton aria-label="upload picture">
                                 <FileCopySharpIcon
@@ -355,12 +306,10 @@ export default function QuesDetail() {
                             style={{ marginLeft: 15, verticalAlign: "middle" }}
                           >
                             OUTPUT EXAMPLE
-                      </div>
+                          </div>
                           <div className="column">
                             <Tooltip
-                              title={
-                                copied ? "COPIED !" : "COPY TO CLIPBOARD"
-                              }
+                              title={copied ? "COPIED !" : "COPY TO CLIPBOARD"}
                             >
                               <IconButton aria-label="upload picture">
                                 <FileCopySharpIcon
@@ -379,7 +328,7 @@ export default function QuesDetail() {
                           <div
                             style={{ whiteSpace: "pre-wrap" }}
                             dangerouslySetInnerHTML={{
-                              __html: data[`output_example`]
+                              __html: data[`output_example`],
                             }}
                           />
                         </Typography>
@@ -396,15 +345,11 @@ export default function QuesDetail() {
                       labelId="demo-controlled-open-select-label"
                       id="demo-controlled-open-select"
                       value={language}
-                      onChange={(e) =>
-                        setLang(e.target.value as string)
-                      }
+                      onChange={(e) => setLang(e.target.value as string)}
                     >
                       {data["languages"]?.map((val) => (
-
                         <MenuItem value={val}>{val}</MenuItem>
                       ))}
-
                     </Select>
                   </FormControl>
 
@@ -413,9 +358,7 @@ export default function QuesDetail() {
                       labelId="demo-controlled-open-select-label"
                       id="demo-controlled-open-select"
                       value={theme}
-                      onChange={(e) =>
-                        setTheme(e.target.value as string)
-                      }
+                      onChange={(e) => setTheme(e.target.value as string)}
                     >
                       <MenuItem value="theme-terminal">terminal</MenuItem>
                       <MenuItem value="theme-tomorrow">tomorrow</MenuItem>
@@ -427,25 +370,23 @@ export default function QuesDetail() {
                     lang={language}
                     theme={theme}
                     setValue={(d) => {
-                      setValues(d)
+                      setValues(d);
                     }}
                   />
 
                   {isLoading ? (
                     <CircularProgress size={24} />
                   ) : (
-                      <Button
-                        className="descriptionButton"
-                        color="primary"
-                        variant="outlined"
-                        style={{ margin: "20px auto" }}
-                        onClick={() =>
-                          submitcode(value, language)
-                        }
-                      >
-                        Submit
-                      </Button>
-                    )}
+                    <Button
+                      className="descriptionButton"
+                      color="primary"
+                      variant="outlined"
+                      style={{ margin: "20px auto" }}
+                      onClick={() => submitcode(value, language)}
+                    >
+                      Submit
+                    </Button>
+                  )}
                 </div>
 
                 {res?.length >= 1 ? (
@@ -465,16 +406,17 @@ export default function QuesDetail() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {res?.map((resa, index) => (
-
-                          (resa.code === 0) ? (
+                        {res?.map((resa, index) =>
+                          resa.code === 0 ? (
                             <>
                               <TableRow key={index}>
                                 <TableCell component="th" scope="row">
                                   {index + 1}
                                 </TableCell>
                                 <TableCell align="right">
-                                  <ResultStatus status={resa?.status?.run_status} />
+                                  <ResultStatus
+                                    status={resa?.status?.run_status}
+                                  />
                                 </TableCell>
                                 <TableCell align="right">
                                   {resa?.status?.cpu_time}
@@ -484,192 +426,188 @@ export default function QuesDetail() {
                                 </TableCell>
                               </TableRow>
                             </>
+                          ) : resa.code === 1 ? (
+                            <>
+                              <TableRow key={index}>
+                                <TableCell component="th" scope="row">
+                                  {index + 1}
+                                </TableCell>
+                                <TableCell align="right">
+                                  Compilation Error
+                                </TableCell>
+                                <TableCell align="right">N/A</TableCell>
+                                <TableCell align="right">N/A</TableCell>
+                              </TableRow>
+                            </>
                           ) : (
-                              (resa.code === 1) ? (
-                                <>
-                                  <TableRow key={index}>
-                                    <TableCell component="th" scope="row">
-                                      {index + 1}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      Compilation Error
-                              </TableCell>
-                                    <TableCell align="right">
-                                      N/A
-                              </TableCell>
-                                    <TableCell align="right">
-                                      N/A
-                              </TableCell>
-                                  </TableRow>
-                                </>
-                              ) : (
-                                  <>
-                                    <TableRow key={index}>
-                                      <TableCell component="th" scope="row">
-                                        {index + 1}
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        <ResultStatus status={resa?.status?.run_status} />
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        {resa?.status?.cpu_time}
-                                      </TableCell>
-                                      <TableCell align="right">
-                                        {resa?.status?.memory_taken}
-                                      </TableCell>
-                                    </TableRow>
-                                  </>
-                                )
-                            )
-                        ))}
+                            <>
+                              <TableRow key={index}>
+                                <TableCell component="th" scope="row">
+                                  {index + 1}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <ResultStatus
+                                    status={resa?.status?.run_status}
+                                  />
+                                </TableCell>
+                                <TableCell align="right">
+                                  {resa?.status?.cpu_time}
+                                </TableCell>
+                                <TableCell align="right">
+                                  {resa?.status?.memory_taken}
+                                </TableCell>
+                              </TableRow>
+                            </>
+                          )
+                        )}
                       </TableBody>
                     </Table>
                   </TableContainer>
-                ) : (<> </>
-                    // <TableContainer component={Paper}>
-                    //   <Table
-                    //     style={{
-                    //       minWidth: 650,
-                    //     }}
-                    //     aria-label="simple table"
-                    //   >
-                    //     <TableHead>
-                    //       <TableRow>
-                    //         <TableCell>TestCase (Number)</TableCell>
-                    //         <TableCell align="right">Status</TableCell>
-                    //         <TableCell align="right">Run-Time</TableCell>
-                    //         <TableCell align="right">Memory Used</TableCell>
-                    //       </TableRow>
-                    //     </TableHead>
-                    //     <TableBody>
-                    //       {res?.map((resa, index) => {
-                    //         if(resa.code === 0) {
-                    //         (<>
-                    //         <TableRow key={index}>
-                    //           <TableCell component="th" scope="row">
-                    //             {index + 1}
-                    //           </TableCell>
-                    //           <TableCell align="right">
-                    //             <ResultStatus status={resa?.status?.run_status} />
-                    //           </TableCell>
-                    //           <TableCell align="right">
-                    //             {resa?.status?.cpu_time}
-                    //           </TableCell>
-                    //           <TableCell align="right">
-                    //             {resa?.status?.memory_taken}
-                    //           </TableCell>
-                    //         </TableRow>
-                    //         </>)
-                    //         }
-                    //         else if(resa.code === 1){
-                    //           (<TableRow key={index}>
-                    //             <TableCell component="th" scope="row">
-                    //               {index + 1}
-                    //             </TableCell>
-                    //             <TableCell align="right">
-                    //               Compilation Error
-                    //             </TableCell>
-                    //             <TableCell align="right">
-                    //               N/A
-                    //             </TableCell>
-                    //             <TableCell align="right">
-                    //               N/A
-                    //             </TableCell>
-                    //           </TableRow>)
-                    //         }
-                    //         else {
-                    //           (<TableRow key={index}>
-                    //             <TableCell component="th" scope="row">
-                    //               {index + 1}
-                    //             </TableCell>
-                    //             <TableCell align="right">
-                    //               Compilation Error
-                    //             </TableCell>
-                    //             <TableCell align="right">
-                    //               N/A
-                    //             </TableCell>
-                    //             <TableCell align="right">
-                    //               N/A
-                    //             </TableCell>
-                    //           </TableRow>)
-                    //         }
-                    //     })}
-                    //     </TableBody>
-                    //   </Table>
-                    // </TableContainer>
-                    // <React.Fragment>
-                    //   {res?.map((resa, index) => (
-                    //     <div>
-                    //       {resa.message ? (
-                    //         <div key={index}>
-                    //           <p>Compilation Error</p>
-                    //           <p>{resa?.message?.split(",", 2)[1]}</p>
-                    //         </div>
-                    //       ) : (
-                    //           <TableContainer component={Paper}>
-                    //             <Table
-                    //               style={{
-                    //                 minWidth: 650,
-                    //               }}
-                    //               aria-label="simple table"
-                    //             >
-                    //               <TableHead>
-                    //                 <TableRow>
-                    //                   <TableCell>TestCase (Number)</TableCell>
-                    //                   <TableCell align="right">Status</TableCell>
-                    //                   <TableCell align="right">Run-Time</TableCell>
-                    //                   <TableCell align="right">Memory Used</TableCell>
-                    //                 </TableRow>
-                    //               </TableHead>
-                    //               <TableBody>
-                    //                 <TableRow key={index}>
-                    //                   <TableCell component="th" scope="row">
-                    //                     {index + 1}
-                    //                   </TableCell>
-                    //                   <TableCell align="right">
-                    //                     <ResultStatus status={resa?.status?.run_status} />
-                    //                   </TableCell>
-                    //                   <TableCell align="right">
-                    //                     {resa?.status?.cpu_time}
-                    //                   </TableCell>
-                    //                   <TableCell align="right">
-                    //                     {resa?.status?.memory_taken}
-                    //                   </TableCell>
-                    //                 </TableRow>
-                    //               </TableBody>
-                    //             </Table>
-                    //           </TableContainer>
-                    //         )}
-                    //     </div>
-                    //   ))}
-                    // </React.Fragment>
-                  )}
+                ) : (
+                  <> </>
+                  // <TableContainer component={Paper}>
+                  //   <Table
+                  //     style={{
+                  //       minWidth: 650,
+                  //     }}
+                  //     aria-label="simple table"
+                  //   >
+                  //     <TableHead>
+                  //       <TableRow>
+                  //         <TableCell>TestCase (Number)</TableCell>
+                  //         <TableCell align="right">Status</TableCell>
+                  //         <TableCell align="right">Run-Time</TableCell>
+                  //         <TableCell align="right">Memory Used</TableCell>
+                  //       </TableRow>
+                  //     </TableHead>
+                  //     <TableBody>
+                  //       {res?.map((resa, index) => {
+                  //         if(resa.code === 0) {
+                  //         (<>
+                  //         <TableRow key={index}>
+                  //           <TableCell component="th" scope="row">
+                  //             {index + 1}
+                  //           </TableCell>
+                  //           <TableCell align="right">
+                  //             <ResultStatus status={resa?.status?.run_status} />
+                  //           </TableCell>
+                  //           <TableCell align="right">
+                  //             {resa?.status?.cpu_time}
+                  //           </TableCell>
+                  //           <TableCell align="right">
+                  //             {resa?.status?.memory_taken}
+                  //           </TableCell>
+                  //         </TableRow>
+                  //         </>)
+                  //         }
+                  //         else if(resa.code === 1){
+                  //           (<TableRow key={index}>
+                  //             <TableCell component="th" scope="row">
+                  //               {index + 1}
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               Compilation Error
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //           </TableRow>)
+                  //         }
+                  //         else {
+                  //           (<TableRow key={index}>
+                  //             <TableCell component="th" scope="row">
+                  //               {index + 1}
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               Compilation Error
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //             <TableCell align="right">
+                  //               N/A
+                  //             </TableCell>
+                  //           </TableRow>)
+                  //         }
+                  //     })}
+                  //     </TableBody>
+                  //   </Table>
+                  // </TableContainer>
+                  // <React.Fragment>
+                  //   {res?.map((resa, index) => (
+                  //     <div>
+                  //       {resa.message ? (
+                  //         <div key={index}>
+                  //           <p>Compilation Error</p>
+                  //           <p>{resa?.message?.split(",", 2)[1]}</p>
+                  //         </div>
+                  //       ) : (
+                  //           <TableContainer component={Paper}>
+                  //             <Table
+                  //               style={{
+                  //                 minWidth: 650,
+                  //               }}
+                  //               aria-label="simple table"
+                  //             >
+                  //               <TableHead>
+                  //                 <TableRow>
+                  //                   <TableCell>TestCase (Number)</TableCell>
+                  //                   <TableCell align="right">Status</TableCell>
+                  //                   <TableCell align="right">Run-Time</TableCell>
+                  //                   <TableCell align="right">Memory Used</TableCell>
+                  //                 </TableRow>
+                  //               </TableHead>
+                  //               <TableBody>
+                  //                 <TableRow key={index}>
+                  //                   <TableCell component="th" scope="row">
+                  //                     {index + 1}
+                  //                   </TableCell>
+                  //                   <TableCell align="right">
+                  //                     <ResultStatus status={resa?.status?.run_status} />
+                  //                   </TableCell>
+                  //                   <TableCell align="right">
+                  //                     {resa?.status?.cpu_time}
+                  //                   </TableCell>
+                  //                   <TableCell align="right">
+                  //                     {resa?.status?.memory_taken}
+                  //                   </TableCell>
+                  //                 </TableRow>
+                  //               </TableBody>
+                  //             </Table>
+                  //           </TableContainer>
+                  //         )}
+                  //     </div>
+                  //   ))}
+                  // </React.Fragment>
+                )}
               </Paper>
             </div>
 
-            {ended ?
-              null
-              : (
-                <Paper elevation={0} className="descriptionPaper2">
-                  <div style={{ margin: "20px", textAlign: "center" }}>
-                    <Disqus.DiscussionEmbed
-                      shortname={disqusShortname}
-                      config={disqusConfig}
-                    />
-                  </div>
-                </Paper>
-              )}
+            {ended ? null : (
+              <Paper elevation={0} className="descriptionPaper2">
+                <div style={{ margin: "20px", textAlign: "center" }}>
+                  <Disqus.DiscussionEmbed
+                    shortname={disqusShortname}
+                    config={disqusConfig}
+                  />
+                </div>
+              </Paper>
+            )}
 
             <div className="Footer">
-              &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
-        </div>
+              &copy; Created and maintained by GNU/Linux Users' group, Nit
+              Durgapur
+            </div>
           </>
-          : <Loader />}
-
+        ) : (
+          <Loader />
+        )}
       </Layout>
     </div>
   );
-
 }
 
 function ResultStatus({ status }) {
@@ -678,8 +616,6 @@ function ResultStatus({ status }) {
   } else if (status == "WA") {
     return <Error />;
   } else return status;
-
 }
-
 
 //////////

@@ -97,19 +97,21 @@ export default function QuesDetail() {
         contest_id: localStorage.code,
       }),
     })
-      .then((resp) => resp.json())
-      .then((response) => {
-        console.log(response);
-        if (response.status === 302) {
-          // alert(response.message)
+      .then(async (resp) => {
+        if (resp.status == 302) {
+          alert(await resp.text())
+        } else if (resp.status == 200) {
+          resp.json().then(response => {
+            console.log(response);
+            setRes(response);
+            setLoading(false);
+            clearInterval(interval);
+          })
         } else {
-          console.log(response);
-          setRes(response);
           setLoading(false);
           clearInterval(interval);
         }
       })
-      .then(() => console.log(res))
       .catch((err) => console.log(err));
     return null;
   }
@@ -377,16 +379,16 @@ export default function QuesDetail() {
                   {isLoading ? (
                     <CircularProgress size={24} />
                   ) : (
-                    <Button
-                      className="descriptionButton"
-                      color="primary"
-                      variant="outlined"
-                      style={{ margin: "20px auto" }}
-                      onClick={() => submitcode(value, language)}
-                    >
-                      Submit
-                    </Button>
-                  )}
+                      <Button
+                        className="descriptionButton"
+                        color="primary"
+                        variant="outlined"
+                        style={{ margin: "20px auto" }}
+                        onClick={() => submitcode(value, language)}
+                      >
+                        Submit
+                      </Button>
+                    )}
                 </div>
 
                 {res?.length >= 1 ? (
@@ -440,149 +442,149 @@ export default function QuesDetail() {
                               </TableRow>
                             </>
                           ) : (
-                            <>
-                              <TableRow key={index}>
-                                <TableCell component="th" scope="row">
-                                  {index + 1}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <ResultStatus
-                                    status={resa?.status?.run_status}
-                                  />
-                                </TableCell>
-                                <TableCell align="right">
-                                  {resa?.status?.cpu_time}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {resa?.status?.memory_taken}
-                                </TableCell>
-                              </TableRow>
-                            </>
-                          )
+                                <>
+                                  <TableRow key={index}>
+                                    <TableCell component="th" scope="row">
+                                      {index + 1}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      <ResultStatus
+                                        status={resa?.status?.run_status}
+                                      />
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      {resa?.status?.cpu_time}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      {resa?.status?.memory_taken}
+                                    </TableCell>
+                                  </TableRow>
+                                </>
+                              )
                         )}
                       </TableBody>
                     </Table>
                   </TableContainer>
                 ) : (
-                  <> </>
-                  // <TableContainer component={Paper}>
-                  //   <Table
-                  //     style={{
-                  //       minWidth: 650,
-                  //     }}
-                  //     aria-label="simple table"
-                  //   >
-                  //     <TableHead>
-                  //       <TableRow>
-                  //         <TableCell>TestCase (Number)</TableCell>
-                  //         <TableCell align="right">Status</TableCell>
-                  //         <TableCell align="right">Run-Time</TableCell>
-                  //         <TableCell align="right">Memory Used</TableCell>
-                  //       </TableRow>
-                  //     </TableHead>
-                  //     <TableBody>
-                  //       {res?.map((resa, index) => {
-                  //         if(resa.code === 0) {
-                  //         (<>
-                  //         <TableRow key={index}>
-                  //           <TableCell component="th" scope="row">
-                  //             {index + 1}
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             <ResultStatus status={resa?.status?.run_status} />
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             {resa?.status?.cpu_time}
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             {resa?.status?.memory_taken}
-                  //           </TableCell>
-                  //         </TableRow>
-                  //         </>)
-                  //         }
-                  //         else if(resa.code === 1){
-                  //           (<TableRow key={index}>
-                  //             <TableCell component="th" scope="row">
-                  //               {index + 1}
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               Compilation Error
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //           </TableRow>)
-                  //         }
-                  //         else {
-                  //           (<TableRow key={index}>
-                  //             <TableCell component="th" scope="row">
-                  //               {index + 1}
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               Compilation Error
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //           </TableRow>)
-                  //         }
-                  //     })}
-                  //     </TableBody>
-                  //   </Table>
-                  // </TableContainer>
-                  // <React.Fragment>
-                  //   {res?.map((resa, index) => (
-                  //     <div>
-                  //       {resa.message ? (
-                  //         <div key={index}>
-                  //           <p>Compilation Error</p>
-                  //           <p>{resa?.message?.split(",", 2)[1]}</p>
-                  //         </div>
-                  //       ) : (
-                  //           <TableContainer component={Paper}>
-                  //             <Table
-                  //               style={{
-                  //                 minWidth: 650,
-                  //               }}
-                  //               aria-label="simple table"
-                  //             >
-                  //               <TableHead>
-                  //                 <TableRow>
-                  //                   <TableCell>TestCase (Number)</TableCell>
-                  //                   <TableCell align="right">Status</TableCell>
-                  //                   <TableCell align="right">Run-Time</TableCell>
-                  //                   <TableCell align="right">Memory Used</TableCell>
-                  //                 </TableRow>
-                  //               </TableHead>
-                  //               <TableBody>
-                  //                 <TableRow key={index}>
-                  //                   <TableCell component="th" scope="row">
-                  //                     {index + 1}
-                  //                   </TableCell>
-                  //                   <TableCell align="right">
-                  //                     <ResultStatus status={resa?.status?.run_status} />
-                  //                   </TableCell>
-                  //                   <TableCell align="right">
-                  //                     {resa?.status?.cpu_time}
-                  //                   </TableCell>
-                  //                   <TableCell align="right">
-                  //                     {resa?.status?.memory_taken}
-                  //                   </TableCell>
-                  //                 </TableRow>
-                  //               </TableBody>
-                  //             </Table>
-                  //           </TableContainer>
-                  //         )}
-                  //     </div>
-                  //   ))}
-                  // </React.Fragment>
-                )}
+                    <> </>
+                    // <TableContainer component={Paper}>
+                    //   <Table
+                    //     style={{
+                    //       minWidth: 650,
+                    //     }}
+                    //     aria-label="simple table"
+                    //   >
+                    //     <TableHead>
+                    //       <TableRow>
+                    //         <TableCell>TestCase (Number)</TableCell>
+                    //         <TableCell align="right">Status</TableCell>
+                    //         <TableCell align="right">Run-Time</TableCell>
+                    //         <TableCell align="right">Memory Used</TableCell>
+                    //       </TableRow>
+                    //     </TableHead>
+                    //     <TableBody>
+                    //       {res?.map((resa, index) => {
+                    //         if(resa.code === 0) {
+                    //         (<>
+                    //         <TableRow key={index}>
+                    //           <TableCell component="th" scope="row">
+                    //             {index + 1}
+                    //           </TableCell>
+                    //           <TableCell align="right">
+                    //             <ResultStatus status={resa?.status?.run_status} />
+                    //           </TableCell>
+                    //           <TableCell align="right">
+                    //             {resa?.status?.cpu_time}
+                    //           </TableCell>
+                    //           <TableCell align="right">
+                    //             {resa?.status?.memory_taken}
+                    //           </TableCell>
+                    //         </TableRow>
+                    //         </>)
+                    //         }
+                    //         else if(resa.code === 1){
+                    //           (<TableRow key={index}>
+                    //             <TableCell component="th" scope="row">
+                    //               {index + 1}
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               Compilation Error
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //           </TableRow>)
+                    //         }
+                    //         else {
+                    //           (<TableRow key={index}>
+                    //             <TableCell component="th" scope="row">
+                    //               {index + 1}
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               Compilation Error
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //             <TableCell align="right">
+                    //               N/A
+                    //             </TableCell>
+                    //           </TableRow>)
+                    //         }
+                    //     })}
+                    //     </TableBody>
+                    //   </Table>
+                    // </TableContainer>
+                    // <React.Fragment>
+                    //   {res?.map((resa, index) => (
+                    //     <div>
+                    //       {resa.message ? (
+                    //         <div key={index}>
+                    //           <p>Compilation Error</p>
+                    //           <p>{resa?.message?.split(",", 2)[1]}</p>
+                    //         </div>
+                    //       ) : (
+                    //           <TableContainer component={Paper}>
+                    //             <Table
+                    //               style={{
+                    //                 minWidth: 650,
+                    //               }}
+                    //               aria-label="simple table"
+                    //             >
+                    //               <TableHead>
+                    //                 <TableRow>
+                    //                   <TableCell>TestCase (Number)</TableCell>
+                    //                   <TableCell align="right">Status</TableCell>
+                    //                   <TableCell align="right">Run-Time</TableCell>
+                    //                   <TableCell align="right">Memory Used</TableCell>
+                    //                 </TableRow>
+                    //               </TableHead>
+                    //               <TableBody>
+                    //                 <TableRow key={index}>
+                    //                   <TableCell component="th" scope="row">
+                    //                     {index + 1}
+                    //                   </TableCell>
+                    //                   <TableCell align="right">
+                    //                     <ResultStatus status={resa?.status?.run_status} />
+                    //                   </TableCell>
+                    //                   <TableCell align="right">
+                    //                     {resa?.status?.cpu_time}
+                    //                   </TableCell>
+                    //                   <TableCell align="right">
+                    //                     {resa?.status?.memory_taken}
+                    //                   </TableCell>
+                    //                 </TableRow>
+                    //               </TableBody>
+                    //             </Table>
+                    //           </TableContainer>
+                    //         )}
+                    //     </div>
+                    //   ))}
+                    // </React.Fragment>
+                  )}
               </Paper>
             </div>
 
@@ -603,8 +605,8 @@ export default function QuesDetail() {
             </div>
           </>
         ) : (
-          <Loader />
-        )}
+            <Loader />
+          )}
       </Layout>
     </div>
   );

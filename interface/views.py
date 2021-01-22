@@ -138,48 +138,46 @@ def status(request):
     fail_check = app.AsyncResult(request.data.get('task_id'))
     if fail_check.failed():
         return Response("Service Temporarily Unavailable please try again", status=HTTP_503_SERVICE_UNAVAILABLE)
+    coder = Coder.objects.get(user=request.user)
+    contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
     try:
-        coder = Coder.objects.get(user=request.user)
-        contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
-        try:
-            question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
-            coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
-            answer = Answer.objects.get_or_create(question=question, user=coder, contest=contest)[0]
-            job = Job.objects.get(coder=coder, job_id=request.data.get('task_id'))
-        except MultipleObjectsReturned:
-            question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
-        except ObjectDoesNotExist:
-            return Response('Does not exist', status = HTTP_404_NOT_FOUND)
-
-        job.name = coder.first_name
-        job.question_name = question.question_name
-        answer.ques_name = question.question_name
-        job.save()
-        if job.AC_no == Testcases.objects.filter(question=question).count():
-            if coder.check_solved(question.pk) == False:
-                coder.put_solved(question.pk)
-                answer.correct += 1
-                if contest.isOver() == False and contest.isStarted():
-                    coder_contest_score.score += question.question_score
-                    answer.score = question.question_score
-                    answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
-                    if coder_contest_score.timestamp == None :
-                        coder_contest_score.timestamp = (answer.timestamp - contest.start_time)
-                    else:
-                        coder_contest_score.timestamp += (answer.timestamp - contest.start_time)
-        else:
-            if contest.isOver() == False and contest.isStarted():
-                if not job.compile_error:
-                    answer.timestamp = t.now()
-                    answer.wrong += 1
-        coder.save()
-        answer.save()
-        coder_contest_score.save()
-        res = json.loads(job.status)
-        return Response(res, status = HTTP_200_OK)
+        question = Question.objects.get(question_code=request.data.get('q_id'), contest=contest)
+        coder_contest_score = Contest_Score.objects.get_or_create(contest=contest, coder=coder)[0]
+        answer = Answer.objects.get_or_create(question=question, user=coder, contest=contest)[0]
+    except MultipleObjectsReturned:
+        question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
+    except ObjectDoesNotExist:
+        return Response('Does not exist', status = HTTP_404_NOT_FOUND)
+    try:
+        job = Job.objects.get(coder=coder, job_id=request.data.get('task_id'))
     except Job.DoesNotExist:
-        return Response('Please wait. Answer being processed', status = HTTP_226_IM_USED)
-
+        return Response('Still Processing', status=HTTP_226_IM_USED)
+    job.name = coder.first_name
+    job.question_name = question.question_name
+    answer.ques_name = question.question_name
+    job.save()
+    if job.AC_no == Testcases.objects.filter(question=question).count():
+        if coder.check_solved(question.pk) == False:
+            coder.put_solved(question.pk)
+            answer.correct += 1
+            if contest.isOver() == False and contest.isStarted():
+                coder_contest_score.score += question.question_score
+                answer.score = question.question_score
+                answer.timestamp = t.now() + timedelta(minutes=10*answer.wrong)
+                if coder_contest_score.timestamp == None :
+                    coder_contest_score.timestamp = (answer.timestamp - contest.start_time)
+                else:
+                    coder_contest_score.timestamp += (answer.timestamp - contest.start_time)
+    else:
+        if contest.isOver() == False and contest.isStarted():
+            if not job.compile_error:
+                answer.timestamp = t.now()
+                answer.wrong += 1
+    coder.save()
+    answer.save()
+    coder_contest_score.save()
+    res = json.loads(job.status)
+    return Response(res, status = HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])

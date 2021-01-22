@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS, HTTP_226_IM_USED, HTTP_401_UNAUTHORIZED
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS, HTTP_226_IM_USED, HTTP_401_UNAUTHORIZED, HTTP_503_SERVICE_UNAVAILABLE
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer
@@ -27,7 +27,7 @@ def GetContestList(request):
         serializer = ContestSerializer(query_set, many=True, context={'request': request})
         return Response(serializer.data, status = HTTP_200_OK)
     except ObjectDoesNotExist:
-        return Respone('Contest does not exist', status = HTTP_404_NOT_FOUND)
+        return Response('Contest does not exist', status = HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -37,7 +37,7 @@ def GetContest(request, contest_code):
         serializer = ContestSerializer(query_set, context={'request': request})
         return Response(serializer.data, status = HTTP_200_OK)
     except ObjectDoesNotExist:
-        return Respone('Contest does not exist', status = HTTP_404_NOT_FOUND)
+        return Response('Contest does not exist', status = HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 @permission_classes([
@@ -54,7 +54,7 @@ def GetQuestionList(request):
             return Response("Contest is Over", status = HTTP_403_FORBIDDEN)
         return Response("Contest hasnt started", status = HTTP_403_FORBIDDEN)
     except ObjectDoesNotExist:
-        return Respone("Contest does not exist", status = HTTP_404_NOT_FOUND)
+        return Response("Contest does not exist", status = HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
@@ -135,6 +135,9 @@ def submitCode(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def status(request):
+    fail_check = app.AsyncResult(request.data.get('task_id'))
+    if fail_check.failed():
+        return Response("Service Temporarily Unavailable please try again", status=HTTP_503_SERVICE_UNAVAILABLE)
     try:
         coder = Coder.objects.get(user=request.user)
         contest = Contest.objects.get(contest_code=request.data.get('contest_id'))
@@ -146,7 +149,7 @@ def status(request):
         except MultipleObjectsReturned:
             question = Question.objects.filter(question_code=request.data.get('q_id'), contest=contest)[0]
         except ObjectDoesNotExist:
-            return Respone('Does not exist', status = HTTP_404_NOT_FOUND)
+            return Response('Does not exist', status = HTTP_404_NOT_FOUND)
 
         job.name = coder.first_name
         job.question_name = question.question_name
@@ -186,11 +189,10 @@ def leaderboard(request):
             contest = Contest.objects.get(contest_code=request.GET['contest_id'])
             time = Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp')[0].timestamp
         except ObjectDoesNotExist:
-            return Respone('contest does not exist', status = HTTP_404_NOT_FOUND)
+            return Response('contest does not exist', status = HTTP_404_NOT_FOUND)
         coder_array = []
         rank_cnt = 1
-        for (rank,
-             participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp'),
+        for (rank, participant) in enumerate(Contest_Score.objects.filter(contest=contest).order_by('-score', 'timestamp'),
                                    start=1):
             query_set = Answer.objects.filter(contest=contest, user=participant.coder)
             serializer = AnswerSerializer(query_set, many=True)
@@ -250,7 +252,7 @@ def GetAnswer(request):
             return Response(serializer.data)
         return Response('Contest has not started yet', status = HTTP_403_FORBIDDEN)
     except ObjectDoesNotExist:
-        return Respone('Object does not exist', status = HTTP_404_NOT_FOUND)
+        return Response('Object does not exist', status = HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])

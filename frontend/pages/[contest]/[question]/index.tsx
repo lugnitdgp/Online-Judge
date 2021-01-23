@@ -101,8 +101,8 @@ export default function QuesDetail() {
     })
       .then(async (resp) => {
         if (resp.status == 226) {
-          setError(await resp.text());
-          setLoading(false);
+          // setError(await resp.text());
+          // setLoading(false);
         } else if (resp.status == 200) {
           resp.json().then((response) => {
             console.log(response);

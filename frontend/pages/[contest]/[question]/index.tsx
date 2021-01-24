@@ -16,7 +16,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Layout from "components/layout";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { CheckCircleOutline, Error } from "@material-ui/icons";
+import { CheckCircleOutline, Error, Check, Clear, PriorityHighSharp } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
@@ -62,16 +62,13 @@ export default function QuesDetail() {
         contest_id: localStorage.code,
       }),
     })
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((res) => {
+      .then(async (res) => {
         console.log(res);
-        if (res.status === 302) {
-          // alert(res.message);
+        if (res.status === 429) {
+          setError((await res.text()).match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, ""));
           setLoading(false);
         } else {
-          localStorage.taskid = res;
+          localStorage.taskid =(await res.text()).match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, "")
           interval = setInterval(() => statuscode(), 5000);
         }
       })
@@ -619,10 +616,10 @@ export default function QuesDetail() {
 
 function ResultStatus({ status }) {
   if (status == "AC") {
-    return <CheckCircleOutline />;
+    return <React.Fragment><Check/><sub>AC</sub></React.Fragment>;
   } else if (status == "WA") {
-    return <Error />;
-  } else return status;
+    return <React.Fragment><Clear/><sub>WA</sub></React.Fragment>;
+  } else return <React.Fragment><PriorityHighSharp></PriorityHighSharp><sub>{status}</sub></React.Fragment>;
 }
 
 //////////

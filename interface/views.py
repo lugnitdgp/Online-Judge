@@ -171,7 +171,7 @@ def status(request):
                         coder_contest_score.timestamp += (answer.timestamp - contest.start_time)
                 else :
                     answer.timestamp = t.now()
-                    coder_contest_score.timestamp = t.now()
+                    coder_contest_score.timestamp = (answer.timestamp - contest.start_time)
     else:
         if contest.isOver() == False and contest.isStarted():
             if not job.compile_error:

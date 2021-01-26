@@ -30,6 +30,7 @@ class Contest(models.Model):
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
     contest_langs = models.ManyToManyField(Programming_Language)
+    penalty = models.BooleanField(default = 0)
 
     def __str__(self):
         return self.contest_name + " " + self.contest_code

@@ -174,3 +174,14 @@ DJRICHTEXTFIELD_CONFIG = {
 # AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
 # AWS_DEFAULT_ACL = 'public-read'
 # AWS_QUERYSTRING_AUTH = False
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "480px",
+    "width": "960px",
+    "menubar": "",
+    "toolbar": "undo redo | bold italic underline strikethrough superscript subscript | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+    "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+    "a11ycheck ltr rtl | showcomments addcomment code",
+}

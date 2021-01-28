@@ -241,6 +241,7 @@ export default function personalSubmissions() {
   ];
   const options = {
     download: false,
+    print: false,
     selectableRows: "none",
     viewColumns: false,
     setRowProps: (row) => {

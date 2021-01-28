@@ -197,6 +197,7 @@ export default function submissions() {
   ];
   const options = {
     download: false,
+    print: false,
     selectableRows: "none",
     viewColumns: false,
     setRowProps: (row) => {

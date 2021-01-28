@@ -147,12 +147,12 @@ export default function QuesDetail() {
     return null;
   }
 
-  const disqusShortname = "onlinejudge-1";
-  const disqusConfig = {
-    url: "http://localhost:3000",
-    identifier: "article-id",
-    title: "Title of Your Article",
-  };
+  // const disqusShortname = "onlinejudge-1";
+  // const disqusConfig = {
+  //   url: "http://localhost:3000",
+  //   identifier: "article-id",
+  //   title: "Title of Your Article",
+  // };
 
   ///////////////////////
 
@@ -508,136 +508,20 @@ export default function QuesDetail() {
                   </TableContainer>
                 ) : (
                   <> </>
-                  // <TableContainer component={Paper}>
-                  //   <Table
-                  //     style={{
-                  //       minWidth: 650,
-                  //     }}
-                  //     aria-label="simple table"
-                  //   >
-                  //     <TableHead>
-                  //       <TableRow>
-                  //         <TableCell>TestCase (Number)</TableCell>
-                  //         <TableCell align="right">Status</TableCell>
-                  //         <TableCell align="right">Run-Time</TableCell>
-                  //         <TableCell align="right">Memory Used</TableCell>
-                  //       </TableRow>
-                  //     </TableHead>
-                  //     <TableBody>
-                  //       {res?.map((resa, index) => {
-                  //         if(resa.code === 0) {
-                  //         (<>
-                  //         <TableRow key={index}>
-                  //           <TableCell component="th" scope="row">
-                  //             {index + 1}
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             <ResultStatus status={resa?.status?.run_status} />
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             {resa?.status?.cpu_time}
-                  //           </TableCell>
-                  //           <TableCell align="right">
-                  //             {resa?.status?.memory_taken}
-                  //           </TableCell>
-                  //         </TableRow>
-                  //         </>)
-                  //         }
-                  //         else if(resa.code === 1){
-                  //           (<TableRow key={index}>
-                  //             <TableCell component="th" scope="row">
-                  //               {index + 1}
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               Compilation Error
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //           </TableRow>)
-                  //         }
-                  //         else {
-                  //           (<TableRow key={index}>
-                  //             <TableCell component="th" scope="row">
-                  //               {index + 1}
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               Compilation Error
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //             <TableCell align="right">
-                  //               N/A
-                  //             </TableCell>
-                  //           </TableRow>)
-                  //         }
-                  //     })}
-                  //     </TableBody>
-                  //   </Table>
-                  // </TableContainer>
-                  // <React.Fragment>
-                  //   {res?.map((resa, index) => (
-                  //     <div>
-                  //       {resa.message ? (
-                  //         <div key={index}>
-                  //           <p>Compilation Error</p>
-                  //           <p>{resa?.message?.split(",", 2)[1]}</p>
-                  //         </div>
-                  //       ) : (
-                  //           <TableContainer component={Paper}>
-                  //             <Table
-                  //               style={{
-                  //                 minWidth: 650,
-                  //               }}
-                  //               aria-label="simple table"
-                  //             >
-                  //               <TableHead>
-                  //                 <TableRow>
-                  //                   <TableCell>TestCase (Number)</TableCell>
-                  //                   <TableCell align="right">Status</TableCell>
-                  //                   <TableCell align="right">Run-Time</TableCell>
-                  //                   <TableCell align="right">Memory Used</TableCell>
-                  //                 </TableRow>
-                  //               </TableHead>
-                  //               <TableBody>
-                  //                 <TableRow key={index}>
-                  //                   <TableCell component="th" scope="row">
-                  //                     {index + 1}
-                  //                   </TableCell>
-                  //                   <TableCell align="right">
-                  //                     <ResultStatus status={resa?.status?.run_status} />
-                  //                   </TableCell>
-                  //                   <TableCell align="right">
-                  //                     {resa?.status?.cpu_time}
-                  //                   </TableCell>
-                  //                   <TableCell align="right">
-                  //                     {resa?.status?.memory_taken}
-                  //                   </TableCell>
-                  //                 </TableRow>
-                  //               </TableBody>
-                  //             </Table>
-                  //           </TableContainer>
-                  //         )}
-                  //     </div>
-                  //   ))}
-                  // </React.Fragment>
                 )}
               </Paper>
             </div>
 
             {ended ? null : (
-              <Paper elevation={0} className="descriptionPaper2">
-                <div style={{ margin: "20px", textAlign: "center" }}>
-                  <Disqus.DiscussionEmbed
-                    shortname={disqusShortname}
-                    config={disqusConfig}
-                  />
-                </div>
-              </Paper>
+              // <Paper elevation={0} className="descriptionPaper2">
+              //   <div style={{ margin: "20px", textAlign: "center" }}>
+              //     {/* <Disqus.DiscussionEmbed
+              //       shortname={disqusShortname}
+              //       config={disqusConfig}
+              //     /> */}
+              //   </div>
+              // </Paper>
+              <></>
             )}
 
             <div className="Footer">

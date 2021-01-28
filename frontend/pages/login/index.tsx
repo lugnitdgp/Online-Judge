@@ -33,10 +33,10 @@ const styles = createStyles((theme: Theme) => ({
     flexDirection: "column",
     alignItems: "center",
     padding: theme.spacing(3),
-    borderRadius:"20px",
-    border:"2px solid #104E8B",
-    borderTop:"10px solid #104E8B",
-    borderBottom:"10px solid #104E8B",
+    borderRadius: "20px",
+    border: "2px solid #104E8B",
+    borderTop: "10px solid #104E8B",
+    borderBottom: "10px solid #104E8B",
   },
 
   form: {
@@ -46,34 +46,34 @@ const styles = createStyles((theme: Theme) => ({
   },
   submit: {
     marginTop: theme.spacing(3),
-    width:"200px",
-    borderRadius:"20px",
-    margin:"0 auto",
+    width: "200px",
+    borderRadius: "20px",
+    margin: "0 auto",
   },
   signInIcon: {
     color: "white",
-    
+
   },
   googleButton: {
     borderColor: "#104E8B",
     color: "#104E8B",
     margin: theme.spacing(2),
-    borderRadius:"60px",
-    width:"63px",
-    height:"63px",
-    textAlign:"center"
+    borderRadius: "60px",
+    width: "63px",
+    height: "63px",
+    textAlign: "center"
   },
   facebookButton: {
     color: "white",
     backgroundColor: "#104E8B",
     margin: theme.spacing(2),
-    borderRadius:"60px",
+    borderRadius: "60px",
     "&:hover": {
       backgroundColor: "blue",
     },
-    width:"63px",
-    height:"63px",
-    textAlign:"center"
+    width: "63px",
+    height: "63px",
+    textAlign: "center"
   },
   linkedInButton: {
     backgroundColor: "#027bb6",
@@ -163,9 +163,9 @@ function LoginPage(props: Props) {
     event.preventDefault();
   };
 
-  
-    
-  const logIn = (event: React.MouseEvent<HTMLButtonElement>) =>{
+
+
+  const logIn = (event: React.MouseEvent<HTMLButtonElement>) => {
 
     event.preventDefault();
     var payload = JSON.stringify({
@@ -177,42 +177,42 @@ function LoginPage(props: Props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-    },
+      },
       body: payload
-    }).then((resp) => resp.json())
-      .then((response) => {
-        
-        if(response.status === 401)
-        {
+    }).then(async (response) => {
+      if (response.status === 401) {
+        response.json().then((response) => {
           alert(response.message)
-          window.location.href= "/login"
-        }
-        else if(response.status === 404){
+          window.location.href = "/login"
+        });
+      }
+      else if (response.status === 404) {
+        response.json().then((response) => {
           alert("Please enter your details properly.")
-          window.location.href= "/login"
-        }
-        else if(response.status === 200){
-        localStorage.token = response.token;
-        document.cookie = `token=${response.token}; path=/; max-age=${
-            60 * 60 * 24 * 100
+          window.location.href = "/login"
+        });
+      }
+      else if (response.status === 200) {
+        response.json().then((response) => {
+          localStorage.token = response.token;
+          document.cookie = `token=${response.token}; path=/; max-age=${60 * 60 * 24 * 100
             }`;
-        localStorage.onlinejudge_info = JSON.stringify({
+          localStorage.onlinejudge_info = JSON.stringify({
             name: response.user.name,
             email: response.user.email,
             image_link: response.user.image_link
-        })
+          })
 
-        window.location.href = "/"
-        
-    }})
-        
-      .catch((error) => { console.log(error) });
+          window.location.href = "/"
+        }); 
+      }
+    }).catch((error) => { console.log(error) });
   }
   React.useEffect(() => {
     let status = getParameterByName("status")
     if (status == "success") {
       //window.location.href = "/"
-        //alert('hemlo')
+      //alert('hemlo')
     }
     let params = new URLSearchParams(document.location.search.substring(1));
     let code = params.get("code");
@@ -221,32 +221,31 @@ function LoginPage(props: Props) {
         accesscode: code,
         provider: "github"
       })
-  
+
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/social_login`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-            body: payload
-          }).then((resp) => resp.json())
-          
+          body: payload
+        }).then((resp) => resp.json())
+
         .then((response) => {
-            console.log(response);
-            localStorage.token = response.token;
-            document.cookie = `token=${response.token}; path=/; max-age=${
-                60 * 60 * 24 * 100
-                }`;
-            localStorage.onlinejudge_info = JSON.stringify({
-                name: response.user.name,
-                email: response.user.email,
-                image_link: response.user.image_link
-            });
-            window.location.href = "/"
+          console.log(response);
+          localStorage.token = response.token;
+          document.cookie = `token=${response.token}; path=/; max-age=${60 * 60 * 24 * 100
+            }`;
+          localStorage.onlinejudge_info = JSON.stringify({
+            name: response.user.name,
+            email: response.user.email,
+            image_link: response.user.image_link
+          });
+          window.location.href = "/"
         })
         .catch((e) => {
-            console.log(e);
-            
+          console.log(e);
+
         });
     }
   }, [])
@@ -254,57 +253,57 @@ function LoginPage(props: Props) {
   return (
     <main className={classes.main}>
       {/* {isLogin ? ( */}
-        <Paper className={classes.paper}>
-          
-          <Typography variant="h3" gutterBottom style={{color:"#104E8B"}}>
-            Login
+      <Paper className={classes.paper}>
+
+        <Typography variant="h3" gutterBottom style={{ color: "#104E8B" }}>
+          Login
         </Typography>
         <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => Router.push("/signup")}
-            style={{ border: "None", outline: "none" }}
-          >
-            Didn't Sign Up? Register here.
+          variant="outlined"
+          color="secondary"
+          onClick={() => Router.push("/signup")}
+          style={{ border: "None", outline: "none" }}
+        >
+          Didn't Sign Up? Register here.
         </Button>
-          <form
-            className={classes.form}
+        <form
+          className={classes.form}
 
 
-          >
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email</InputLabel>
-              <Input
-                value={values.email1}
-                onChange={handleChange('email1')}
-                name="email"
-                autoFocus
-              />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                id="standard-adornment-password"
-                type={values.showPassword ? 'text' : 'password'}
-                value={values.password1}
-                onChange={handleChange('password1')}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <br/>
-              <br/>
-              <br/>
-            <div style={{textAlign:"center"}}>
+        >
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="email">Email</InputLabel>
+            <Input
+              value={values.email1}
+              onChange={handleChange('email1')}
+              name="email"
+              autoFocus
+            />
+          </FormControl>
+          <FormControl margin="normal" required fullWidth>
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <Input
+              id="standard-adornment-password"
+              type={values.showPassword ? 'text' : 'password'}
+              value={values.password1}
+              onChange={handleChange('password1')}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+          <br />
+          <br />
+          <br />
+          <div style={{ textAlign: "center" }}>
             <Button
               variant="contained"
               type="submit"
@@ -315,13 +314,13 @@ function LoginPage(props: Props) {
             >
               LogIn
           </Button>
-          <br/>
-              <br/>
+            <br />
+            <br />
               OR
           </div>
-          <br/>
-          
-              <div style={{textAlign:"center"}}>
+          <br />
+
+          <div style={{ textAlign: "center" }}>
             <Button
               variant="outlined"
               className={classes.googleButton}
@@ -333,8 +332,8 @@ function LoginPage(props: Props) {
                 src="https://img.icons8.com/color/24/000000/google-logo.png"
                 className={classes.signInIcon}
               />
-            {/* Login with Google */}
-          </Button>
+              {/* Login with Google */}
+            </Button>
             {/* <Button
               variant="outlined"
               color="secondary"
@@ -346,11 +345,11 @@ function LoginPage(props: Props) {
               <Facebook className={classes.signInIcon} />
             
           </Button> */}
-          <a style={{maxHeight:"63px", border:"1px solid #104E8B", borderRadius:"60px", maxWidth:"63px", padding:"20px"}} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon/></a>
+            <a style={{ maxHeight: "63px", border: "1px solid #104E8B", borderRadius: "60px", maxWidth: "63px", padding: "20px" }} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon /></a>
           </div>
-          </form>
-          
-        </Paper>
+        </form>
+
+      </Paper>
     </main>
   );
 }

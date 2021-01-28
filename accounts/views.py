@@ -140,7 +140,6 @@ class Register(generics.GenericAPIView):
 
         return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
 
-
 def customRegister(request):
     try:
         res = {
@@ -148,19 +147,20 @@ def customRegister(request):
             "username": request.data['username'],
             "first_name": request.data['first_name'],
             "password": request.data["password"],
-            "image": "https://robohash.org/" + request.data['email']
+            "image": "https://robohash.org/" + request.data['email'],
+            "status": 200
         }
-        return Response(res, status = HTTP_200_OK)
     except:
-        return Response("Try Again", status = HTTP_400_BAD_REQUEST)
+        res = {"status": 404}
+    return res
 
 
 def customLogin(request):
     try:
-        res = {"email": request.data['email'], "password": request.data["password"]}
-        return Response(res, status = HTTP_200_OK)
+        res = {"email": request.data['email'], "password": request.data["password"], "status": 200}
     except:
-        return Response("Try Again", status = HTTP_404_NOT_FOUND)
+        res = {"status": 404}
+    return res
 
 
 @permission_classes([

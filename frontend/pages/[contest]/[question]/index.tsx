@@ -16,7 +16,13 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Layout from "components/layout";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { CheckCircleOutline, Error, Check, Clear, PriorityHighSharp } from "@material-ui/icons";
+import {
+  CheckCircleOutline,
+  Error,
+  Check,
+  Clear,
+  PriorityHighSharp,
+} from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
@@ -29,14 +35,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { getIndividualQuestionData } from "../../../store/actions/individualQuestionAction";
 import dynamic from "next/dynamic";
-import Alert from "../../../components/Alert"
+import Alert from "../../../components/Alert";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(() => ({
+  compileLogBox: {
+    backgroundColor: "#f50057",
+    color: "#fff",
+    padding: "8px 16px",
+    fontWeight: 700,
+    margin: "8px 16px",
+    borderRadius: "8px"
+  },
+}));
 
 const Editor = dynamic(import("components/editor"), { ssr: false });
 
 export default function QuesDetail() {
+  const classes = useStyles();
   const router = useRouter();
   const { contest, question } = router.query;
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
+  const [compileError, setCompileError] = useState("");
 
   var interval;
 
@@ -49,6 +69,8 @@ export default function QuesDetail() {
   function submitcode(code: any, lang: any) {
     setLoading(true);
     setRes([]);
+    setCompileError("");
+
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/submit`, {
       method: "POST",
       headers: {
@@ -65,10 +87,14 @@ export default function QuesDetail() {
       .then(async (res) => {
         console.log(res);
         if (res.status === 429) {
-          setError((await res.text()).match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, ""));
+          setError(
+            (await res.text()).match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, "")
+          );
           setLoading(false);
         } else {
-          localStorage.taskid =(await res.text()).match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, "")
+          localStorage.taskid = (await res.text())
+            .match(/(?:"[^"]*"|^[^"]*$)/)[0]
+            .replace(/"/g, "");
           interval = setInterval(() => statuscode(), 5000);
         }
       })
@@ -102,8 +128,12 @@ export default function QuesDetail() {
           // setLoading(false);
         } else if (resp.status == 200) {
           resp.json().then((response) => {
-            console.log(response);
-            setRes(response);
+            if (response.length > 0) {
+              if (response[0].code == 1)
+                setCompileError(decodeURIComponent(response[0].message).replace(/(?:\r\n|\r|\n)/g, '<br>'));
+              else setRes(response);
+            }
+            console.log(decodeURIComponent(response[0].message))
             setLoading(false);
             clearInterval(interval);
           });
@@ -391,7 +421,17 @@ export default function QuesDetail() {
                     </Button>
                   )}
                 </div>
-
+                {compileError.length > 0 ? (
+                  <div>
+                    <h4 style={{ marginLeft: "16px"}}>Compile Log</h4>
+                    <p
+                      className={classes.compileLogBox}
+                      dangerouslySetInnerHTML={{
+                        __html: compileError,
+                      }}
+                    />
+                  </div>
+                ) : null}
                 {res?.length >= 1 ? (
                   <TableContainer component={Paper}>
                     <Table
@@ -609,17 +649,33 @@ export default function QuesDetail() {
           <Loader />
         )}
       </Layout>
-      <Alert message={error} setMessage={d => setError(d)} />
+      <Alert message={error} setMessage={(d) => setError(d)} />
     </div>
   );
 }
 
 function ResultStatus({ status }) {
   if (status == "AC") {
-    return <React.Fragment><Check/><sub>AC</sub></React.Fragment>;
+    return (
+      <React.Fragment>
+        <Check />
+        <sub>AC</sub>
+      </React.Fragment>
+    );
   } else if (status == "WA") {
-    return <React.Fragment><Clear/><sub>WA</sub></React.Fragment>;
-  } else return <React.Fragment><PriorityHighSharp></PriorityHighSharp><sub>{status}</sub></React.Fragment>;
+    return (
+      <React.Fragment>
+        <Clear />
+        <sub>WA</sub>
+      </React.Fragment>
+    );
+  } else
+    return (
+      <React.Fragment>
+        <PriorityHighSharp></PriorityHighSharp>
+        <sub>{status}</sub>
+      </React.Fragment>
+    );
 }
 
 //////////

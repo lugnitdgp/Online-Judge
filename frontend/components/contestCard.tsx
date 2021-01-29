@@ -24,6 +24,16 @@ const useStyles = makeStyles({
 
 export default function ContestCard(props) {
   const classes = useStyles();
+  const [hasEnded, setHasEnded] = React.useState(false);
+
+  React.useEffect(() => {
+    let t1 = new Date(props.contestInfo.end_time * 1000);
+    let t2 = new Date();
+    // t1.setYear(t2.getUTCFullYear());
+
+    setHasEnded(t1.getTime() < t2.getTime());
+  }, []);
+
   const renderer = ({ days, hours, minutes, seconds }) => {
     return (
       <span>
@@ -60,14 +70,14 @@ export default function ContestCard(props) {
             paddingBottom: "0px",
           }}
         >
-          <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center",  }}>
+          <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
             <div>
               <img
                 className={classes.media}
                 // image={props.contestInfo.contest_image}
                 src={props.contestInfo?.contest_image}
                 title={props.contestInfo?.contest_name}
-                style={{borderRadius:"10px"}}
+                style={{ borderRadius: "10px" }}
               />
             </div>
           </Grid>
@@ -101,7 +111,10 @@ export default function ContestCard(props) {
                     );
                     localStorage.setItem("start", props.contestInfo.start_time);
                     localStorage.setItem("end", props.contestInfo.end_time);
-                    Router.push('/[contest]',`/${props.contestInfo.contest_code}`);
+                    Router.push(
+                      "/[contest]",
+                      `/${props.contestInfo.contest_code}`
+                    );
                   }
                 }}
               >
@@ -123,11 +136,14 @@ export default function ContestCard(props) {
                     );
                     localStorage.setItem("start", props.contestInfo.start_time);
                     localStorage.setItem("end", props.contestInfo.end_time);
-                    Router.push('/[contest]',`/${props.contestInfo.contest_code}`);
+                    Router.push(
+                      "/[contest]",
+                      `/${props.contestInfo.contest_code}`
+                    );
                   }
                 }}
               >
-                Enter Contest
+                {hasEnded ? "Check Editorials" : "Enter Contest"}
               </Button>
             )}
             <br />

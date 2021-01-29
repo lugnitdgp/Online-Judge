@@ -29,8 +29,13 @@ export default function Timer(props) {
                 ) : (
                   <p> </p>
                 )} */}
-                {props.message} {zeroPad(days)}:{zeroPad(hours)}:
-                {zeroPad(minutes)}:{zeroPad(seconds)}
+                {props.message}{" "}
+                {days + hours + minutes + seconds != 0 ? (
+                  <>
+                    {zeroPad(days)}:{zeroPad(hours)}:{zeroPad(minutes)}:
+                    {zeroPad(seconds)}
+                  </>
+                ) : null}
               </h4>
             </div>
           </CardContent>

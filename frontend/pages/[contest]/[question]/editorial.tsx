@@ -38,7 +38,9 @@ function Editorial() {
   };
 
   const [loadedState, setLoaded] = useState(false);
-  const [Editorial, setEditorial] = useState([]);
+  const [Editorial, setEditorial] = useState({
+    code: ""
+  });
 
   if (JSON.stringify(editorial) !== JSON.stringify(Editorial) || loadedState != loaded) {
     setEditorial(editorial);
@@ -48,6 +50,7 @@ function Editorial() {
     loaded === true &&
     loadedState === false
   ) {
+    console.log(editorial)
     setEditorial(editorial);
     setLoaded(loaded);
   }
@@ -70,7 +73,7 @@ function Editorial() {
                 <hr></hr>
                 <br />
                 <h4>code</h4>
-                <Viewer value={decodeURIComponent((Editorial['code']))} lang="c++" />
+                <Viewer value={encodeURI(Editorial['code'])} lang="c++" />
               </div>
 
             </>

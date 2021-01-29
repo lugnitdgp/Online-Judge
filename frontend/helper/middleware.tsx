@@ -223,7 +223,7 @@ const processQuestions =(payload, state)=>{
                     return Object.assign({}, state, {
                         loaded: true,
                         timestamp: 0,ended:true,
-                        message: "The Contest has ended",
+                        message: "The contest has ended !!!",
                         questions: questionsvar
                     });
                   } else if (start > today) {

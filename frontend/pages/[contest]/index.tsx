@@ -7,20 +7,19 @@ import TableRow from "@material-ui/core/TableRow";
 import Timer from "../../components/Timer";
 import Grid from "@material-ui/core/Grid";
 import SecondaryNav from "../../components/secondaryNav";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import Loader from "../../components/loading";
-import Link from 'next/link'
-import { contestService } from '../../services/contestService'
+import Link from "next/link";
+import { contestService } from "../../services/contestService";
 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getQuestionsData } from "../../store/actions/questionsAction";
 
-
 export default function questionlist() {
   ////
-  const router = useRouter()
-  const { contest } = router.query
+  const router = useRouter();
+  const { contest } = router.query;
   const dispatch = useDispatch();
 
   const { questions } = useSelector((state) => state.questionsReducer);
@@ -33,17 +32,16 @@ export default function questionlist() {
 
   const { loaded } = useSelector((state) => state.questionsReducer);
 
-
-
-
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
     localStorage.setItem("code", contest.toString());
-    contestService.getIndiContest().then(temp => {
+    contestService.getIndiContest().then((temp) => {
       for (let i = 0; i < temp.data.languages.length; i++)
-        localStorage.setItem(`${contest.toString()}:template:${temp.data.languages[i]}`,
-          temp.data.templates[i])
-    })
+        localStorage.setItem(
+          `${contest.toString()}:template:${temp.data.languages[i]}`,
+          temp.data.templates[i]
+        );
+    });
 
     if (!localStorage.source) {
       var contestdeet = [
@@ -56,7 +54,6 @@ export default function questionlist() {
 
       localStorage.setItem("source", JSON.stringify(arr));
     } else {
-      console.log(JSON.parse(localStorage.source));
       var source = JSON.parse(localStorage.source);
       var flag = false;
       source.map((el) => {
@@ -72,13 +69,22 @@ export default function questionlist() {
       }
     }
 
-  });
-
-
-
-  useEffect(() => {
     dispatch(getQuestionsData());
   }, []);
+
+  React.useEffect(() => {
+    if (
+      JSON.stringify(list) !== JSON.stringify(questions) ||
+      loadedState != loaded ||
+      endedBool !== ended
+    ) {
+      setList(questions);
+      setTime(timestamp);
+      setMsg(message);
+      setLoaded(loaded);
+      setEnded(ended);
+    }
+  }, [questions]);
 
   const [loadedState, setLoaded] = useState(false);
   const [list, setList] = useState([]);
@@ -87,28 +93,15 @@ export default function questionlist() {
   const [endedBool, setEnded] = useState(false);
   ////
 
-  if (JSON.stringify(list) !== JSON.stringify(questions) || loadedState != loaded || endedBool !== ended) {
-    setList(questions)
-    setTime(timestamp)
-    setMsg(message)
-    setLoaded(loaded)
-    setEnded(ended)
-  }
-
   return (
     <Layout>
-
-      {loadedState ?
+      {loadedState ? (
         <>
           <SecondaryNav />
           <div style={{ maxWidth: "1000px", margin: "10px auto" }}>
             <Grid container spacing={0}>
               <Grid item xs={12} md={6}>
-                <p
-                  className="Qcontestname"
-                >
-                  Contest Name
-              </p>
+                <p className="Qcontestname">{contest}</p>
               </Grid>
               <Grid
                 item
@@ -153,119 +146,144 @@ export default function questionlist() {
                 >
                   <TableCell style={{ color: "#fff", padding: "20px" }}>
                     Question Code
-                </TableCell>
+                  </TableCell>
                   <TableCell
                     align="left"
                     style={{ color: "#fff", marginBottom: "20px" }}
                   >
                     Question
-                </TableCell>
+                  </TableCell>
                   <TableCell
                     align="left"
                     style={{ color: "#fff", marginBottom: "20px" }}
                   >
                     Status
-                </TableCell>
+                  </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#fff", marginBottom: "20px" }}
                   >
                     Score
-                </TableCell>
-                  {endedBool == false ? (null) : (
+                  </TableCell>
+                  {endedBool == false ? null : (
                     <TableCell
                       align="right"
                       style={{ color: "#fff", marginBottom: "20px" }}
                     >
                       Editorial
-                    </TableCell>)}
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {list.length > 0
                   ? list.map((item, i) => (
-                    <>
-                      <TableRow
-                        key={i}
-                        style={{
-                          borderTop: "2px solid #104e8b",
-                          borderBottom: "2px solid #104e8b",
-                          borderRadius: "10px",
-                          width: "100%",
-                        }}
-                      >
-                        <TableCell
-                          component="th"
-                          scope="row"
+                      <>
+                        <TableRow
+                          key={i}
                           style={{
-                            textDecoration: "None",
-                            color: "#104e8b",
-                            padding: "20px",
-                            margin: "10px",
-                          }}
-                        >
-                          <Link href="/[contest]/[question]" as={`/${contest}/${item.question_code}`}>
-                            <a
-
-                              style={{ textDecoration: "None", color: "#104e8b" }}
-                            >
-                              {item.question_code}
-                            </a></Link>
-                        </TableCell>
-
-                        <TableCell
-                          align="left"
-                          style={{
-                            textDecoration: "None",
+                            borderTop: "2px solid #104e8b",
+                            borderBottom: "2px solid #104e8b",
                             borderRadius: "10px",
+                            width: "100%",
                           }}
                         >
-                          <Link href="/[contest]/[question]" as={`/${contest}/${item.question_code}`}>
-                            <a style={{ textDecoration: "None", color: "#104e8b" }}
-                            >{item.question_name}</a>
-                          </Link>
-                        </TableCell>
-                        <TableCell
-                          align="left"
-                          style={{ textDecoration: "None", color: "#104e8b" }}
-                        >
-                          {item.icon}
-                        </TableCell>
-                        <TableCell
-                          align="right"
-                          style={{ textDecoration: "None", color: "#104e8b" }}
-                        >
-                          {item.question_score}
-                        </TableCell>
-                        {endedBool == false ? (null) : (
                           <TableCell
-                            align="right"
+                            component="th"
+                            scope="row"
+                            style={{
+                              textDecoration: "None",
+                              color: "#104e8b",
+                              padding: "20px",
+                              margin: "10px",
+                            }}
+                          >
+                            <Link
+                              href="/[contest]/[question]"
+                              as={`/${contest}/${item.question_code}`}
+                            >
+                              <a
+                                style={{
+                                  textDecoration: "None",
+                                  color: "#104e8b",
+                                }}
+                              >
+                                {item.question_code}
+                              </a>
+                            </Link>
+                          </TableCell>
+
+                          <TableCell
+                            align="left"
                             style={{
                               textDecoration: "None",
                               borderRadius: "10px",
                             }}
                           >
-                            <Link href="/[contest]/[question]/editorial" as={`/${contest}/${item.question_code}/editorial`}></Link>
-                            <a
-                              style={{ textDecoration: "None", color: "#104e8b" }}
+                            <Link
+                              href="/[contest]/[question]"
+                              as={`/${contest}/${item.question_code}`}
                             >
-                              View Editorial
-                          </a>
-                          </TableCell>)}
-                      </TableRow>
-                    </>
-                  ))
+                              <a
+                                style={{
+                                  textDecoration: "None",
+                                  color: "#104e8b",
+                                }}
+                              >
+                                {item.question_name}
+                              </a>
+                            </Link>
+                          </TableCell>
+                          <TableCell
+                            align="left"
+                            style={{ textDecoration: "None", color: "#104e8b" }}
+                          >
+                            {item.icon}
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            style={{ textDecoration: "None", color: "#104e8b" }}
+                          >
+                            {item.question_score}
+                          </TableCell>
+                          {endedBool == false ? null : (
+                            <TableCell
+                              align="right"
+                              style={{
+                                textDecoration: "None",
+                                borderRadius: "10px",
+                              }}
+                            >
+                              <Link
+                                href="/[contest]/[question]/editorial"
+                                as={`/${contest}/${item.question_code}/editorial`}
+                              >
+                                <a
+                                  style={{
+                                    textDecoration: "None",
+                                    color: "#104e8b",
+                                  }}
+                                >
+                                  View Editorial
+                                </a>
+                              </Link>
+                            </TableCell>
+                          )}
+                        </TableRow>
+                      </>
+                    ))
                   : null}
               </TableBody>
             </Table>
           </TableContainer>
           <div className="FooterFixed">
-            &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
-        </div>
+            &copy; Created and maintained by GNU/Linux Users' group, Nit
+            Durgapur
+          </div>
         </>
-        : <Loader />}
-
+      ) : (
+        <Loader />
+      )}
     </Layout>
   );
-
 }

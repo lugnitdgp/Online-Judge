@@ -12,6 +12,10 @@ class Coder(models.Model):
     solved_ques = models.CharField(max_length=200, blank=True, help_text="Questions solved by the user")
     time_stamp = models.DateTimeField(default=t.now, help_text="To check the time span between submitting codes")
 
+    class Meta:
+        verbose_name = "Coder"
+        verbose_name_plural = "Coders"
+        
     def __str__(self):
         return self.name
 

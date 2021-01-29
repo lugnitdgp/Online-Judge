@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS, HTTP_226_IM_USED, HTTP_401_UNAUTHORIZED, HTTP_503_SERVICE_UNAVAILABLE
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer
-from interface.models import Question, Job, Testcases, Contest, Contest_Score, Answer, Editorial
+from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer, AnnouncementsSerializer, RulesSerializer
+from interface.models import Question, Job, Testcases, Contest, Contest_Score, Answer, Editorial, Announcements, Rules
 # from interface.tasks import execute
 from judge.celery import app
 from accounts.serializers import CoderSerializer
@@ -290,6 +290,25 @@ def GetEditorial(request):
     except ObjectDoesNotExist:
         return Response('Object Does not exist', status = HTTP_404_NOT_FOUND)
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def getAnnouncements(request):
+    try:
+        announcements = Announcements.objects.all()
+        serializer = AnnouncementsSerializer(announcements, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+    except:
+        return Response('No Announcements found', status=HTTP_404_NOT_FOUND)
+        
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def getRules(request):
+    try:
+        rules = Rules.objects.all()
+        serializer = RulesSerializer(rules, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+    except ObjectDoesNotExist:
+        return Response('No Rules found', status=HTTP_404_NOT_FOUND)
 
 @api_view(["GET"])
 @permission_classes([AllowAny])

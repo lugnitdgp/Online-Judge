@@ -19,6 +19,10 @@ class Programming_Language(models.Model):
     multiplier_name = models.CharField(max_length=64)
     template = models.TextField(max_length=1024, blank=True)
 
+    class Meta:
+        verbose_name = "Programming Language"
+        verbose_name_plural = "Programming Languages"
+        
     def __str__(self):
         return self.name
 
@@ -43,6 +47,8 @@ class Contest(models.Model):
 
     class Meta:
         ordering = ['end_time']
+        verbose_name = "Contest"
+        verbose_name_plural = "Contests"
 
 
 class Question(models.Model):
@@ -65,6 +71,8 @@ class Question(models.Model):
         
     class Meta:
         ordering = ['question_score']
+        verbose_name = "Question"
+        verbose_name_plural = "Questions"
 
 
 def input_dir(instance, filename):
@@ -82,6 +90,10 @@ class Testcases(models.Model):
     output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
     input_hash = models.SlugField(max_length=128)
     output_hash = models.SlugField(max_length=128)
+
+    class Meta:
+        verbose_name = "Test case"
+        verbose_name_plural  = "Test cases"
 
     def __str__(self):
         return ("Testcase of " + self.question.question_code)
@@ -132,6 +144,8 @@ class Job(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+        verbose_name = "Job"
+        verbose_name_plural = 'Jobs'
 
     def __str__(self):
         return str(self.id) + " " + self.coder.name
@@ -152,6 +166,10 @@ class Answer(models.Model):
     score = models.IntegerField(default=0, help_text="Score of the Question")
     timestamp = models.DateTimeField(default=t.now, help_text="Time of submission")
 
+    class Meta:
+        verbose_name = "Answer"
+        verbose_name_plural = "Answers"
+
     def __str__(self):
         return self.question.question_name + " " + self.user.name
 
@@ -161,6 +179,10 @@ class Contest_Score(models.Model):
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
     timestamp = models.DurationField(blank=True, null=True, help_text="Penalty Time of submission")
+
+    class Meta:
+        verbose_name = "Contest Score"
+        verbose_name_plural = "Contest Scores"
 
     def __str__(self):
         return self.contest.contest_name + " " + self.coder.name
@@ -173,5 +195,30 @@ class Editorial(models.Model):
     solution = models.TextField(blank=True, help_text="Hint and Explanation Goes Here")
     code = models.FileField(upload_to="editorial/", help_text="Editorial file")
 
+    class Meta:
+        verbose_name = "Editorial"
+        verbose_name_plural = "Editorials"
+        
     def __str__(self):
         return self.contest.contest_name
+
+class Announcements(models.Model):
+    text = models.TextField(max_length=100, help_text="New Announcements")
+
+    class Meta:
+        verbose_name = "Announcement"
+        verbose_name_plural = "Announcements"
+
+    def __str__(self):
+        return str(self.id)
+
+class Rules(models.Model):
+    text = models.TextField(max_length=100, help_text="Rules for the Entire OJ")
+
+    class Meta:
+        verbose_name = "Rule"
+        verbose_name_plural = "Rules"
+
+    def __str__(self):
+        return str(self.id)
+    

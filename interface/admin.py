@@ -54,3 +54,5 @@ class Contest_ScoreAdmin(admin.ModelAdmin):
     list_filter = ('contest')
 
 admin.site.register(Contest_Score)
+admin.site.register(Announcements)
+admin.site.register(Rules)

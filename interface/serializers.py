@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from interface.models import Question, Contest, Job, Answer, Editorial
+from interface.models import Question, Contest, Job, Answer, Editorial, Announcements, Rules
 import datetime
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -77,3 +77,12 @@ class EditorialSerializer(serializers.ModelSerializer):
         fields = ('question', 'solution', 'code', 'ques_name')
 
 
+class AnnouncementsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Announcements
+        fields = '__all__'
+
+class RulesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rules
+        fields = '__all__'

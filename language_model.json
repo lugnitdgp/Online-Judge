@@ -1,6 +1,7 @@
 [
     {
-        "model": "interface.programming_language", "pk": 1, 
+        "model": "interface.programming_language",
+        "pk": 1,
         "fields": {
             "name": "c",
             "ext": "c",
@@ -8,54 +9,54 @@
             "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec compiled_code < {in_file} > {temp_out_file}",
             "multiplier_name": "c_cpp_multiplier",
             "template": "%23include%20%3Cstdio.h%3E%0A%0Aint%20main%28void%29%20%7B%0A%09//%20your%20code%20goes%20here%0A%09return%200%3B%0A%7D"
-            }
-        },
-        {
-            "model": "interface.programming_language", 
-            "pk": 2, 
-            "fields": {
-                "name": "c++",
-                "ext": "cpp",
-                "compile_command": "g++ -o compiled_code {} 2> compile_log",
-                "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec compiled_code < {in_file} > {temp_out_file}",
-                "multiplier_name": "c_cpp_multiplier",
-                "template": "%23include%20%3Ciostream%3E%0Ausing%20namespace%20std%3B%0A%0Aint%20main%28%29%20%7B%0A%09//%20your%20code%20goes%20here%0A%09return%200%3B%0A%7D"
-            }
-        },
-        {
-            "model": "interface.programming_language", 
-            "pk": 3, 
-            "fields": {
-                "name": "java",
-                "ext": "java",
-                "compile_command": "javac {} 2> compile_log",
-                "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --nproc 20 --usage usage.txt --exec /usr/bin/java -cp {outpath} test < {in_file} > {temp_out_file}", 
-                "multiplier_name": "java_multipler",
-                "template": "import%20java.util.%2A%3B%0Aimport%20java.lang.%2A%3B%0Aimport%20java.io.%2A%3B%0A%0Aclass%20Test%20%7B%0A%09public%20static%20void%20main%20%28String%20args%5B%5D%29%20throws%20java.lang.Exception%20%7B%0A%09%09//writw%20you%20code%20here%20%0A%09%7D%0A%7D"
-            }
-        }, 
-        {
-            "model": "interface.programming_language", 
-            "pk": 4, 
-            "fields": {
-                "name": "python2",
-                "ext": "py",
-                "compile_command": "python2 -m py_compile {} 2> compile_log", 
-                "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec /usr/bin/python2 {f} < {in_file} > {temp_out_file}", 
-                "multiplier_name": "python_multiplier",
-                "template": "%23write%20your%20code%20here"
-            }
-        }, 
-        {
-            "model": "interface.programming_language", 
-            "pk": 5, 
-            "fields": {
-                "name": "python3", 
-                "ext": "py", 
-                "compile_command": "python3 -m py_compile {} 2> compile_log", 
-                "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec /usr/bin/python3 {f} < {in_file} > {temp_out_file}", 
-                "multiplier_name": "python_multiplier",
-                "template": "%23write%20your%20code%20here"
-            }
+        }
+    },
+    {
+        "model": "interface.programming_language",
+        "pk": 2,
+        "fields": {
+            "name": "c++",
+            "ext": "cpp",
+            "compile_command": "g++ -o compiled_code {} 2> compile_log",
+            "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec compiled_code < {in_file} > {temp_out_file}",
+            "multiplier_name": "c_cpp_multiplier",
+            "template": "%23include%20%3Ciostream%3E%0Ausing%20namespace%20std%3B%0A%0Aint%20main%28%29%20%7B%0A%09//%20your%20code%20goes%20here%0A%09return%200%3B%0A%7D"
+        }
+    },
+    {
+        "model": "interface.programming_language",
+        "pk": 3,
+        "fields": {
+            "name": "java",
+            "ext": "java",
+            "compile_command": "javac {} 2> compile_log",
+            "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --nproc 20 --usage usage.txt --exec /usr/bin/java -cp {outpath} test < {in_file} > {temp_out_file}",
+            "multiplier_name": "java_multipler",
+            "template": "import%20java.util.%2A%3B%0Aimport%20java.lang.%2A%3B%0Aimport%20java.io.%2A%3B%0A%0A//Kindly%20do%20not%20change%20the%20class%20name%2C%20else%20it%20won%27t%20execute%21%0Aclass%20test%20%7B%0A%09public%20static%20void%20main%28String%20args%5B%5D%29%20throws%20java.lang.Exception%20%7B%0A%09%09//Write%20your%20code%20here%21%0A%09%7D%0A%7D"
+        }
+    },
+    {
+        "model": "interface.programming_language",
+        "pk": 4,
+        "fields": {
+            "name": "python2",
+            "ext": "py",
+            "compile_command": "python2 -m py_compile {} 2> compile_log",
+            "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec /usr/bin/python2 {f} < {in_file} > {temp_out_file}",
+            "multiplier_name": "python_multiplier",
+            "template": "%23write%20your%20code%20here"
+        }
+    },
+    {
+        "model": "interface.programming_language",
+        "pk": 5,
+        "fields": {
+            "name": "python3",
+            "ext": "py",
+            "compile_command": "python3 -m py_compile {} 2> compile_log",
+            "run_command": "sudo {engine_path} --cpu {time} --mem {mem} --usage usage.txt --exec /usr/bin/python3 {f} < {in_file} > {temp_out_file}",
+            "multiplier_name": "python_multiplier",
+            "template": "%23write%20your%20code%20here"
+        }
     }
 ]

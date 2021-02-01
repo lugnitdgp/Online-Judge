@@ -1,10 +1,16 @@
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import theme from '../components/theme';
 
 export default class MyDocument extends Document {
+	static async getInitialProps(ctx) {
+		const initialProps = await Document.getInitialProps(ctx);
+		return { ...initialProps };
+	}
+
 	render() {
+		const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 		return (
 			<html lang="en">
 				<Head>
@@ -14,12 +20,27 @@ export default class MyDocument extends Document {
 						name="viewport"
 						content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
 					/>
-					
+
 					<meta name="robots" content="all" />
 					<meta name="theme-color" content={theme.palette.primary.main} />
 					<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet"></link>
-
-					
+					<script
+						async
+						src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+					/>
+					<script
+						// eslint-disable-next-line react/no-danger
+						dangerouslySetInnerHTML={{
+							__html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+						}}
+					/>
 				</Head>
 				<body >
 					<Main />

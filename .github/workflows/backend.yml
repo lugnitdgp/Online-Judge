@@ -49,4 +49,5 @@ jobs:
         hosts: 'azureuser@52.162.48.234'
         privatekey: ${{ secrets.SSHKEY }}
         command: |
+                cd Online-Judge
                 sudo docker-compose -f docker-compose.prod.yml up -d --no-deps --build

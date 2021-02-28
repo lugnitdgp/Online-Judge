@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.3'
 
 services:
   
@@ -24,7 +24,7 @@ services:
       python manage.py migrate --noinput && 
       python manage.py migrate --noinput interface && 
       python manage.py collectstatic --no-input &&
-      python manage.py loaddata /backend/language_models.json &&
+      python manage.py loaddata /backend/language_model.json &&
       gunicorn judge.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
       - app:/backend:rw
@@ -38,21 +38,14 @@ services:
       - db
       - redis
   
-  executor:
-    image: phantsure/oj:latest
-    depends_on:
-      - redis
-      - db 
-      - backend
-
-  celery:
-    build: .
-    command: celery -A judge worker -l info
+  nginx:
+    build: ./nginx
     volumes:
-      - .:/backend
+      - static:/backend/static/
+      - media:/backend/media/
+    ports:
+      - "80:80"
     depends_on:
-      - redis
-      - db
       - backend
 
 volumes:

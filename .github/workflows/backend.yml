@@ -50,4 +50,6 @@ jobs:
         privatekey: ${{ secrets.SSHKEY }}
         command: |
                 cd Online-Judge
-                sudo docker-compose -f docker-compose.prod.yml up -d --no-deps --build
+                git pull
+                sudo docker-compose -f docker-compose.prod.yml down
+                sudo docker-compose -f docker-compose.prod.yml up -d --force-recreate --build

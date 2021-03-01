@@ -27,9 +27,9 @@ services:
       python manage.py loaddata /backend/language_model.json &&
       gunicorn judge.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
-      - app:/backend:rw
-      - static:/backend/static/
-      - media:/backend/media/
+      - ./:/backend:rw
+      - ./static:/backend/static/
+      - ./media:/backend/media/
     env_file: 
       - .env.prod
     ports:
@@ -41,8 +41,8 @@ services:
   nginx:
     build: ./nginx
     volumes:
-      - static:/backend/static/
-      - media:/backend/media/
+      - ./static:/backend/static/
+      - ./media:/backend/media/
     ports:
       - "80:80"
     depends_on:
@@ -50,6 +50,6 @@ services:
 
 volumes:
   postgres_data:
-  app:
-  media:
-  static:
+          #  app:
+          #  media:
+          #  static:

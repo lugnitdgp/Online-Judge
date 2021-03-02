@@ -19,12 +19,12 @@ services:
         condition: on-failure
         max_attempts: 3
     command: >- 
-      bash -c "python manage.py makemigrations &&
-      python manage.py makemigrations interface && 
-      python manage.py migrate --noinput && 
-      python manage.py migrate --noinput interface && 
-      python manage.py loaddata language_models.json &&
-      python manage.py runserver 0.0.0.0:8000"
+      bash -c "python manage.py makemigrations --settings=judge.dev_settings &&
+      python manage.py makemigrations --settings=judge.dev_settings interface && 
+      python manage.py migrate --noinput --settings=judge.dev_settings && 
+      python manage.py migrate --noinput --settings=judge.dev_settings interface && 
+      python manage.py loaddata --settings=judge.dev_settings language_models.json &&
+      python manage.py runserver 0.0.0.0:8000 --settings=judge.dev_settings"
     volumes:
       - app:/backend:rw
       - static:/backend/static/
@@ -37,11 +37,10 @@ services:
       - db
       - redis
   
-  celery:
-    build: .
-    command: celery -A judge worker -l info
-    volumes:
-      - .:/backend
+  executor:
+    image: phantsure/oj:latest
+    working_dir: /OJExec-Python/
+    command: celery -A tasks worker -l info
     depends_on:
       - redis
       - db 

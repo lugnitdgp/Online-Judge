@@ -50,14 +50,12 @@ export default function questionlist() {
         },
       ];
       var arr = contestdeet;
-      console.log(arr);
 
       localStorage.setItem("source", JSON.stringify(arr));
     } else {
       var source = JSON.parse(localStorage.source);
       var flag = false;
       source.map((el) => {
-        console.log(el);
         if (el.name === localStorage.code) flag = true;
       });
       if (flag === false) {

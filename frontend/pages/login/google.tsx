@@ -1,11 +1,17 @@
 import React from "react";
 import {CircularProgress, Typography } from "@material-ui/core";
 import { } from "@material-ui/icons";
-import UserContextProvider from '../../components/UserContextProvider';
+import { useContext } from 'react';
+import {AdminContext} from '../../components/AdminContextProvider';
+import { useRouter } from "next/router";
+
 
 
 function LoginPage() {
     const [error, setError] = React.useState(false);
+    const { storeAdmin } = useContext(AdminContext);
+
+    const router = useRouter();
 
     const googleLogin = () => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/oauth/google`, {
@@ -33,7 +39,6 @@ function LoginPage() {
                 })
                     .then((resp) => resp.json())
                     .then((response) => {
-                        // console.log(response);
                         localStorage.token = response.token;
                         document.cookie = `token=${response.token}; path=/; max-age=${
                             60 * 60 * 24 * 100
@@ -43,7 +48,8 @@ function LoginPage() {
                             email: response.user.email,
                             image_link: response.user.image_link
                         });
-                        window.location.href = "/"
+                        localStorage.admin = response.admin;
+                        router.push("/");
                     })
                     .catch((e) => {
                         console.log(e);
@@ -62,7 +68,6 @@ function LoginPage() {
 
 
     return (
-        <UserContextProvider>
             <div className="socialRoot">
                 {error ? (
                     <React.Fragment >
@@ -79,7 +84,6 @@ function LoginPage() {
           </Typography>
                         </React.Fragment>
                     )}</div>
-        </UserContextProvider>
     );
 }
 

@@ -14,6 +14,8 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Router from "next/router";
 import Link from "next/link";
 import GitHubIcon from '@material-ui/icons/GitHub';
+import { useContext } from 'react';
+import {AdminContext} from '../../components/AdminContextProvider';
 
 const styles = createStyles((theme: Theme) => ({
   main: {
@@ -142,6 +144,8 @@ interface State {
 function LoginPage(props: Props) {
   const { classes } = props;
 
+  const { storeAdmin } = useContext(AdminContext);
+  
   const [values, setValues] = React.useState<State>({
     email1: '',
     email2: '',
@@ -170,12 +174,10 @@ function LoginPage(props: Props) {
   };
 
   async function checkPasswordComplexity(pwd) {
-    console.log('text is : ', pwd)
     var lowerCase = /[a-z]/;
     var upperCase = /[A-Z]/;
     var number = /[0-9]/;
     let valid = (number.test(pwd) && lowerCase.test(pwd) && upperCase.test(pwd) && pwd.length >= 6);
-    console.log(valid)
     if (valid)
       setValues({ ...values, password2: pwd, view: valid })
     else
@@ -222,6 +224,7 @@ function LoginPage(props: Props) {
             email: response.user.email,
             image_link: response.user.image_link
           })
+          localStorage.admin = response.admin;
 
           window.location.href = "/"
         });
@@ -253,7 +256,6 @@ function LoginPage(props: Props) {
         }).then((resp) => resp.json())
 
         .then((response) => {
-          console.log(response);
           localStorage.token = response.token;
           document.cookie = `token=${response.token}; path=/; max-age=${60 * 60 * 24 * 100
             }`;
@@ -262,7 +264,8 @@ function LoginPage(props: Props) {
             email: response.user.email,
             image_link: response.user.image_link
           });
-          window.location.href = "/"
+          localStorage.admin = response.admin;
+          window.location.href = "/";
         })
         .catch((e) => {
           console.log(e);

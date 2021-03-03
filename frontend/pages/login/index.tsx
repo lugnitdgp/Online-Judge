@@ -14,6 +14,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Router from "next/router";
+import { useContext } from 'react';
+import {AdminContext} from '../../components/AdminContextProvider';
 
 const styles = createStyles((theme: Theme) => ({
   main: {
@@ -139,6 +141,8 @@ interface State {
 function LoginPage(props: Props) {
   const { classes } = props;
 
+  const { storeAdmin } = useContext(AdminContext);
+
   const [values, setValues] = React.useState<State>({
     email1: '',
     email2: '',
@@ -201,8 +205,8 @@ function LoginPage(props: Props) {
             name: response.user.name,
             email: response.user.email,
             image_link: response.user.image_link
-          })
-
+          });
+          localStorage.admin = response.admin;
           window.location.href = "/"
         }); 
       }
@@ -232,7 +236,6 @@ function LoginPage(props: Props) {
         }).then((resp) => resp.json())
 
         .then((response) => {
-          console.log(response);
           localStorage.token = response.token;
           document.cookie = `token=${response.token}; path=/; max-age=${60 * 60 * 24 * 100
             }`;
@@ -241,7 +244,8 @@ function LoginPage(props: Props) {
             email: response.user.email,
             image_link: response.user.image_link
           });
-          window.location.href = "/"
+          localStorage.admin = response.admin;
+          window.location.href = "/";
         })
         .catch((e) => {
           console.log(e);

@@ -47,7 +47,7 @@ def GetQuestionList(request):
     try :
         contest = Contest.objects.get(contest_code=request.GET['contest_id'])
         query_set = Question.objects.filter(contest=contest)
-        if contest.isStarted() or contest.isOver():
+        if contest.isStarted() or contest.isOver() or request.user.is_staff:
             serializer = QuestionListSerializer(query_set, many=True)
             return Response(serializer.data, status = HTTP_200_OK)
         if contest.isOver():
@@ -160,7 +160,7 @@ def status(request):
         if coder.check_solved(question.pk) == False:
             coder.put_solved(question.pk)
             answer.correct += 1
-            if contest.isOver() == False and contest.isStarted():
+            if contest.isOver() == False and contest.isStarted() or request.user.is_staff:
                 coder_contest_score.score += question.question_score
                 answer.score = question.question_score
                 answer.timestamp = t.now() + timedelta(minutes=contest.time_penalty*answer.wrong)
@@ -169,7 +169,7 @@ def status(request):
                 else:
                     coder_contest_score.timestamp += (answer.timestamp - contest.start_time)
     else:
-        if contest.isOver() == False and contest.isStarted():
+        if contest.isOver() == False and contest.isStarted() or request.user.is_staff:
             if not job.compile_error:
                 answer.timestamp = t.now()
                 answer.wrong += 1
@@ -216,7 +216,7 @@ def GetSubmissions(request):
         contest = Contest.objects.get(contest_code=request.GET['contest_id'])
         query_set = Job.objects.filter(contest=contest)
         serializer = SubmissionSerializer(query_set, many=True)
-        if contest.isStarted() or contest.isOver():
+        if contest.isStarted() or contest.isOver() or request.user.is_staff:
             return Response(serializer.data, status = HTTP_200_OK)
         return Response('Contest has not started yet', status = HTTP_403_FORBIDDEN)
     except ObjectDoesNotExist:
@@ -231,7 +231,7 @@ def GetPersonalSubmissions(request):
         coder = Coder.objects.get(user=request.user)
         query_set = Job.objects.filter(contest=contest, coder=coder)
         serializer = PersonalSubmissionSerializer(query_set, many=True)
-        if contest.isStarted() or contest.isOver():
+        if contest.isStarted() or contest.isOver() or request.user.is_staff:
             return Response(serializer.data)
         return Response('Contest has not started yet', status = HTTP_403_FORBIDDEN)
     except :
@@ -246,7 +246,7 @@ def GetAnswer(request):
         coder = Coder.objects.get(user=request.user)
         query_set = Answer.objects.filter(contest=contest, user=coder)
         serializer = AnswerSerializer(query_set, many=True)
-        if contest.isStarted() or contest.isOver():
+        if contest.isStarted() or contest.isOver() or request.user.is_staff:
             return Response(serializer.data)
         return Response('Contest has not started yet', status = HTTP_403_FORBIDDEN)
     except ObjectDoesNotExist:
@@ -310,24 +310,3 @@ def getRules(request):
     except ObjectDoesNotExist:
         return Response('No Rules found', status=HTTP_404_NOT_FOUND)
 
-@api_view(["GET"])
-@permission_classes([AllowAny])
-def check(request):
-    try :
-        question_id = request.GET["q_id"]
-        question = Question.objects.get(question_code=question_id)
-        testcases = Testcases.objects.filter(question=question)
-        input_file_urls, output_file_urls, input_file_hashes, output_file_hashes = [], [], [], []
-        for test in testcases:
-            input_file_urls.append(request.build_absolute_uri(MEDIA_URL + test.input_test.url.split(MEDIA_URL)[-1]))
-            output_file_urls.append(request.build_absolute_uri(MEDIA_URL + test.output_test.url.split(MEDIA_URL)[-1]))
-            input_file_hashes.append(test.input_hash)
-            output_file_hashes.append(test.output_hash)
-        return Response({
-            "input_file_urls": input_file_urls,
-            "output_file_urls": output_file_urls,
-            "input_file_hashes": input_file_hashes,
-            "output_file_hashes": output_file_hashes
-        })
-    except ObjectDoesNotExist:
-        return Response('Object Does not exist', status = HTTP_404_NOT_FOUND)

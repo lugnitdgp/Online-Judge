@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import Countdown, { zeroPad } from "react-countdown";
 import Router from "next/router";
 import Grid from "@material-ui/core/Grid";
+import { useContext } from "react";
+import {AdminContext} from './AdminContextProvider';
 
 const useStyles = makeStyles({
   root: {
@@ -25,6 +27,7 @@ const useStyles = makeStyles({
 export default function ContestCard(props) {
   const classes = useStyles();
   const [hasEnded, setHasEnded] = React.useState(false);
+  const { admin } = useContext(AdminContext);
 
   React.useEffect(() => {
     let t1 = new Date(props.contestInfo.end_time * 1000);
@@ -94,13 +97,14 @@ export default function ContestCard(props) {
             </div>
           </Grid>
           <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
+            { console.log(admin) }
             {props.contestInfo.upcoming ? (
               <Button
                 size="large"
                 color="primary"
                 variant="outlined"
                 style={{ outline: "none", border: "none" }}
-                disabled
+                disabled = { !admin }
                 onClick={() => {
                   if (!localStorage.token) {
                     Router.push("/login");

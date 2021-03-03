@@ -3,7 +3,6 @@ import Countdown, { zeroPad } from "react-countdown";
 import { CardContent, Card } from "@material-ui/core";
 
 export default function Timer(props) {
-  console.log(props);
   const renderer = ({ days, hours, minutes, seconds }) => {
     return (
       <span>

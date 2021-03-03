@@ -85,7 +85,6 @@ export default function QuesDetail() {
       }),
     })
       .then(async (res) => {
-        console.log(res);
         if (res.status === 429) {
           setError(
             (await res.text()).match(/(?:"[^"]*"|^[^"]*$)/)[0].replace(/"/g, "")
@@ -133,7 +132,6 @@ export default function QuesDetail() {
                 setCompileError(decodeURIComponent(response[0].message).replace(/(?:\r\n|\r|\n)/g, '<br>'));
               else setRes(response);
             }
-            console.log(decodeURIComponent(response[0].message))
             setLoading(false);
             clearInterval(interval);
           });
@@ -202,7 +200,6 @@ export default function QuesDetail() {
   }, []);
 
   if (JSON.stringify(qdata) !== JSON.stringify(data) || loadedState != loaded) {
-    console.log(qdata);
     setData(qdata);
     setLoaded(loaded);
   }

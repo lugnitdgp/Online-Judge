@@ -24,8 +24,6 @@ function leaderboardReducer(state = initialState, action) {
       });
     }
     case LEADERBOARD_DATA_SUCCESS: {
-      // console.log(action.payload)
-      console.log(action.payload)
       return Object.assign({}, state, {
         leaderboard: middleware.processLeaderboard(action.payload[1]),
         data:action.payload[0],

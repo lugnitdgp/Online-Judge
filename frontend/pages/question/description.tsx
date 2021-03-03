@@ -58,7 +58,6 @@ function submitcode(code: any, lang: any){
       return resp.json();
     })
     .then((res) => {
-      console.log(res);
       if (res.status === 302) {
         //alert(res.message);
           setLoading(false)
@@ -119,17 +118,14 @@ function statuscode(){
   })
     .then((resp) => resp.json())
     .then((response) => {
-      console.log(response);
       if (response.status === 302) {
         alert(response.message);
       } else {
-        console.log(response);
         setRes(response);
         setLoading(false);
         clearInterval(interval);
       }
     })
-    .then(() => console.log(res))
     .catch((err) => console.log(err));
 };
 
@@ -193,9 +189,7 @@ const dispatch = useDispatch()
     }
 
 function setCodeFromAutoSave(source2:any){
-  console.log(source2)
   source2.map((contest) => {
-    console.log(contest)
     if (contest.name === localStorage.code) {
       if (contest.questions)
         contest.questions.map((ques) => {

@@ -50,7 +50,6 @@ function Editorial() {
     loaded === true &&
     loadedState === false
   ) {
-    console.log(editorial)
     setEditorial(editorial);
     setLoaded(loaded);
   }

@@ -7,7 +7,6 @@ const processContests = (payload) =>{
     var contestTotal = [];
 
     payload.map((contest) => {
-        console.log(contest);
         var dateObj = new Date(contest["start_time"] * 1000);
         contest["start"] = dateObj.toString();
         contest["start"] =
@@ -15,12 +14,10 @@ const processContests = (payload) =>{
             contest["start"].substring(15, 24);
         var today = Date.now();
         var dateo = new Date(today);
-        console.log(dateObj.toString(), "   ", dateo.toString(), "  ");
         dateObj = new Date(contest["end_time"] * 1000);
         contest["end"] = dateObj.toString();
         contest["end"] =
             contest["end"].substring(0, 10) + contest["end"].substring(15, 24);
-        console.log(contest["end"]);
         if (
             contest["start_time"] * 1000 < today &&
             contest["end_time"] * 1000 > today
@@ -208,7 +205,6 @@ const processQuestions =(payload, state)=>{
                   var today = Date.now();
                   var start = localStorage.start * 1000;
                   var end = localStorage.end * 1000;
-                  console.log(start + "   " + today + "  " + end);
                   if (start <= today && end > today) {
 
                     return Object.assign({}, state, {
@@ -223,7 +219,7 @@ const processQuestions =(payload, state)=>{
                     return Object.assign({}, state, {
                         loaded: true,
                         timestamp: 0,ended:true,
-                        message: "The contest has ended !!!",
+                        message: "The contest has ended!",
                         questions: questionsvar
                     });
                   } else if (start > today) {
@@ -231,7 +227,7 @@ const processQuestions =(payload, state)=>{
                         loaded: true,
                         ended:false,
                         timestamp: start,
-                        message: "TThe Contest begins in",
+                        message: "The Contest begins in",
                         questions: questionsvar
                     });
                 }

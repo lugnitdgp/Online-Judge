@@ -138,7 +138,7 @@ class Register(generics.GenericAPIView):
             else:
                 return Response("User has already registered under this email.", status = HTTP_401_UNAUTHORIZED)
 
-        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
+        return Response({"user": self.serializer.data, "admin": self.user.is_staff, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
 
 def customRegister(request):
     try:
@@ -185,7 +185,7 @@ class CustomLogin(generics.GenericAPIView):
             else:
                 return Response("Incorrect password", status = HTTP_401_UNAUTHORIZED)
 
-        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
+        return Response({"user": self.serializer.data,"admin": self.user.is_staff, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
 
 
 @permission_classes([
@@ -220,4 +220,4 @@ class SocialLogin(generics.GenericAPIView):
                 coder = Coder.objects.get(email=res['email'])
                 self.serializer = self.get_serializer(coder)
 
-        return Response({"user": self.serializer.data, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)
+        return Response({"user": self.serializer.data, "admin": self.user.is_staff, "token": AuthToken.objects.create(self.user)[1]}, status = HTTP_200_OK)

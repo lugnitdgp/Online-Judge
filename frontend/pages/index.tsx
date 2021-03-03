@@ -6,8 +6,8 @@ import ContestCard from "../components/contestCard";
 import Router from "next/router";
 import Loader from "../components/loading";
 import { useMediaQuery } from "react-responsive";
-import { useEffect } from "react";
-
+import { useEffect, useContext } from "react";
+import {AdminContext} from "../components/AdminContextProvider"; 
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getContest } from "../store/actions/contestAction";
@@ -19,6 +19,8 @@ interface State {
 }
 
 export default function IndexPage() {
+  //@ts-ignore
+  const { storeAdmin } = useContext(AdminContext);
   const dispatch = useDispatch();
   const { contests } = useSelector((state) => state.contestReducer);
   const { loaded } = useSelector((state) => state.contestReducer);
@@ -26,6 +28,7 @@ export default function IndexPage() {
     accesscode: '',
     provider: '',
   });
+
   useEffect(() => {
     dispatch(getContest());
   }, []);
@@ -33,8 +36,11 @@ export default function IndexPage() {
   useEffect(() => {
     let params = new URLSearchParams(document.location.search.substring(1));
     let code = params.get("code");
+    if(localStorage.admin != null){
+      storeAdmin(localStorage.admin);
+      localStorage.removeItem("admin");
+    }
     if (code) {
-      console.log(code)
       var payload = JSON.stringify({
         accesscode: code,
         provider: "github"
@@ -50,7 +56,6 @@ export default function IndexPage() {
           }).then((resp) => resp.json())
           
         .then((response) => {
-            console.log(response);
             localStorage.token = response.token;
             document.cookie = `token=${response.token}; path=/; max-age=${
                 60 * 60 * 24 * 100
@@ -60,7 +65,8 @@ export default function IndexPage() {
                 email: response.user.email,
                 image_link: response.user.image_link
             });
-            window.location.href = "/"
+            localStorage.admin = response.admin;
+            window.location.href = "/";
         })
         .catch((e) => {
             console.log(e);

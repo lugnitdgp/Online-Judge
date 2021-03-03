@@ -1,11 +1,12 @@
 import React from "react";
 import {CircularProgress, Typography } from "@material-ui/core";
 import { } from "@material-ui/icons";
-import UserContextProvider from '../../components/UserContextProvider';
+import { useContext } from 'react';
+import {AdminContext} from '../../components/AdminContextProvider';
 
 function LoginPage() {
     const [error, setError] = React.useState(false);
-
+    const { storeAdmin } = useContext(AdminContext);
     const googleLogin = () => {
         fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/account/oauth/google`, {
             method: "POST",
@@ -41,6 +42,7 @@ function LoginPage() {
                             email: response.user.email,
                             image_link: response.user.image_link
                         });
+                        localStorage.admin = response.admin;
                         window.location.href = "/"
                     })
                     .catch((e) => {
@@ -59,7 +61,6 @@ function LoginPage() {
     }, [])
 
     return (
-        <UserContextProvider>
             <div className="socialRoot">
                 {error ? (
                     <React.Fragment >
@@ -76,7 +77,6 @@ function LoginPage() {
           </Typography>
                         </React.Fragment>
                     )}</div>
-        </UserContextProvider>
     );
 }
 

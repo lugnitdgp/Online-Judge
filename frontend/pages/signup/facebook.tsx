@@ -1,7 +1,6 @@
 import React from "react";
 import {CircularProgress, Typography } from "@material-ui/core";
 import { } from "@material-ui/icons";
-import UserContextProvider from '../../components/UserContextProvider';
 
 function LoginPage() {
     const [error, setError] = React.useState(false);
@@ -48,7 +47,6 @@ function LoginPage() {
 
 
     return (
-        <UserContextProvider>
             <div className="socialRoot">
                 {error ? (
                     <React.Fragment >
@@ -65,7 +63,6 @@ function LoginPage() {
           </Typography>
                         </React.Fragment>
                     )}</div>
-        </UserContextProvider>
     );
 }
 

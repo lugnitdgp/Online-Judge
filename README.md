@@ -22,6 +22,13 @@ You can check out the code executor part of the project [here](https://github.co
 ## Documentation to help with Celery
 https://docs.celeryproject.org/en/stable/getting-started/next-steps.html#next-steps
 
+## Documentation to help setting up public PostgreSQL
+https://blog.logrocket.com/setting-up-a-remote-postgres-database-server-on-ubuntu-18-04/
+
+## Documentation to help setting up public Redis
+https://linuxize.com/post/how-to-install-and-configure-redis-on-ubuntu-18-04/
+https://www.w3resource.com/redis/redis-auth-password.php
+
 ## Development Environment Config
 This project uses PEP8 code style, please make sure to follow. Yapf is our preffered formatting tool.
 If you are using VSCode add the following in your *settings.json* 

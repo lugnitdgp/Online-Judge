@@ -37,7 +37,7 @@ export default function IndexPage() {
     let params = new URLSearchParams(document.location.search.substring(1));
     let code = params.get("code");
     if(localStorage.admin != null){
-      storeAdmin(localStorage.admin);
+      storeAdmin(localStorage.admin == 'true');
       localStorage.removeItem("admin");
     }
     if (code) {

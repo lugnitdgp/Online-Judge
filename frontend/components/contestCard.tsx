@@ -97,14 +97,13 @@ export default function ContestCard(props) {
             </div>
           </Grid>
           <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
-            { console.log(admin) }
             {props.contestInfo.upcoming ? (
+              admin==true ? (
               <Button
                 size="large"
                 color="primary"
                 variant="outlined"
                 style={{ outline: "none", border: "none" }}
-                disabled = { !admin }
                 onClick={() => {
                   if (!localStorage.token) {
                     Router.push("/login");
@@ -123,7 +122,7 @@ export default function ContestCard(props) {
                 }}
               >
                 Enter Contest
-              </Button>
+              </Button> ) : <></>
             ) : (
               <Button
                 size="large"

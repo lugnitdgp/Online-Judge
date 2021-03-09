@@ -177,7 +177,7 @@ export default function IndexPage() {
             <>
               <Grid container spacing={0}>
                 <Grid item xs={12} md={7} style={{ textAlign: "center" }}>
-                  <img src="/Coding-bro.png" alt="." className="bannerImage" />
+                  <img src="/Code-typing-bro.png" alt="." className="bannerImage" />
                 </Grid>
                 <Grid
                   item
@@ -188,8 +188,8 @@ export default function IndexPage() {
                 >
                   <h3 className="welcometext">
                     <i>
-                      "Hi there, welcome to Online Judge presented to you by
-                      Gnu/Linux Users' Group, Nit Durgapur"
+                      "Welcome to Online Judge presented to you by
+                      GLUG, NIT Durgapur"
                     </i>
                   </h3>
                   <div className="buttonsparent">

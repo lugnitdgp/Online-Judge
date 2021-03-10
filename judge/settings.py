@@ -14,6 +14,8 @@ import os
 from decouple import config, Csv
 from datetime import timedelta
 from rest_framework.settings import api_settings
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -186,3 +188,10 @@ TINYMCE_DEFAULT_CONFIG = {
 
 # Careful with this unless you set a server that will serve request only via ssl
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+sentry_sdk.init(
+    dsn=config("SENTRY_DEBUG_URL"),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)

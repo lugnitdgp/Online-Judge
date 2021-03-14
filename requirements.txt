@@ -43,3 +43,4 @@ sqlparse==0.4.1
 urllib3==1.26.3
 vine==5.0.0
 zipp==3.4.0
+sentry-sdk

@@ -51,4 +51,7 @@ jobs:
         command: |
                 cd Online-Judge
                 git pull
+                source env/bin/activate
+                python manage.py makemigrations interface
+                python manage.py migrate interface
                 sudo systemctl restart uwsgi

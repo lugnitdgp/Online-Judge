@@ -213,7 +213,7 @@ class Announcements(models.Model):
         return str(self.id)
 
 class Rules(models.Model):
-    text = models.TextField(max_length=100, help_text="Rules for the Entire OJ")
+    text = models.TextField(help_text="Rules for the Entire OJ")
 
     class Meta:
         verbose_name = "Rule"

@@ -275,7 +275,34 @@ export default function QuesDetail() {
                       __html: data[`question_text`],
                     }}
                   />
-                  <hr></hr>
+                  {console.log("hiii", process.env.NEXT_PUBLIC_BACKEND_URL, data['question_image'])}
+                  <hr />
+                  {data['question_image'] != null ? <div>
+                    <Typography
+                      style={{ fontSize: "18px", color: "#104e8b" }}
+                      gutterBottom
+                    >
+                      <div
+                        className="column"
+                        style={{ marginLeft: 15, verticalAlign: "middle" }}
+                      >
+                        QUESTION IMAGE
+                          </div>
+                          <br/>
+                      <img
+                        // image={props.contestInfo.contest_image}
+                        src={process.env.NEXT_PUBLIC_BACKEND_URL + data['question_image']}
+                        style={{
+                          borderRadius: "10px",
+                          margin: "0 auto",
+                        }}
+                        className="questionImage"
+                      />
+                      <br/>
+                    </Typography>
+                    <hr />
+                  </div> : <></>}
+                  
                   <CopyToClipboard
                     text={data[`input_example`]}
                     onCopy={changeCopyState}
@@ -407,20 +434,20 @@ export default function QuesDetail() {
                   {isLoading ? (
                     <CircularProgress size={24} />
                   ) : (
-                    <Button
-                      className="descriptionButton"
-                      color="primary"
-                      variant="outlined"
-                      style={{ margin: "20px auto" }}
-                      onClick={() => submitcode(value, language)}
-                    >
-                      Submit
-                    </Button>
-                  )}
+                      <Button
+                        className="descriptionButton"
+                        color="primary"
+                        variant="outlined"
+                        style={{ margin: "20px auto" }}
+                        onClick={() => submitcode(value, language)}
+                      >
+                        Submit
+                      </Button>
+                    )}
                 </div>
                 {compileError.length > 0 ? (
                   <div>
-                    <h4 style={{ marginLeft: "16px"}}>Compile Log</h4>
+                    <h4 style={{ marginLeft: "16px" }}>Compile Log</h4>
                     <p
                       className={classes.compileLogBox}
                       dangerouslySetInnerHTML={{
@@ -480,32 +507,32 @@ export default function QuesDetail() {
                               </TableRow>
                             </>
                           ) : (
-                            <>
-                              <TableRow key={index}>
-                                <TableCell component="th" scope="row">
-                                  {index + 1}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <ResultStatus
-                                    status={resa?.status?.run_status}
-                                  />
-                                </TableCell>
-                                <TableCell align="right">
-                                  {resa?.status?.cpu_time}
-                                </TableCell>
-                                <TableCell align="right">
-                                  {resa?.status?.memory_taken}
-                                </TableCell>
-                              </TableRow>
-                            </>
-                          )
+                                <>
+                                  <TableRow key={index}>
+                                    <TableCell component="th" scope="row">
+                                      {index + 1}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      <ResultStatus
+                                        status={resa?.status?.run_status}
+                                      />
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      {resa?.status?.cpu_time}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      {resa?.status?.memory_taken}
+                                    </TableCell>
+                                  </TableRow>
+                                </>
+                              )
                         )}
                       </TableBody>
                     </Table>
                   </TableContainer>
                 ) : (
-                  <> </>
-                )}
+                    <> </>
+                  )}
               </Paper>
             </div>
 
@@ -527,8 +554,8 @@ export default function QuesDetail() {
             </div>
           </>
         ) : (
-          <Loader />
-        )}
+            <Loader />
+          )}
       </Layout>
       <Alert message={error} setMessage={(d) => setError(d)} />
     </div>

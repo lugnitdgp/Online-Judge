@@ -46,7 +46,7 @@ def GetContest(request, contest_code):
 def GetQuestionList(request):
     try :
         contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-        query_set = Question.objects.filter(contest=contest)
+        query_set = Question.objects.filter(contest=contest).order_by('question_score','pk')
         if contest.isStarted() or contest.isOver() or request.user.is_staff:
             serializer = QuestionListSerializer(query_set, many=True)
             return Response(serializer.data, status = HTTP_200_OK)

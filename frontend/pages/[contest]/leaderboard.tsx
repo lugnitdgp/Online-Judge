@@ -77,21 +77,16 @@ export default function Leaderboard() {
   }
 
   // console.log(Data);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = React.useState(0);
 
-  const options = {
-    download: false,
-    selectableRows: "none",
-    viewColumns: false,
-    page: 0,
-    rowsPerPage: 10,
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
   };
 
-  const handleChangePage = () => {
-    options.page = options.page + 1;
-  };
-
-  const handleChangeRowsPerPage = () => {
-    options.rowsPerPage = +event.target;
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
 
   return (
@@ -127,11 +122,7 @@ export default function Leaderboard() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {Data.slice(
-                          options.page * options.rowsPerPage,
-                          options.page * options.rowsPerPage +
-                            options.rowsPerPage
-                        ).map((row) => {
+                        {Data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                           // console.log(row);
                           return (
                             <TableRow
@@ -182,9 +173,9 @@ export default function Leaderboard() {
                   <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
-                    count={Leaderboard.length}
-                    rowsPerPage={options.rowsPerPage}
-                    page={options.page}
+                    count={Data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                     className="leaderboardPagination"

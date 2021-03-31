@@ -97,7 +97,6 @@ export default function ContestCard(props) {
             </div>
           </Grid>
           <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
-          {console.log(props.contestInfo)}
             
             {
               props.contestInfo.prize_link && !hasEnded ? 

@@ -28,12 +28,12 @@ hr {
 .Footer {
     position: relative;
     bottom: 0;
-    height: 40px;
+    height: 80px;
     width: 100%;
     border-top: 2px solid #104e8b;
-    background-color: #fff;
+    background-color: #104e8b;
     text-align: center;
-    color: #104e8b;
+    color: #fff;
     font-size: 12px;
     text-transform: uppercase;
     font-weight: bolder;
@@ -44,17 +44,22 @@ hr {
 .FooterFixed {
     position: fixed;
     bottom: 0;
-    height: 40px;
+    height: 80px;
     width: 100%;
     border-top: 2px solid #104e8b;
-    background-color: #fff;
+    background-color:#104e8b;
     text-align: center;
-    color: #104e8b;
+    color: #fff;
     font-size: 12px;
     text-transform: uppercase;
     font-weight: bolder;
     padding-top: 10px;
     z-index: 99;
+}
+
+.FooterImg{
+    height: 30px;
+    width: auto;
 }
 
 .ContestGrid {

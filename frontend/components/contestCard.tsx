@@ -97,6 +97,31 @@ export default function ContestCard(props) {
             </div>
           </Grid>
           <Grid item xs={12} style={{ margin: "0 auto", textAlign: "center" }}>
+          {console.log(props.contestInfo)}
+            
+            {
+              props.contestInfo.prize_link && !hasEnded ? 
+              <Button
+              size="large"
+              color="primary"
+              variant="outlined"
+              style={{ outline: "none", border: "none" }}
+              onClick={() => {
+                if (!localStorage.token) {
+                  Router.push("/login");
+                } else {
+                  Router.push(
+                    `${props.contestInfo.prize_link}`,
+                    `${props.contestInfo.prize_link}`
+                  );
+                }
+              }}
+            >
+              Prize Eligibility Form
+            </Button>
+              :
+              <></>
+            }
             {props.contestInfo.upcoming ? (
               admin==true ? (
               <Button
@@ -122,7 +147,11 @@ export default function ContestCard(props) {
                 }}
               >
                 Enter Contest
-              </Button> ) : <></>
+              </Button> 
+  
+              
+              
+              ) : <></>
             ) : (
               <Button
                 size="large"

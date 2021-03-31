@@ -252,6 +252,7 @@ export default function questionlist() {
                                 borderRadius: "10px",
                               }}
                             >
+                              {item.editorial ? 
                               <Link
                                 href="/[contest]/[question]/editorial"
                                 as={`/${contest}/${item.question_code}/editorial`}
@@ -264,7 +265,17 @@ export default function questionlist() {
                                 >
                                   View Editorial
                                 </a>
-                              </Link>
+                              </Link> 
+                              : 
+                              <a
+                                style={{
+                                  textDecoration: "None",
+                                  color: "#000",
+                                }}
+                              >
+                                Not available.
+                              </a>
+                              }
                             </TableCell>
                           )}
                         </TableRow>
@@ -275,6 +286,16 @@ export default function questionlist() {
             </Table>
           </TableContainer>
           <div className="FooterFixed">
+            Sponsored by : &nbsp;&nbsp;
+            <img alt="." src="/codingblocks.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/IOCL.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/techbairn.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/wt.png" className="FooterImg" />
+            <br/>
+            <br/>
             &copy; Created and maintained by GNU/Linux Users' group, Nit
             Durgapur
           </div>

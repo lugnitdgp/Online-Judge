@@ -21,7 +21,8 @@ class QuestionListSerializer(serializers.BaseSerializer):
         return {
             'question_name': instance.question_name,
             'question_code': instance.question_code,
-            'question_score': instance.question_score
+            'question_score': instance.question_score,
+            'editorial' : instance.editorial_published
         }
 
 class ContestSerializer(serializers.ModelSerializer):
@@ -46,6 +47,7 @@ class ContestSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super(ContestSerializer, self).to_representation(instance)
+        data['prize_link'] = instance.prize_form
         data['start_time'] = instance.start_time.timestamp()
         data['end_time'] = instance.end_time.timestamp()
         data['contest_image'] = self.context['request'].build_absolute_uri(instance.contest_image.url)

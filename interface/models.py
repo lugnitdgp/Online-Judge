@@ -35,6 +35,7 @@ class Contest(models.Model):
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
     contest_langs = models.ManyToManyField(Programming_Language)
     time_penalty = models.IntegerField(default = 0, help_text="penalty time in minutes")
+    prize_form = models.CharField(blank=True, help_text='Eligibility form for prizes', max_length=100)
 
     def __str__(self):
         return self.contest_name + " " + self.contest_code
@@ -65,6 +66,7 @@ class Question(models.Model):
     c_cpp_multiplier = models.IntegerField(default=1, help_text="Time and Memory Limit multiplier for C/C++")
     python_multiplier = models.IntegerField(default=2, help_text="Time and Memory limit multiplier for Python")
     java_multipler = models.IntegerField(default=2, help_text="Time and Memory limit multipler for JAVA")
+    editorial_published = models.BooleanField(default=False, help_text="Check if editorial is declared or not")
 
     def __str__(self):
         return self.question_code

@@ -173,6 +173,8 @@ export default function IndexPage() {
             <img alt="." src="/techbairn.png" className="FooterImg" />
             &nbsp;&nbsp;&nbsp;&nbsp;
             <img alt="." src="/wt.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/pb.png" className="FooterImg" />
             <br/>
             <br/>
                     &copy; Created and maintained by GNU/Linux Users' group, Nit
@@ -239,6 +241,8 @@ export default function IndexPage() {
             <img alt="." src="/techbairn.png" className="FooterImg" />
             &nbsp;&nbsp;&nbsp;&nbsp;
             <img alt="." src="/wt.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/pb.png" className="FooterImg" />
             <br/>
             <br/>
                 &copy; Created and maintained by GNU/Linux Users' group, Nit

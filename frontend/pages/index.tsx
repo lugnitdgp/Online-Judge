@@ -165,6 +165,18 @@ export default function IndexPage() {
                     </Grid>
                   </Grid>
                   <div className="Footer">
+                  Sponsored by : &nbsp;&nbsp;
+            <img alt="." src="/codingblocks.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/IOCL.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/techbairn.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/wt.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/pb.png" className="FooterImg" />
+            <br/>
+            <br/>
                     &copy; Created and maintained by GNU/Linux Users' group, Nit
                     Durgapur
                   </div>
@@ -221,6 +233,18 @@ export default function IndexPage() {
                 </Grid>
               </Grid>
               <div className="FooterFixed">
+              Sponsored by : &nbsp;&nbsp;
+            <img alt="." src="/codingblocks.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/IOCL.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/techbairn.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/wt.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/pb.png" className="FooterImg" />
+            <br/>
+            <br/>
                 &copy; Created and maintained by GNU/Linux Users' group, Nit
                 Durgapur
               </div>

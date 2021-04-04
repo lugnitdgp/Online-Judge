@@ -335,8 +335,21 @@ export default function personalSubmissions() {
             </Paper>
           </div>
           <div className="Footer">
+          Sponsored by : &nbsp;&nbsp;
+            <img alt="." src="/codingblocks.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/IOCL.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/techbairn.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/wt.png" className="FooterImg" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <img alt="." src="/pb.png" className="FooterImg" />
+            <br/>
+            <br/>
             &copy; Created and maintained by GNU/Linux Users' group, Nit
             Durgapur
+            
           </div>
         </>
       ) : (

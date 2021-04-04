@@ -242,6 +242,7 @@ const processAllSubmissions = (payload)=>{
                   var stat = "";
                   var time = "";
                   var mem = "";
+                  var code = "";
                   var isFail = false;
                   var sign;
                   const cases = JSON.parse(r.status);
@@ -277,6 +278,7 @@ const processAllSubmissions = (payload)=>{
                     time: time,
                     memory: mem,
                     isFail: sign,
+                    code: [r.code,r.lang],
                   };
         
                   arr.push(payload);

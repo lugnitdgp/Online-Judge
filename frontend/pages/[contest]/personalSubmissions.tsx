@@ -22,7 +22,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
 
-const Viewer = dynamic(import("components/codeViewer"),{ssr:false});
+const Viewer = dynamic(import("components/codeViewer"), { ssr: false });
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getPersonalSubmissionsData } from "../../store/actions/personalSubmissionsAction";
@@ -59,8 +59,8 @@ export default function personalSubmissions() {
 
   useEffect(() => {
     if (!localStorage.token) window.location.href = "/";
-      localStorage.setItem("code", contest.toString());
-    })
+    localStorage.setItem("code", contest.toString());
+  })
 
   if (
     personal_submissions.length !== Psubmissions.length ||
@@ -340,8 +340,8 @@ export default function personalSubmissions() {
           </div>
         </>
       ) : (
-        <Loader />
-      )}
+          <Loader />
+        )}
     </Layout>
   );
 }

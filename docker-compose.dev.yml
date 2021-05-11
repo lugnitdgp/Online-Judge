@@ -5,7 +5,7 @@ services:
   db:
     image: postgres:12
     env_file: 
-      .db.env
+      .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
@@ -50,7 +50,7 @@ services:
     build: ./frontend
     command: npm run dev
     env_file: 
-      .frnt.env
+      ./frontend/.env
     ports:
       - "3000:3000"
 

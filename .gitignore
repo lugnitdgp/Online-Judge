@@ -8,6 +8,8 @@ db.sqlite3-journal
 .db.env
 .env.prod.proxy-comp
 env/
+venv/
+quick_psql.sh
 .vscode
 testcases/
 *.in

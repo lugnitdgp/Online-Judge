@@ -11,6 +11,7 @@ import {AdminContext} from "../components/AdminContextProvider";
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getContest } from "../store/actions/contestAction";
+import Footer from "components/footer";
 
 //ALL CSS INJECTED FROM "main.css"
 interface State {
@@ -164,22 +165,7 @@ export default function IndexPage() {
                       )}
                     </Grid>
                   </Grid>
-                  <div className="Footer">
-                  Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-                    &copy; Created and maintained by GNU/Linux Users' group, Nit
-                    Durgapur
-                  </div>
+                  <Footer />
                 </>
               ) : (
                 <Loader />
@@ -232,22 +218,7 @@ export default function IndexPage() {
                   </div>
                 </Grid>
               </Grid>
-              <div className="FooterFixed">
-              Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-                &copy; Created and maintained by GNU/Linux Users' group, Nit
-                Durgapur
-              </div>
+              <Footer />
             </>
           )}
         </Layout>

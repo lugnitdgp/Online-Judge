@@ -15,6 +15,7 @@ import { contestService } from "../../services/contestService";
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getQuestionsData } from "../../store/actions/questionsAction";
+import Footer from "components/footer";
 
 export default function questionlist() {
   ////
@@ -285,22 +286,7 @@ export default function questionlist() {
               </TableBody>
             </Table>
           </TableContainer>
-          <div className="FooterFixed">
-            Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-            &copy; Created and maintained by GNU/Linux Users' group, Nit
-            Durgapur
-          </div>
+          <Footer />
         </>
       ) : (
         <Loader />

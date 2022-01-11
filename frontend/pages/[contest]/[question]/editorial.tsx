@@ -12,6 +12,7 @@ import { getEditorial } from "store/actions/editorialAction";
 import { Paper } from "@material-ui/core";
 import Disqus from "disqus-react";
 import { connected } from "process";
+import Footer from "components/footer";
 
 const Viewer = dynamic(import("components/codeViewer"), { ssr: false });
 
@@ -86,22 +87,7 @@ function Editorial() {
               />
             </div>
           </Paper>
-          <div className="Footer">
-          Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-            &copy; Created and maintained by GNU/Linux Users' group, Nit
-            Durgapur
-            </div>
+          <Footer />
         </>
         : <Loader />}
     </Layout>

@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getLearderboardDataQues,
 } from "../../store/actions/leaderboardAction";
+import Footer from "components/footer";
 
 export default function Leaderboard() {
   const dispatch = useDispatch();
@@ -183,22 +184,7 @@ export default function Leaderboard() {
                 </Paper>
               </Card>
             </div>
-            <div className="Footer">
-            Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-              &copy; Created and maintained by GNU/Linux Users' group, Nit
-              Durgapur
-            </div>
+            <Footer />
           </>
         ) : (
           <Loader />

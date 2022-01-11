@@ -27,6 +27,7 @@ import Loader from "../../components/loading";
 import Disqus from "disqus-react"
 import { useDispatch, useSelector } from "react-redux";
 import { getIndividualQuestionData } from "../../store/actions/individualQuestionAction"
+import Footer from "components/footer";
 
 export default function QuesDetail() {
 
@@ -512,21 +513,7 @@ export default function QuesDetail() {
                 </Paper>
               )}
 
-            <div className="Footer">
-            Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-              &copy; Created and maintained by GNU/Linux Users' group, Nit Durgapur
-        </div>
+            <Footer />
           </>
           : <Loader />}
 

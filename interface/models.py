@@ -22,7 +22,7 @@ class Programming_Language(models.Model):
     class Meta:
         verbose_name = "Programming Language"
         verbose_name_plural = "Programming Languages"
-        
+
     def __str__(self):
         return self.name
 
@@ -30,12 +30,17 @@ class Programming_Language(models.Model):
 class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
-    contest_image = models.ImageField(upload_to="contest_images/")
-    start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
-    end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
+    contest_image = models.ImageField(
+        upload_to="contest_images/", blank=True, null=True)
+    start_time = models.DateTimeField(
+        default=t.now, help_text="Start time for contest")
+    end_time = models.DateTimeField(
+        default=t.now, help_text="End time for contest")
     contest_langs = models.ManyToManyField(Programming_Language)
-    time_penalty = models.IntegerField(default = 0, help_text="penalty time in minutes")
-    prize_form = models.CharField(blank=True, help_text='Eligibility form for prizes', max_length=100)
+    time_penalty = models.IntegerField(
+        default=0, help_text="penalty time in minutes")
+    prize_form = models.CharField(
+        blank=True, help_text='Eligibility form for prizes', max_length=100)
 
     def __str__(self):
         return self.contest_name + " " + self.contest_code
@@ -54,23 +59,35 @@ class Contest(models.Model):
 
 class Question(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
-    question_code = models.CharField(max_length=50, blank=True, help_text="Code for the question")
-    question_name = models.CharField(max_length=50, blank=True, help_text="Name of the question")
+    question_code = models.CharField(
+        max_length=50, blank=True, help_text="Code for the question")
+    question_name = models.CharField(
+        max_length=50, blank=True, help_text="Name of the question")
     question_text = HTMLField()
-    question_image = models.ImageField(blank=True, help_text="Optional Image if the question demands")
-    question_score = models.IntegerField(default=0, blank=True, help_text="Score for solving this problem")
-    input_example = models.TextField(blank=True, help_text="Example showing how should the input look")
-    output_example = models.TextField(blank=True, help_text="Example showing how should the output look")
-    time_limit = models.IntegerField(default=1, help_text="Time Limit of the question for C")
-    mem_limit = models.BigIntegerField(default=100000, help_text="Memory Limit for C")
-    c_cpp_multiplier = models.IntegerField(default=1, help_text="Time and Memory Limit multiplier for C/C++")
-    python_multiplier = models.IntegerField(default=2, help_text="Time and Memory limit multiplier for Python")
-    java_multipler = models.IntegerField(default=2, help_text="Time and Memory limit multipler for JAVA")
-    editorial_published = models.BooleanField(default=False, help_text="Check if editorial is declared or not")
+    question_image = models.ImageField(
+        blank=True, help_text="Optional Image if the question demands")
+    question_score = models.IntegerField(
+        default=0, blank=True, help_text="Score for solving this problem")
+    input_example = models.TextField(
+        blank=True, help_text="Example showing how should the input look")
+    output_example = models.TextField(
+        blank=True, help_text="Example showing how should the output look")
+    time_limit = models.IntegerField(
+        default=1, help_text="Time Limit of the question for C")
+    mem_limit = models.BigIntegerField(
+        default=100000, help_text="Memory Limit for C")
+    c_cpp_multiplier = models.IntegerField(
+        default=1, help_text="Time and Memory Limit multiplier for C/C++")
+    python_multiplier = models.IntegerField(
+        default=2, help_text="Time and Memory limit multiplier for Python")
+    java_multipler = models.IntegerField(
+        default=2, help_text="Time and Memory limit multipler for JAVA")
+    editorial_published = models.BooleanField(
+        default=False, help_text="Check if editorial is declared or not")
 
     def __str__(self):
         return self.question_code
-        
+
     class Meta:
         ordering = ['question_score']
         verbose_name = "Question"
@@ -87,15 +104,18 @@ def output_dir(instance, filename):
 
 class Testcases(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    test_case_no = models.IntegerField(default=1, help_text="Test Case ID for the particular question")
-    input_test = models.FileField(upload_to=input_dir, help_text="Input test case")
-    output_test = models.FileField(upload_to=output_dir, help_text="Output test case")
+    test_case_no = models.IntegerField(
+        default=1, help_text="Test Case ID for the particular question")
+    input_test = models.FileField(
+        upload_to=input_dir, help_text="Input test case")
+    output_test = models.FileField(
+        upload_to=output_dir, help_text="Output test case")
     input_hash = models.SlugField(max_length=128)
     output_hash = models.SlugField(max_length=128)
 
     class Meta:
         verbose_name = "Test case"
-        verbose_name_plural  = "Test cases"
+        verbose_name_plural = "Test cases"
 
     def __str__(self):
         return ("Testcase of " + self.question.question_code)
@@ -132,17 +152,27 @@ class Testcases(models.Model):
 
 class Job(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
-    coder = models.ForeignKey(Coder, blank=True, null=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, null=True, help_text="Name goes here")
-    question_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
+    coder = models.ForeignKey(
+        Coder, blank=True, null=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, null=True,
+                            help_text="Name goes here")
+    question_name = models.CharField(
+        max_length=200, null=True, help_text="Question Name goes here")
     code = models.TextField(blank=True, help_text="Code goes here")
-    lang = models.CharField(max_length=100, blank=True, help_text="language of the code")
-    compile_error = models.BooleanField(default=False, help_text="To check if a compiler error has occured")
-    status = models.TextField(blank=True, help_text="Status in json format. Please don't touch it.")
-    AC_no = models.IntegerField(default=0, help_text="Number of correct answers for this job")
-    WA_no = models.IntegerField(default=0, help_text="Number of wrong answers for this job")
-    job_id = models.CharField(max_length=200, null=True, unique=True, help_text="Celery Job id for the current task")
-    timestamp = models.DateTimeField(default=t.now, help_text="Latest submission")
+    lang = models.CharField(max_length=100, blank=True,
+                            help_text="language of the code")
+    compile_error = models.BooleanField(
+        default=False, help_text="To check if a compiler error has occured")
+    status = models.TextField(
+        blank=True, help_text="Status in json format. Please don't touch it.")
+    AC_no = models.IntegerField(
+        default=0, help_text="Number of correct answers for this job")
+    WA_no = models.IntegerField(
+        default=0, help_text="Number of wrong answers for this job")
+    job_id = models.CharField(max_length=200, null=True, unique=True,
+                              help_text="Celery Job id for the current task")
+    timestamp = models.DateTimeField(
+        default=t.now, help_text="Latest submission")
 
     class Meta:
         ordering = ['-timestamp']
@@ -151,6 +181,7 @@ class Job(models.Model):
 
     def __str__(self):
         return str(self.id) + " " + self.coder.name
+
 
 @receiver(pre_delete, sender=Testcases)
 def testcases_delete(sender, instance, using, **kwargs):
@@ -162,11 +193,15 @@ class Answer(models.Model):
     user = models.ForeignKey(Coder, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-    ques_name = models.CharField(max_length=200, blank=True, null=True, help_text="Question name")
-    correct = models.IntegerField(default=0, help_text="Number of correct attempts of the Question")
-    wrong = models.IntegerField(default=0, help_text="Number of wrong attempts of the Question")
+    ques_name = models.CharField(
+        max_length=200, blank=True, null=True, help_text="Question name")
+    correct = models.IntegerField(
+        default=0, help_text="Number of correct attempts of the Question")
+    wrong = models.IntegerField(
+        default=0, help_text="Number of wrong attempts of the Question")
     score = models.IntegerField(default=0, help_text="Score of the Question")
-    timestamp = models.DateTimeField(default=t.now, help_text="Time of submission")
+    timestamp = models.DateTimeField(
+        default=t.now, help_text="Time of submission")
 
     class Meta:
         verbose_name = "Answer"
@@ -179,8 +214,10 @@ class Answer(models.Model):
 class Contest_Score(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     coder = models.ForeignKey(Coder, on_delete=models.CASCADE)
-    score = models.IntegerField(default=0, help_text="Score of the given user in the given contest")
-    timestamp = models.DurationField(blank=True, null=True, help_text="Penalty Time of submission")
+    score = models.IntegerField(
+        default=0, help_text="Score of the given user in the given contest")
+    timestamp = models.DurationField(
+        blank=True, null=True, help_text="Penalty Time of submission")
 
     class Meta:
         verbose_name = "Contest Score"
@@ -193,16 +230,19 @@ class Contest_Score(models.Model):
 class Editorial(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    ques_name = models.CharField(max_length=200, null=True, help_text="Question Name goes here")
-    solution = models.TextField(blank=True, help_text="Hint and Explanation Goes Here")
+    ques_name = models.CharField(
+        max_length=200, null=True, help_text="Question Name goes here")
+    solution = models.TextField(
+        blank=True, help_text="Hint and Explanation Goes Here")
     code = models.FileField(upload_to="editorial/", help_text="Editorial file")
 
     class Meta:
         verbose_name = "Editorial"
         verbose_name_plural = "Editorials"
-        
+
     def __str__(self):
         return self.contest.contest_name
+
 
 class Announcements(models.Model):
     text = models.TextField(max_length=100, help_text="New Announcements")
@@ -214,6 +254,7 @@ class Announcements(models.Model):
     def __str__(self):
         return str(self.id)
 
+
 class Rules(models.Model):
     text = models.TextField(help_text="Rules for the Entire OJ")
 
@@ -223,10 +264,13 @@ class Rules(models.Model):
 
     def __str__(self):
         return str(self.id)
-    
+
+
 class Sponsor(models.Model):
-    name = models.CharField(max_length=128, blank=True, help_text="Sponsor name goes here")
-    logo = models.ImageField(upload_to="sponsor_logos/", blank=True, null=True, help_text="Sponsor logo")
+    name = models.CharField(max_length=128, blank=True,
+                            help_text="Sponsor name goes here")
+    logo = models.ImageField(upload_to="sponsor_logos/",
+                             blank=True, null=True, help_text="Sponsor logo")
 
     class Meta:
         verbose_name = "Sponsor"

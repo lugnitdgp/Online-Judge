@@ -30,7 +30,7 @@ class Programming_Language(models.Model):
 class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
-    contest_image = models.ImageField(upload_to="contest_images/", blank=True, null=True)
+    contest_image = models.ImageField(upload_to="contest_images/")
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
     contest_langs = models.ManyToManyField(Programming_Language)
@@ -224,3 +224,13 @@ class Rules(models.Model):
     def __str__(self):
         return str(self.id)
     
+class Sponsor(models.Model):
+    name = models.CharField(max_length=128, blank=True, help_text="Sponsor name goes here")
+    logo = models.ImageField(upload_to="sponsor_logos/", blank=True, null=True, help_text="Sponsor logo")
+
+    class Meta:
+        verbose_name = "Sponsor"
+        verbose_name_plural = "Sponsors"
+
+    def __str__(self):
+        return str(self.name)

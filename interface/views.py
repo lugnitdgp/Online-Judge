@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS, HTTP_226_IM_USED, HTTP_401_UNAUTHORIZED, HTTP_503_SERVICE_UNAVAILABLE
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer, AnnouncementsSerializer, RulesSerializer
-from interface.models import Question, Job, Testcases, Contest, Contest_Score, Answer, Editorial, Announcements, Rules
+from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer, AnnouncementsSerializer, RulesSerializer, SponsorSerializer
+from interface.models import Question, Job, Testcases, Contest, Contest_Score, Answer, Editorial, Announcements, Rules, Sponsor
 # from interface.tasks import execute
 from judge.celery import app
 from accounts.serializers import CoderSerializer
@@ -310,3 +310,14 @@ def getRules(request):
     except ObjectDoesNotExist:
         return Response('No Rules found', status=HTTP_404_NOT_FOUND)
 
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def getSponsors(request):
+    try:
+        sponsors = Sponsor.objects.all()
+        serializer = SponsorSerializer(sponsors, many=True, context={
+            'request':request
+        })
+        return Response(serializer.data, status=HTTP_200_OK)
+    except ObjectDoesNotExist:
+        return Response("No Sponsors found", status=HTTP_404_NOT_FOUND)

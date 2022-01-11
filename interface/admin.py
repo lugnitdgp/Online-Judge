@@ -56,3 +56,4 @@ class Contest_ScoreAdmin(admin.ModelAdmin):
 admin.site.register(Contest_Score)
 admin.site.register(Announcements)
 admin.site.register(Rules)
+admin.site.register(Sponsor)

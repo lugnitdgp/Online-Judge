@@ -15,5 +15,6 @@ urlpatterns = [
     path('geteditoriallist', views.GetEditorialList, name="geteditoriallist"),
     path('geteditorial', views.GetEditorial, name="geteditorial"),
     path('getrules', views.getRules),
-    path('getannouncements', views.getAnnouncements)
+    path('getannouncements', views.getAnnouncements),
+    path('getsponsors', views.getSponsors)
 ]

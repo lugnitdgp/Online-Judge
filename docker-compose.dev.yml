@@ -20,10 +20,11 @@ services:
         max_attempts: 3
     command: >- 
       bash -c "python manage.py makemigrations --settings=judge.dev_settings &&
-      python manage.py makemigrations --settings=judge.dev_settings interface && 
+      python manage.py makemigrations interface --settings=judge.dev_settings && 
       python manage.py migrate --noinput --settings=judge.dev_settings && 
-      python manage.py migrate --noinput --settings=judge.dev_settings interface && 
-      python manage.py loaddata --settings=judge.dev_settings language_models.json &&
+      python manage.py migrate --noinput interface --settings=judge.dev_settings && 
+      python manage.py collectstatic --no-input --settings=judge.dev_settings &&
+      python manage.py loaddata /backend/language_model.json --settings=judge.dev_settings &&
       python manage.py runserver 0.0.0.0:8000 --settings=judge.dev_settings"
     volumes:
       - app:/backend:rw
@@ -36,23 +37,33 @@ services:
     depends_on:
       - db
       - redis
-  
-  executor:
-    image: phantsure/oj:latest
-    working_dir: /OJExec-Python/
-    command: celery -A tasks worker -l info
-    depends_on:
-      - redis
-      - db 
-      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      .env
 
   frontend:
     build: ./frontend
-    command: npm run dev
-    env_file: 
+    command: yarn run dev
+    env_file:
       ./frontend/.env
     ports:
       - "3000:3000"
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./static:/backend/static/
+      - ./media:/backend/media/
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
 
 volumes:
   postgres_data:

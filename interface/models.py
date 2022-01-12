@@ -30,7 +30,7 @@ class Programming_Language(models.Model):
 class Contest(models.Model):
     contest_name = models.TextField(help_text="Name of Contest", blank=True)
     contest_code = models.TextField(blank=True, help_text="Code for Contest")
-    contest_image = models.ImageField(upload_to="contest_images/")
+    contest_image = models.ImageField(upload_to="contest_images/", blank=True, null=True)
     start_time = models.DateTimeField(default=t.now, help_text="Start time for contest")
     end_time = models.DateTimeField(default=t.now, help_text="End time for contest")
     contest_langs = models.ManyToManyField(Programming_Language)

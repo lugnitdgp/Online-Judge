@@ -214,6 +214,7 @@ class Announcements(models.Model):
     def __str__(self):
         return str(self.id)
 
+
 class Rules(models.Model):
     text = models.TextField(help_text="Rules for the Entire OJ")
 
@@ -224,6 +225,7 @@ class Rules(models.Model):
     def __str__(self):
         return str(self.id)
     
+
 class Sponsor(models.Model):
     name = models.CharField(max_length=128, blank=True, help_text="Sponsor name goes here")
     logo = models.ImageField(upload_to="sponsor_logos/", blank=True, null=True, help_text="Sponsor logo")

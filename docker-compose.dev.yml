@@ -9,6 +9,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  redis:
+    image: redis
+  
   backend:
     build: .
     deploy:
@@ -24,16 +27,16 @@ services:
       python manage.py loaddata /backend/language_model.json --settings=judge.dev_settings &&
       python manage.py runserver 0.0.0.0:8000 --settings=judge.dev_settings"
     volumes:
-      - ./:/backend:rw
-      - ./static:/backend/static/
-      - ./media:/backend/media/
+      - app:/backend:rw
+      - static:/backend/static/
+      - media:/backend/media/
     env_file: 
       - .env
     ports:
       - "8000:8000"
     depends_on:
       - db
-      - rabbitmq
+      - redis
 
   rabbitmq:
     image: rabbitmq:3.8-management
@@ -64,5 +67,6 @@ services:
 
 volumes:
   postgres_data:
+  app:
   static:
   media:

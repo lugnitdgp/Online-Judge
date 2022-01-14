@@ -37,6 +37,7 @@ import { getIndividualQuestionData } from "../../../store/actions/individualQues
 import dynamic from "next/dynamic";
 import Alert from "../../../components/Alert";
 import { makeStyles } from "@material-ui/core/styles";
+import Footer from "components/footer";
 
 const useStyles = makeStyles(() => ({
   compileLogBox: {
@@ -548,22 +549,7 @@ export default function QuesDetail() {
               <></>
             )}
 
-            <div className="Footer">
-            Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-              &copy; Created and maintained by GNU/Linux Users' group, Nit
-              Durgapur
-            </div>
+            <Footer />
           </>
         ) : (
             <Loader />

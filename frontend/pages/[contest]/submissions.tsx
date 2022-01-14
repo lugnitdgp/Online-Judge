@@ -26,6 +26,7 @@ const Viewer = dynamic(import("components/codeViewer"), { ssr: false });
 //Redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { getSubmissionsData } from "../../store/actions/submissionsAction";
+import Footer from "components/footer";
 
 const customStyles = makeStyles(() => ({
   Successful: {
@@ -317,22 +318,7 @@ export default function submissions() {
               style={{ fontSize: "16px", margin: "0 auto" }}
             />
           </div>
-          <div className="Footer">
-          Sponsored by : &nbsp;&nbsp;
-            <img alt="." src="/codingblocks.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/IOCL.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/techbairn.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/wt.png" className="FooterImg" />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <img alt="." src="/pb.png" className="FooterImg" />
-            <br/>
-            <br/>
-            &copy; Created and maintained by GNU/Linux Users' group, Nit
-            Durgapur
-          </div>
+          <Footer />
         </>
       ) : (
           <Loader />

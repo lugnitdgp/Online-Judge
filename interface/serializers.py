@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from interface.models import Question, Contest, Job, Answer, Editorial, Announcements, Rules
+from interface.models import Question, Contest, Job, Answer, Editorial, Announcements, Rules, Sponsor
 import datetime
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -88,3 +88,13 @@ class RulesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rules
         fields = '__all__'
+
+class SponsorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sponsor
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super(SponsorSerializer, self).to_representation(instance)
+        data['logo'] = self.context['request'].build_absolute_uri(instance.logo.url)
+        return data

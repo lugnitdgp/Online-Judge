@@ -54,6 +54,15 @@ services:
       - "80:80"
     depends_on:
       - backend
+  
+  frontend:
+    build: ./frontend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

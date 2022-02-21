@@ -12,3 +12,5 @@ WORKDIR /frontend
 RUN yarn install
 # RUN yarn add sharp@0.26.3
 RUN yarn run build
+
+ENTRYPOINT yarn start

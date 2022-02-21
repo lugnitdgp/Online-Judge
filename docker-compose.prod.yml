@@ -61,6 +61,9 @@ services:
       - ./frontend/.env
     ports:
       - "3000:3000"
+    volumes:
+      - ./fstatic:/frontend/_next/static/
+      - ./fmedia:/frontend/_next/media/
     depends_on:
       - backend
 

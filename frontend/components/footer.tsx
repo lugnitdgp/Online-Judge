@@ -27,8 +27,9 @@ function Footer() {
               }
             <br/>
             <br/>
-                &copy; Created and maintained by GNU/Linux Users' group, Nit
-                Durgapur
+                {/* &copy; Created and maintained by GNU/Linux Users' group, Nit
+                Durgapur */}
+                Aarohan by Team Aavishkar
               </div>
         </div>
     )

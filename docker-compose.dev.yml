@@ -27,9 +27,9 @@ services:
       python manage.py loaddata /backend/language_model.json --settings=judge.dev_settings &&
       python manage.py runserver 0.0.0.0:8000 --settings=judge.dev_settings"
     volumes:
-      - app:/backend:rw
-      - static:/backend/static/
-      - media:/backend/media/
+      - ./:/backend:rw
+      - ./static:/backend/static/:rw
+      - ./media:/backend/media/:rw
     env_file: 
       - .env
     ports:
@@ -55,7 +55,9 @@ services:
       - "3000:3000"
 
   nginx:
-    build: ./nginx
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile-dev
     volumes:
       - ./static:/backend/static/
       - ./media:/backend/media/

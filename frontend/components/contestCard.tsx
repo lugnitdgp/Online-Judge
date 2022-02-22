@@ -19,6 +19,8 @@ const useStyles = makeStyles({
     borderRadius: "20px",
   },
   media: {
+    maxHeight: "180px",
+    objectFit: "cover",
     width: "95%",
     margin: "0 auto",
   },

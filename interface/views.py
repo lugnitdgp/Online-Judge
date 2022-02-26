@@ -15,7 +15,9 @@ from urllib.parse import unquote
 from django.utils import timezone as t
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from judge.settings import MEDIA_URL
+from django.conf import settings
 from datetime import datetime, timedelta
+import pytz
 # Create your views here.
 
 
@@ -214,7 +216,8 @@ def leaderboard(request):
 def GetSubmissions(request):
     try :
         contest = Contest.objects.get(contest_code=request.GET['contest_id'])
-        contest_running = datetime.datetime.now() < contest.end_time
+        tz_judge = pytz.timezone(settings.TIME_ZONE)
+        contest_running = tz_judge.localize(datetime.now()) < contest.end_time
         query_set = Job.objects.filter(contest=contest)
         serializer = ContestRunningSubmissionSerializer(query_set, many=True) if contest_running else SubmissionSerializer(query_set, many=True)
         if contest.isStarted() or contest.isOver() or request.user.is_staff:

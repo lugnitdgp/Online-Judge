@@ -28,8 +28,13 @@ services:
       python manage.py runserver 0.0.0.0:8000 --settings=judge.dev_settings"
     volumes:
       - ./:/backend:rw
+<<<<<<< HEAD
       - ./static:/backend/static/
       - ./media:/backend/media/
+=======
+      - ./static:/backend/static/:rw
+      - ./media:/backend/media/:rw
+>>>>>>> 14047e466db62d1f557be55ec03300e494b0b8f3
     env_file: 
       - .env
     ports:
@@ -55,7 +60,9 @@ services:
       - "3000:3000"
 
   nginx:
-    build: ./nginx
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile-dev
     volumes:
       - ./static:/backend/static/
       - ./media:/backend/media/

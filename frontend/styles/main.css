@@ -29,6 +29,10 @@ hr {
   position: relative;
   bottom: 0;
   height: 80px;
+<<<<<<< HEAD
+=======
+  margin-top: 80px;
+>>>>>>> 14047e466db62d1f557be55ec03300e494b0b8f3
   width: 100%;
   border-top: 2px solid #104e8b;
   background-color: #104e8b;
@@ -206,6 +210,7 @@ hr {
   padding: 10px;
   margin: 10px;
 }
+<<<<<<< HEAD
 
 .RunningContestSubmission {
   display: flex;
@@ -213,3 +218,5 @@ hr {
   align-items: center;
   justify-content: center;
 }
+=======
+>>>>>>> 14047e466db62d1f557be55ec03300e494b0b8f3

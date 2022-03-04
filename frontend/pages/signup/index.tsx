@@ -396,7 +396,7 @@ function LoginPage(props: Props) {
             {/* Sign Up with Facebook }
           </Button> */}
 
-            <a style={{ maxHeight: "63px", border: "1px solid #104E8B", borderRadius: "60px", maxWidth: "63px", padding: "20px" }} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon /></a>
+            {/* <a style={{ maxHeight: "63px", border: "1px solid #104E8B", borderRadius: "60px", maxWidth: "63px", padding: "20px" }} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon /></a> */}
 
           </div>
         </form>

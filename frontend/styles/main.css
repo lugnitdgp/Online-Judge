@@ -29,7 +29,6 @@ hr {
   position: relative;
   bottom: 0;
   height: 80px;
-  margin-top: 80px;
   width: 100%;
   border-top: 2px solid #104e8b;
   background-color: #104e8b;
@@ -206,4 +205,11 @@ hr {
   margin-top: 50px;
   padding: 10px;
   margin: 10px;
+}
+
+.RunningContestSubmission {
+  display: flex;
+  height: 540px;
+  align-items: center;
+  justify-content: center;
 }

@@ -187,7 +187,7 @@ export default function IndexPage() {
                   <h3 className="welcometext">
                     <i>
                       "Welcome to Online Judge presented to you by
-                      GLUG, NIT Durgapur"
+                      Team Aavishkar"
                     </i>
                   </h3>
                   <div className="buttonsparent">

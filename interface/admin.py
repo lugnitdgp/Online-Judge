@@ -1,7 +1,7 @@
 from django.contrib import admin
 from interface.models import *
 
-admin.site.site_header = 'Online Judge GLUG'
+admin.site.site_header = 'Online Judge Aarohan'
 
 admin.site.register(Programming_Language)
 

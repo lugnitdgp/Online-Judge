@@ -10,5 +10,7 @@ COPY . /frontend
 WORKDIR /frontend
 
 RUN yarn install
+RUN npx browserslist@latest --update-db
 # RUN yarn add sharp@0.26.3
-RUN yarn run build
+# RUN yarn run build
+RUN yarn dev

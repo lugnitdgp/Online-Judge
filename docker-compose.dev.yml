@@ -53,16 +53,9 @@ services:
       ./frontend/.env
     ports:
       - "3000:3000"
-
-  nginx:
-    build: ./nginx
     volumes:
-      - ./static:/backend/static/
-      - ./media:/backend/media/
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
+      - ./frontend:/frontend
+
 
 
 volumes:

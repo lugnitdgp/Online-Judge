@@ -42,7 +42,7 @@ hr {
 }
 
 .FooterFixed {
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     height: 80px;
     width: 100%;

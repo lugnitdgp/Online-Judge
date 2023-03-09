@@ -186,7 +186,7 @@ export default function IndexPage() {
                 >
                   <h3 className="welcometext">
                     <i>
-                      "Welcome to Online Judge presented to you by
+                      "Hello to Online Judge presented to you by
                       GLUG, NIT Durgapur"
                     </i>
                   </h3>
@@ -218,9 +218,10 @@ export default function IndexPage() {
                   </div>
                 </Grid>
               </Grid>
-              <Footer />
             </>
           )}
+          <Footer />
+
         </Layout>
       )}
     </>

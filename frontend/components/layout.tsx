@@ -9,6 +9,7 @@ function Layout(props) {
       <React.Fragment>
         <Newappbar />
         {props.children}
+        
       </React.Fragment>
     );
   }

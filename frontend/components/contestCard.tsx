@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     borderRadius: "20px",
   },
   media: {
-    width: "95%",
+    width: "80%",
     margin: "0 auto",
   },
 });

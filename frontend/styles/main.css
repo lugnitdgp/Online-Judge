@@ -42,7 +42,7 @@ hr {
 }
 
 .FooterFixed {
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     height: 80px;
     width: 100%;
@@ -54,7 +54,7 @@ hr {
     text-transform: uppercase;
     font-weight: bolder;
     padding-top: 10px;
-    z-index: 99;
+    /* z-index: 99; */
 }
 
 .FooterImg{

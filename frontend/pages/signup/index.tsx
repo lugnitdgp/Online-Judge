@@ -16,6 +16,8 @@ import Link from "next/link";
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { useContext } from 'react';
 import {AdminContext} from '../../components/AdminContextProvider';
+import { red } from "@material-ui/core/colors";
+
 
 const styles = createStyles((theme: Theme) => ({
   main: {
@@ -337,7 +339,8 @@ function LoginPage(props: Props) {
                 </InputAdornment>
               }
             />
-            <p style="font-size:10px;  color:red;">Note : The password must contain atleast 8 letters including and uppercase, a lowercase, a digit and a special character</p>
+            <br/>
+            <p id="passwordnote" style = {{color:"red",fontSize:"12px"}}>Note : The password must contain atleast 8 letters including and uppercase, a lowercase, a digit and a special character</p>
           </FormControl>
           <br />
           <br />

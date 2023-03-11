@@ -337,6 +337,7 @@ function LoginPage(props: Props) {
                 </InputAdornment>
               }
             />
+            <p style="font-size:10px;  color:red;">Note : The password must contain atleast 8 letters including and uppercase, a lowercase, a digit and a special character</p>
           </FormControl>
           <br />
           <br />
@@ -396,7 +397,7 @@ function LoginPage(props: Props) {
             {/* Sign Up with Facebook }
           </Button> */}
 
-            <a style={{ maxHeight: "63px", border: "1px solid #104E8B", borderRadius: "60px", maxWidth: "63px", padding: "20px" }} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon /></a>
+            {/* <a style={{ maxHeight: "63px", border: "1px solid #104E8B", borderRadius: "60px", maxWidth: "63px", padding: "20px" }} href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&scope=user&redirect_uri=${process.env.NEXT_PUBLIC_GITHUB_URI}`}><GitHubIcon /></a> */}
 
           </div>
         </form>

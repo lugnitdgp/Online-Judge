@@ -83,7 +83,7 @@ export default function submissions() {
     setOpen(false);
   };
 
-  const columns = [
+  var columns = [
     {
       name: "isFail",
       label: " ",
@@ -301,8 +301,18 @@ export default function submissions() {
                       MINIMIZE
                     </Button>
 
-                    <Card style={{ background: "black" }}>
-                      <Viewer value={view} lang={modallang} />
+                    <Card>
+
+                        {
+                          !view ? 
+                          (<div className="RunningContestSubmission">
+                              <h4>
+                              You can view code after the contest ends
+                              </h4>
+                          </div>
+                          )
+                          :(<Viewer value={view} lang={modallang} />)
+                        }
                     </Card>
                   </div>
                 </div>

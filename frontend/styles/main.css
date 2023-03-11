@@ -207,3 +207,10 @@ hr {
     padding: 10px;
     margin: 10px;
 }
+
+.RunningContestSubmission {
+    display: flex;
+    height: 540px;
+    align-items: center;
+    justify-content: center;
+}

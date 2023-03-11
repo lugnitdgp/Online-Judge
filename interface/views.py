@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS, HTTP_226_IM_USED, HTTP_401_UNAUTHORIZED, HTTP_503_SERVICE_UNAVAILABLE
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer, AnnouncementsSerializer, RulesSerializer, SponsorSerializer
+from interface.serializers import QuestionSerializer, QuestionListSerializer, ContestSerializer, SubmissionSerializer, PersonalSubmissionSerializer, AnswerSerializer, EditorialSerializer, AnnouncementsSerializer, RulesSerializer, SponsorSerializer, ContestRunningSubmissionSerializer
 from interface.models import Question, Job, Testcases, Contest, Contest_Score, Answer, Editorial, Announcements, Rules, Sponsor
 # from interface.tasks import execute
 from judge.celery import app
@@ -15,7 +15,7 @@ from urllib.parse import unquote
 from django.utils import timezone as t
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from judge.settings import MEDIA_URL
-from datetime import timedelta
+from datetime import timedelta, datetime
 # Create your views here.
 
 
@@ -214,8 +214,9 @@ def leaderboard(request):
 def GetSubmissions(request):
     try :
         contest = Contest.objects.get(contest_code=request.GET['contest_id'])
+        contest_running = datetime.datetime.now() < contest.end_time
         query_set = Job.objects.filter(contest=contest)
-        serializer = SubmissionSerializer(query_set, many=True)
+        serializer = ContestRunningSubmissionSerializer(query_set, many=True) if contest_running else SubmissionSerializer(query_set, many=True)
         if contest.isStarted() or contest.isOver() or request.user.is_staff:
             return Response(serializer.data, status = HTTP_200_OK)
         return Response('Contest has not started yet', status = HTTP_403_FORBIDDEN)
